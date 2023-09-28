@@ -6,6 +6,25 @@
     <title>강남대</title>
 </head>
 <body>
-    test
+    <table>
+        <tr>
+            <th>board_id</th>
+            <th>title</th>
+            <th>type</th>
+            <th>writer</th>
+            <th>regdate</th>
+            <th>view</th>
+        </tr>
+        <tr th:each="i : ${test}">
+            <td th:text="${i.board_id}"></td>
+            <td th:text="${i.title}"></td>
+            <td th:text="${i.type}"></td>
+            <td th:text="${i.writer}"></td>
+            <td th:text="${i.regdate}"></td>
+            <td th:text="${i.view}"></td>
+        </tr>
+    </table>
+    
+    
 </body>
 </html>
