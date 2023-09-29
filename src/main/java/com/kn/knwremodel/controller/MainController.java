@@ -22,6 +22,7 @@ public class MainController {
     @GetMapping(value="/")
     public String test(Model model) throws IOException{
         noticeCrawler.updata();
+        //testtest
         List<Notice> notices = noticeRepo.findAll();
 
         model.addAttribute("test", notices);
