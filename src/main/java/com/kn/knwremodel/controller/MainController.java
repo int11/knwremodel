@@ -19,6 +19,7 @@ public class MainController {
     private final NoticeRepository noticeRepo;
     private final NoticeCrawlerService noticeCrawler;
 
+    //대충
     @GetMapping(value="/")
     public String test(Model model) throws IOException{
         noticeCrawler.updata();
