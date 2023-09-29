@@ -9,4 +9,5 @@ import com.kn.knwremodel.entity.Notice;
 
 @Repository
 public interface NoticeRepository extends JpaRepository<Notice, Long> {
+    //test11111
 }

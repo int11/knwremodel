@@ -28,4 +28,5 @@ public class MainController {
         model.addAttribute("test", notices);
         return "index";
     }
+
 }

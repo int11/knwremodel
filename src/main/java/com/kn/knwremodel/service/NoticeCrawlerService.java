@@ -20,6 +20,9 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @Service
 public class NoticeCrawlerService {
+    private NoticeCrawlerService test3;
+    private NoticeCrawlerService test4;
+    private NoticeCrawlerService test5;
     private final NoticeRepository noticeRepo;
 
     private String url = "https://web.kangnam.ac.kr/menu/f19069e6134f8f8aa7f689a4a675e66f.do?paginationInfo.currentPageNo=";
