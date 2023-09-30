@@ -9,14 +9,9 @@ import lombok.*;
 @ToString
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Notice {
-
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(updatable = false)
     private Long id;
-
-    @Column(nullable = false)
-    private Long board_id;
 
     @Column(nullable = false)
     private String title;
@@ -32,17 +27,17 @@ public class Notice {
     @Column(nullable = false)
     private String view;
 
-    @Column(length = 8192, nullable = true)
+    @Column(columnDefinition = "TEXT", nullable = true)
     private String post;
 
-    @Column(nullable = true)
+    @Column(columnDefinition = "TEXT", nullable = true)
     private String img;
 
 
     @Builder
-    public Notice(Long board_id, String title, String type, String writer,
+    public Notice(Long id, String title, String type, String writer,
                   String regdate, String view, String post, String img) {
-        this.board_id = board_id;
+        this.id = id;
         this.title = title;
         this.type = type;
         this.writer = writer;

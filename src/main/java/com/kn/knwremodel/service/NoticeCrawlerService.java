@@ -23,18 +23,19 @@ public class NoticeCrawlerService {
     private final NoticeRepository noticeRepo;
 
     private String url = "https://web.kangnam.ac.kr/menu/f19069e6134f8f8aa7f689a4a675e66f.do?paginationInfo.currentPageNo=";
-    private int maxPage = 5; //크롤링할 공지사항 페이지의 수
+    private int maxPage = 2; //크롤링할 공지사항 페이지의 수
 
 
     @Transactional
     public void updata() {
         List<Notice> notices = noticeRepo.findAll();
-
+        JSONParser parser = new JSONParser();
+        
         try {
-            if (notices.isEmpty() || !notices.get(0).getBoard_id().equals(first_Notice_id())) {
+            if (notices.isEmpty() || !notices.get(notices.size()-1).getId().equals(first_Notice_id())) {
+                loopout:
                 for (int page = 1; page <= maxPage; page++) {
-                    Connection conn = Jsoup.connect(url + page);
-                    Document document = conn.get();
+                    Document document = Jsoup.connect(url + page).get();
                     Elements contents = document.getElementsByClass("tbody").select("ul");
 
                     for (Element content : contents) {
@@ -44,38 +45,46 @@ public class NoticeCrawlerService {
                             continue;
                         }
 
+                        Long id = Long.parseLong(content.select("li").first().text());
+                        Elements titlElements = content.select("a");
+                        
+                        if (noticeRepo.findById(id).isEmpty()){
+                            break loopout;
+                        }
+
                         //게시물 내용, 사진 크롤링
-                        JSONParser parser = new JSONParser();
-                        Object obj = parser.parse(content.select("a").attr("data-params"));
-                        JSONObject jsonObject = (JSONObject) obj;
+                        JSONObject jsonObject = (JSONObject)parser.parse(titlElements.attr("data-params"));
                         String encMenuSeq = (String) jsonObject.get("encMenuSeq");
                         String encMenuBoardSeq = (String) jsonObject.get("encMenuBoardSeq");
 
                         String articleURL = "https://web.kangnam.ac.kr/menu/board/info/f19069e6134f8f8aa7f689a4a675e66f.do?scrtWrtiYn=false&encMenuSeq="
                                 + encMenuSeq + "&encMenuBoardSeq=" + encMenuBoardSeq;
 
-                        Connection articleConn = Jsoup.connect(articleURL);
-                        Document articleDocument = articleConn.get();
+                        Document articleDocument = Jsoup.connect(articleURL).get();
                         Elements articleContents = articleDocument.getElementsByClass("tbody").select("ul");
+                        
 
-                        String post = articleContents.select("li p").text();
-                        String img = articleContents.select("img").attr("abs:src");
+                        String post = articleContents.select("li p:gt(1)").text();
 
-
-                        // 이미지가 없거나 불안정한 경로일 경우 null 반환
-                        if (img.length() > 256 || img.isEmpty())
-                            img = null;
-
-                        notices.add(new Notice(Long.parseLong(content.select("li").first().text()),
-                                content.select("a").text(),
+                        String img = "";
+                        for (Element i : articleContents.select("img")) {
+                            String temp = i.attr("abs:src");
+                            // img tag inline data
+                            if (temp.substring(0, 30).contains("data:image")){
+                                continue;
+                            }else{
+                                img += temp + ";";
+                            }
+                        }
+                        
+                        notices.add(new Notice(id,
+                                titlElements.text(),
                                 content.select("li.ali").text(),
                                 content.select("li.sliceDot6").text(),
                                 content.select("li.sliceDot6").next().text(),
                                 content.select("li.sliceDot6").next().next().text(),
                                 post,
-                                img)
-
-                        );
+                                img));
                     }
                 }
             }
@@ -89,8 +98,7 @@ public class NoticeCrawlerService {
     }
 
     private Long first_Notice_id() throws IOException {
-        Connection conn = Jsoup.connect(url + 1);
-        Document document = conn.get();
+        Document document = Jsoup.connect(url + 1).get();
         Elements contents = document.getElementsByClass("tbody").select("ul");
         Long board_id = 0L;
 
