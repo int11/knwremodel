@@ -39,15 +39,15 @@ public class NoticeCrawlerService {
                     Elements contents = document.getElementsByClass("tbody").select("ul");
 
                     for (Element content : contents) {
-
-                        if (content.select("li").first().text().equals("필독") ||
-                                content.select("li").first().text().equals("공지")) {
+                        String Column_number = content.select("li").first().text();
+                        
+                        if (Column_number.equals("필독") || Column_number.equals("공지")) {
                             continue;
                         }
 
-                        Long id = Long.parseLong(content.select("li").first().text());
+                        Long id = Long.parseLong(Column_number);
                         Elements titlElements = content.select("a");
-                        
+
                         if (noticeRepo.findById(id).isEmpty()){
                             break loopout;
                         }
