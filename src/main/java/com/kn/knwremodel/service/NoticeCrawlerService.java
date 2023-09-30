@@ -48,7 +48,7 @@ public class NoticeCrawlerService {
                         Long id = Long.parseLong(Column_number);
                         Elements titlElements = content.select("a");
 
-                        if (noticeRepo.findById(id).isEmpty()){
+                        if (!noticeRepo.findById(id).isEmpty()){
                             break loopout;
                         }
 
