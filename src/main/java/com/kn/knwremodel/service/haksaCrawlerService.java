@@ -2,6 +2,9 @@ package com.kn.knwremodel.service;
 
 import com.kn.knwremodel.entity.haksa;
 import com.kn.knwremodel.repository.haksaRepository;
+
+import jakarta.el.ELManager;
+
 import com.kn.knwremodel.repository.haksaRepository;
 import jdk.jfr.Event;
 import org.jsoup.Jsoup;
@@ -28,25 +31,25 @@ public class haksaCrawlerService {
         }
 
         if (docu != null) {
-            Elements dateElements = docu.select("th.text-center");
-            Elements scheduleElements = docu.select(".text-center.last");
+            
+            Elements dateElements1 = docu.select("div.tbl.typeA.calendal_list").select("tbody");
+            Elements dateElements = dateElements1.select("th.text-center");
+            Elements scheduleElements = dateElements1.select(".text-center.last");
 
             int size = Math.min(dateElements.size(), scheduleElements.size());
 
             for (int i = 0; i < size; i++) {
                 String date = dateElements.get(i).text();
+                
                 String schedule = scheduleElements.get(i).text();
 
-                if (!date.contains("날짜") && !date.contains("일정내용") &&
-                        !schedule.contains("날짜") && !schedule.contains("일정내용")) {
-
-                    haksa event = new haksa();
-                    event.setDate(date);
-                    event.setSchedule(schedule);
-                    haksaRepository.save(event);
-                    System.out.println("Date Elements: " + dateElements);
-                    System.out.println("Schedule Elements: " + scheduleElements);
-                }
+                haksa event = new haksa();
+                event.setDate(date);
+                event.setSchedule(schedule);
+                haksaRepository.save(event);
+                System.out.print("Date Elements: " + dateElements);
+                System.out.println("Schedule Elements: " + scheduleElements);
+                
             }
         }
     }
