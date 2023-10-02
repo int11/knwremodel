@@ -12,6 +12,7 @@ import com.kn.knwremodel.repository.NoticeRepository;
 import com.kn.knwremodel.service.NoticeCrawlerService;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.web.bind.annotation.PathVariable;
 
 @RequiredArgsConstructor
 @Controller
@@ -25,6 +26,12 @@ public class MainController {
         List<Notice> notices = noticeRepo.findAll();
 
         model.addAttribute("test", notices);
+        return "index";
+    }
+    @GetMapping("/{type}")
+    public String searchCrawling(@PathVariable String type, Model model) {
+        List<Notice> search = noticeCrawler.findBytype(type);
+        model.addAttribute("test", search);
         return "index";
     }
 }

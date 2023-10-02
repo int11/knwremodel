@@ -24,8 +24,6 @@ public class NoticeCrawlerService {
 
     private String url = "https://web.kangnam.ac.kr/menu/f19069e6134f8f8aa7f689a4a675e66f.do?paginationInfo.currentPageNo=";
     private int maxPage = 2; //크롤링할 공지사항 페이지의 수
-
-
     @Transactional
     public void updata() {
         List<Notice> notices = noticeRepo.findAll();
@@ -117,5 +115,11 @@ public class NoticeCrawlerService {
         } else {
             return board_id;
         }
+    }
+    //분야별 키워드 분류 테스트 코드
+    @Transactional
+    public List<Notice> findBytype(String type) {
+        List<Notice> notices = noticeRepo.findByTypeContaining(type);
+        return notices;
     }
 }
