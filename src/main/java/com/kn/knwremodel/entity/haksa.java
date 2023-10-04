@@ -14,16 +14,19 @@ public class haksa {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String date;
+    private String date_start;
+    private String date_end;
     private String schedule;
-
-    public void setDate(String date) {
-        this.date = date;
-    }
 
     public void setSchedule(String schedule) {
         this.schedule = schedule;
-
     }
 
+    public void setDateStart(String dateStart) {
+        this.date_start = dateStart;
+    }
+
+    public void setDateEnd(String dateEnd) {
+        this.date_end = dateEnd;
+    }
 }
