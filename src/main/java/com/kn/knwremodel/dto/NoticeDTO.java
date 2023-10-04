@@ -8,19 +8,20 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 
 public class NoticeDTO {
-    private Long id;
+    private int id;
+    private int board_id;
     private String title;
     private String type;
     private String writer;
     private String regdate;
-    private String view;
+    private int view;
     private String post;
     private String img;
 
     @Builder
-    public NoticeDTO(Long id, String title, String type,
-                     String writer, String regdate, String view, String post, String img) {
-        this.id = id;
+    public NoticeDTO(int board_id, String title, String type,
+                     String writer, String regdate, int view, String post, String img) {
+        this.board_id = board_id;
         this.title = title;
         this.type = type;
         this.writer = writer;
