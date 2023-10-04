@@ -23,6 +23,7 @@ public class NoticeCrawlerService {
     private final NoticeRepository noticeRepo;
 
     private String url = "https://web.kangnam.ac.kr/menu/f19069e6134f8f8aa7f689a4a675e66f.do?paginationInfo.currentPageNo=";
+
     private int maxPage = 2; //크롤링할 공지사항 페이지의 수
     @Transactional
     public void updata() {

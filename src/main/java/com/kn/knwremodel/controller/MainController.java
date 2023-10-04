@@ -29,7 +29,7 @@ public class MainController {
         return "index";
     }
     @GetMapping("/{type}")
-    public String searchCrawling(@PathVariable String type, Model model) {
+    public String searchNotice(@PathVariable String type, Model model) {
         List<Notice> search = noticeCrawler.findBytype(type);
         model.addAttribute("test", search);
         return "index";
