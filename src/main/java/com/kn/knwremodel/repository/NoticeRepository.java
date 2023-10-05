@@ -10,4 +10,6 @@ import com.kn.knwremodel.entity.Notice;
 @Repository
 public interface NoticeRepository extends JpaRepository<Notice, Long> {
     List<Notice> findByTypeContaining(String type);
+    boolean existsByBoardId(int board_id);
+    void deleteByBoardId(int board_id);
 }

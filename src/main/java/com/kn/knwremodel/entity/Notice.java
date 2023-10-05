@@ -4,14 +4,21 @@ package com.kn.knwremodel.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.List;
+
 @Entity
 @Getter
 @ToString
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Notice {
+
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(updatable = false)
-    private Long id;
+    private int id;
+
+    @Column(nullable = false)
+    private int boardId;
 
     @Column(nullable = false)
     private String title;
@@ -25,7 +32,7 @@ public class Notice {
     private String regdate;
 
     @Column(nullable = false)
-    private String view;
+    private int view;
 
     @Column(columnDefinition = "TEXT", nullable = true)
     private String post;
@@ -33,11 +40,14 @@ public class Notice {
     @Column(columnDefinition = "TEXT", nullable = true)
     private String img;
 
+    @OneToMany(mappedBy = "notice", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
+    @OrderBy("id asc") // 댓글 정렬
+    private List<Comment> comments;
 
     @Builder
-    public Notice(Long id, String title, String type, String writer,
-                  String regdate, String view, String post, String img) {
-        this.id = id;
+    public Notice(int boardId, String title, String type, String writer,
+                  String regdate, int view, String post, String img) {
+        this.boardId = boardId;
         this.title = title;
         this.type = type;
         this.writer = writer;
@@ -45,5 +55,6 @@ public class Notice {
         this.view = view;
         this.post = post;
         this.img = img;
+        this.comments = getComments();
     }
 }

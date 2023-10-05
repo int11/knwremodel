@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>강남대</title>
+</head>
+<body>
+<table>
+    <tr>
+        <th>id</th>
+        <th>title</th>
+        <th>type</th>
+        <th>writer</th>
+        <th>regdate</th>
+        <th>view</th>
+        <th>post</th>
+        <th>img</th>
+    </tr>
+    <tr>
+        <td th:text="${test.id}"></td>
+        <td th:text="${test.title}"></td>
+        <td th:text="${test.type}"></td>
+        <td th:text="${test.writer}"></td>
+        <td th:text="${test.regdate}"></td>
+        <td th:text="${test.view}"></td>
+        <td th:text="${test.post}"></td>
+        <td th:text="${test.img}"></td>
+    </tr>
+</table>
+<table>
+    <tr th:each="i : ${comments}">
+        <td th:text="${i.user}"></td>
+        <td th:text="${i.comment}"></td>
+        <td th:text="${i.createdDate}"></td>
+        <td th:text="${i.modifiedDate}"></td>
+    </tr>
+</table>
+</body>
+</html>
