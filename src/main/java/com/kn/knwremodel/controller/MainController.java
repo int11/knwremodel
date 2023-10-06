@@ -22,20 +22,17 @@ import org.springframework.web.bind.annotation.PathVariable;
 public class MainController {
     private final NoticeRepository noticeRepo;
     private final NoticeCrawlerService noticeCrawler;
-    private final CollegeService test;
+    private final CollegeService collegeService;
 
     @GetMapping(value="/")
     public String test(Model model) throws IOException{
-        test.testdata();
-        noticeCrawler.updata();
         List<Notice> notices = noticeRepo.findAll();
-
         model.addAttribute("test", notices);
         return "index";
     }
 
     @GetMapping("/{type}")
-    public String searchCrawling(@PathVariable String type, Model model) {
+    public String searchNotice(@PathVariable String type, Model model) {
         List<Notice> search = noticeRepo.findByTypeContaining(type);
         model.addAttribute("test", search);
         return "index";

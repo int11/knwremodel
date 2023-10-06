@@ -12,7 +12,7 @@ import java.time.format.DateTimeFormatter;
 @NoArgsConstructor
 @ToString
 public class NoticeDTO {
-    private int id;
+    private Long id;
     private int boardId;
     private String title;
     private String type;
