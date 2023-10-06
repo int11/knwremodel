@@ -20,7 +20,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 @RequiredArgsConstructor
 @Controller
 public class MainController {
-    private final NoticeRepository noticeRepo;
     private final NoticeCrawlerService noticeCrawler;
     private final CollegeService test;
 
@@ -28,7 +27,7 @@ public class MainController {
     public String test(Model model) throws IOException{
         test.testdata();
         noticeCrawler.updata();
-        List<Notice> notices = noticeRepo.findAll();
+        List<Notice> notices = noticeCrawler.findAll();
 
         model.addAttribute("test", notices);
         return "index";
@@ -36,7 +35,7 @@ public class MainController {
 
     @GetMapping("/{type}")
     public String searchCrawling(@PathVariable String type, Model model) {
-        List<Notice> search = noticeRepo.findByTypeContaining(type);
+        List<Notice> search = noticeCrawler.findByTypeContaining(type);
         model.addAttribute("test", search);
         return "index";
     }

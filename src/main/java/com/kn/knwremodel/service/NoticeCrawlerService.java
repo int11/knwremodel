@@ -66,9 +66,19 @@ public class NoticeCrawlerService {
 
                             Document articleDocument = Jsoup.connect(articleURL).get();
                             Elements articleContents = articleDocument.getElementsByClass("tbody").select("ul");
+                            
+                            String post = "";
+                            for (Element i : articleContents.select("li p:not([style*='display:none'])")) {
+                                String temp = i.text();
+                                if (temp != ""){
+                                    post += temp;
+                                    post += "\n";
+                                }
+                        
+                            }
+                            // html 통째로 긁기 프론트엔드랑 회의 필요
+                            // String post = articleContents.select("li p:not([style*='display:none'])").toString();
 
-
-                            String post = articleContents.select("li p:gt(1)").text();
 
                             String img = "";
                             for (Element i : articleContents.select("img")) {
@@ -80,6 +90,7 @@ public class NoticeCrawlerService {
                                     img += temp + ";";
                                 }
                             }
+
 
                             notices.add(new Notice(id,
                                     titlElements.text(),
@@ -126,7 +137,14 @@ public class NoticeCrawlerService {
         }
     }
     public Notice findById(Long id) {
-        return noticeRepo.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("not found: " + id));
+        return noticeRepo.findById(id).orElseThrow(() -> new IllegalArgumentException("not found: " + id));
+    }
+
+    public List<Notice> findAll() {
+        return noticeRepo.findAll();
+    }
+
+    public List<Notice> findByTypeContaining(String type) {
+        return noticeRepo.findByTypeContaining(type);
     }
 }
