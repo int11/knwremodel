@@ -26,7 +26,6 @@ import lombok.RequiredArgsConstructor;
 public class NoticeCrawlerService {
     private final NoticeRepository noticeRepo;
     private final CollegeRepository CollegeRepo;
-    private String url = "https://web.kangnam.ac.kr/menu/f19069e6134f8f8aa7f689a4a675e66f.do";
     private int maxPage = 1; //크롤링할 공지사항 페이지의 수
     @Transactional
     public void updata() {
@@ -35,8 +34,7 @@ public class NoticeCrawlerService {
 
         try {
             for (College e : CollegeRepo.findAll()) {
-                // TODO IF문 바꿔야함
-                if (notices.isEmpty() || !(notices.get(0).getBoardId() == first_Notice_id(e.getUrl()))) {
+                if (!noticeRepo.existsByMajor(e.getMajor()) || !(noticeRepo.findMaxBoardIdByMajor(e.getMajor()) == first_Notice_id(e.getUrl()))) {
                     loopout:
                     for (int page = 1; page <= maxPage; page++) {
                         Document document = Jsoup.connect(e.getUrl() + "?paginationInfo.currentPageNo=" + page).get();
@@ -83,16 +81,10 @@ public class NoticeCrawlerService {
                                 }
                             }
 
-                            String type = content.select("li.ali").text();
-                            if (type.equals("")){
-                                type = e.getMajor();
-                            }else{
-                                type = e.getMajor() + "/" + type;
-                            }
-
                             notices.add(new Notice(id,
                                     titlElements.text(),
-                                    type,
+                                    content.select("li.ali").text(),
+                                    e.getMajor(),
                                     content.select("li.sliceDot6").text(),
                                     content.select("li.sliceDot6").next().text(),
                                     Integer.parseInt(content.select("li.sliceDot6").next().next().text().replace(",", "")),

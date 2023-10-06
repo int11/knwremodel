@@ -26,6 +26,9 @@ public class Notice {
     private String type;
 
     @Column(nullable = false)
+    private String major;
+
+    @Column(nullable = false)
     private String writer;
 
     @Column(nullable = false)
@@ -45,11 +48,12 @@ public class Notice {
     private List<Comment> comments;
 
     @Builder
-    public Notice(int boardId, String title, String type, String writer,
+    public Notice(int boardId, String title, String type, String major, String writer,
                   String regdate, int view, String post, String img) {
         this.boardId = boardId;
         this.title = title;
         this.type = type;
+        this.major = major;
         this.writer = writer;
         this.regdate = regdate;
         this.view = view;

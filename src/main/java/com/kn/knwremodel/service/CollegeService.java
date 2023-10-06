@@ -22,7 +22,6 @@ public class CollegeService {
         // hard coding for test
         Colleges.add(new College("강남대학교", "강남대학교",  "https://web.kangnam.ac.kr/menu/f19069e6134f8f8aa7f689a4a675e66f.do"));
         Colleges.add(new College("복지융합대학", "스포츠복지전공", "https://ksps.kangnam.ac.kr/menu/3c5c4cf0bebe416ae09666bee7b38984.do"));
-        Colleges.add(new College("복지융합대학", "스포츠복지전공", "https://ksps.kangnam.ac.kr/menu/3c5c4cf0bebe416ae09666bee7b38984.do"));
         Colleges.add(new College("복지융합대학", "유니버설아트디자인학과", "https://uad.kangnam.ac.kr/menu/a79de9b3128bc2343d9411dfedb753c7.do"));
         Colleges.add(new College("복지융합대학", "실버산업학과", "https://senior-industry.kangnam.ac.kr/menu/f61730fb09006de23bee07331bfda13e.do"));
         Colleges.add(new College("복지융합대학", "사회복지학부", "https://knusw.kangnam.ac.kr/menu/22dd7f703ec676ffdecdd6b4e4fe1b1b.do"));
