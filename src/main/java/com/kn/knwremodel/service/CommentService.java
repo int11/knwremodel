@@ -12,11 +12,8 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 @Service
 public class CommentService {
-
     private final CommentRepository commentRepository;
     private final NoticeRepository noticeRepository;
-
-
 
     @Transactional
     public Long commentSave(Long id, CommentDto dto) {
