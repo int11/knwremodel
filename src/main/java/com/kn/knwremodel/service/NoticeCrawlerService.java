@@ -36,18 +36,19 @@ public class NoticeCrawlerService {
             for (College e : CollegeRepo.findAll()) {
                 if (!noticeRepo.existsByMajor(e.getMajor()) || !(noticeRepo.findMaxBoardIdByMajor(e.getMajor()) == first_Notice_id(e.getUrl()))) {
                     loopout:
+
                     for (int page = 1; page <= maxPage; page++) {
                         Document document = Jsoup.connect(e.getUrl() + "?paginationInfo.currentPageNo=" + page).get();
                         Elements contents = document.getElementsByClass("tbody").select("ul");
 
                         for (Element content : contents) {
-                            String Column_number = content.select("li").first().text();
+                            String columnNumber = content.select("li").first().text();
 
-                            if (Column_number.equals("필독") || Column_number.equals("공지")) {
+                            if (columnNumber.equals("필독") || columnNumber.equals("공지")) {
                                 continue;
                             }
 
-                            int id = Integer.parseInt(Column_number);
+                            int id = Integer.parseInt(columnNumber);
                             Elements titlElements = content.select("a");
 
                             if (noticeRepo.existsByBoardId(id)){
@@ -104,14 +105,12 @@ public class NoticeCrawlerService {
                         }
                     }
                 }
-
             }
         } catch (IOException e) {
             e.printStackTrace();
         } catch (ParseException e) {
             throw new RuntimeException(e);
         }
-
         noticeRepo.saveAll(notices);
     }
 
