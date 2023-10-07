@@ -34,7 +34,8 @@ public class College {
     private String url;
 
     @Builder
-    public College(String college, String major, String url) {
+    public College(Long id, String college, String major, String url) {
+        this.id = id;
         this.college = college;
         this.major = major;
         this.url = url;
