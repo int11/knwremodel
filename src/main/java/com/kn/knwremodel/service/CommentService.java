@@ -6,26 +6,43 @@ import com.kn.knwremodel.entity.Notice;
 import com.kn.knwremodel.repository.CommentRepository;
 import com.kn.knwremodel.repository.NoticeRepository;
 import lombok.RequiredArgsConstructor;
+
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @RequiredArgsConstructor
 @Service
 public class CommentService {
-    private final CommentRepository commentRepository;
+    private final CommentRepository commentRepo;
     private final NoticeRepository noticeRepository;
 
     @Transactional
-    public Long commentSave(Long id, CommentDto dto) {
+    public Long saveComment(CommentDto.save dto) {
+        Notice notice = noticeRepository.findById(dto.getNoticeid()).orElseThrow(() ->
+                new IllegalArgumentException("댓글 쓰기 실패: 해당 게시글이 존재하지 않습니다." + dto.getNoticeid()));
 
-        Notice notice = noticeRepository.findById(id).orElseThrow(() ->
-                new IllegalArgumentException("댓글 쓰기 실패: 해당 게시글이 존재하지 않습니다." + id));
+        
+        Comment comment = Comment.builder()
+                .comment(dto.getComment())
+                .user(dto.getUser())
+                .notice(notice)
+                .build();
 
-        dto.setNotice(notice);
+        commentRepo.save(comment);
 
-        Comment comment = dto.toEntity();
-        commentRepository.save(comment);
-
-        return dto.getId();
+        return comment.getId();
     }
+
+    @Transactional
+    public Long modifyComment(CommentDto.modify dto) {
+        Comment comment = commentRepo.findById(dto.getCommentid()).orElseThrow(() ->
+                new IllegalArgumentException("댓글 수정 실패: 해당 댓글이 존재하지 않습니다."));
+
+        comment.setComment(dto.getComment());
+        return comment.getId();
+    }
+ 
 }

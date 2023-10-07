@@ -4,24 +4,26 @@ package com.kn.knwremodel.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
+@Table(name = "notices")
 @Getter
 @ToString
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Notice {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(updatable = false)
-    private int id;
+    private Long id;
 
     @Column(nullable = false)
-    private int boardId;
+    private Long boardId;
 
     @Column(nullable = false)
     private String title;
+
     @Column(nullable = false)
     private String type;
 
@@ -45,10 +47,10 @@ public class Notice {
 
     @OneToMany(mappedBy = "notice", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
     @OrderBy("id asc") // 댓글 정렬
-    private List<Comment> comments;
+    private List<Comment> comments = new ArrayList<>();
 
     @Builder
-    public Notice(int boardId, String title, String type, String major, String writer,
+    public Notice(Long boardId, String title, String type, String major, String writer,
                   String regdate, int view, String post, String img) {
         this.boardId = boardId;
         this.title = title;

@@ -11,11 +11,16 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 public class CommentController {
 
-    private final CommentService commentService;
+    private final CommentService commentS;
 
     /* CREATE */
-    @PostMapping("/posts/{id}/comments")
-    public ResponseEntity commentSave(@PathVariable Long id, @RequestBody CommentDto dto) {
-        return ResponseEntity.ok(commentService.commentSave(id, dto));
+    @PostMapping("/comments/save/")
+    public ResponseEntity saveComment(@RequestBody CommentDto.save commentdto) {
+        return ResponseEntity.ok(commentS.saveComment(commentdto));
+    }
+
+    @PostMapping("/comments/modify/")
+    public ResponseEntity modifyComment(@RequestBody CommentDto.modify commentdto) {
+        return ResponseEntity.ok(commentS.modifyComment(commentdto));
     }
 }

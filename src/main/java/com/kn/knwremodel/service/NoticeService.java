@@ -23,7 +23,7 @@ import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 @Service
-public class NoticeCrawlerService {
+public class NoticeService {
     private final NoticeRepository noticeRepo;
     private final CollegeRepository CollegeRepo;
     private int maxPage = 1; //크롤링할 공지사항 페이지의 수
@@ -48,7 +48,7 @@ public class NoticeCrawlerService {
                                 continue;
                             }
 
-                            int id = Integer.parseInt(columnNumber);
+                            Long id = Long.parseLong(columnNumber);
                             Elements titlElements = content.select("a");
 
                             if (noticeRepo.existsByBoardId(id)){
@@ -114,10 +114,10 @@ public class NoticeCrawlerService {
         noticeRepo.saveAll(notices);
     }
 
-    private int first_Notice_id(String url) throws IOException {
+    private Long first_Notice_id(String url) throws IOException {
         Document document = Jsoup.connect(url + "?paginationInfo.currentPageNo=" + 1).get();
         Elements contents = document.getElementsByClass("tbody").select("ul");
-        int boardId = 0;
+        Long boardId = null;
 
         for (Element content : contents) {
             if (content.select("li").first().text().equals("필독") ||
@@ -125,11 +125,11 @@ public class NoticeCrawlerService {
                 continue;
             }
 
-            boardId = Integer.parseInt(content.select("li").first().text());
+            boardId = Long.parseLong(content.select("li").first().text());
             break;
         }
 
-        if (boardId == 0) {
+        if (boardId == null) {
             throw new IOException();
         } else {
             return boardId;

@@ -12,29 +12,5 @@ import java.time.format.DateTimeFormatter;
 @NoArgsConstructor
 @ToString
 public class NoticeDTO {
-    private Long id;
-    private int boardId;
-    private String title;
-    private String type;
-    private String major;
-    private String writer;
-    private String regdate;
-    private int view;
-    private String post;
-    private String img;
-    
 
-    @Builder
-    public NoticeDTO(int boardId, String title, String type, String major,
-                     String writer, String regdate, int view, String post, String img) {
-        this.boardId = boardId;
-        this.title = title;
-        this.type = type;
-        this.major = major;
-        this.writer = writer;
-        this.regdate = regdate;
-        this.view = view;
-        this.post = post;
-        this.img = img;
-    }
 }
