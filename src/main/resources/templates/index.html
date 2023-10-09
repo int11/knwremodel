@@ -7,15 +7,16 @@
 </head>
 <body>
 <button value="/"onclick="window.open(value,'_self');">전체</button>
-<button value="/학사"onclick="window.open(value,'_self');">학사</button>
-<button value="/장학"onclick="window.open(value,'_self');">장학</button>
-<button value="/학습"onclick="window.open(value,'_self');">학습/상당</button>
-<button value="/취창업"onclick="window.open(value,'_self');">취창업</button>
+<button value="/스포츠복지"onclick="window.open(value,'_self');">스포츠복지전공</button>
+<button value="/유니버설"onclick="window.open(value,'_self');">유니버설아트디자인학과</button>
+<button value="/실버산업"onclick="window.open(value,'_self');">실버산업학과</button>
+<button value="/사회복지"onclick="window.open(value,'_self');">사회복지학부</button>
     <table>
         <tr>
             <th>id</th>
             <th>title</th>
             <th>type</th>
+            <th>major</th>
             <th>writer</th>
             <th>regdate</th>
             <th>view</th>
@@ -26,6 +27,7 @@
             <td th:text="${i.boardId}"></td>
             <td th:text="${i.title}"></td>
             <td th:text="${i.type}"></td>
+            <td th:text="${i.major}"></td>
             <td th:text="${i.writer}"></td>
             <td th:text="${i.regdate}"></td>
             <td th:text="${i.view}"></td>

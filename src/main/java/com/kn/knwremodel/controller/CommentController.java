@@ -23,4 +23,9 @@ public class CommentController {
     public ResponseEntity modifyComment(@RequestBody CommentDto.modify commentdto) {
         return ResponseEntity.ok(commentS.modifyComment(commentdto));
     }
+
+    @PostMapping("/comments/delete/")
+    public ResponseEntity deleteComment(@RequestBody CommentDto.delete commentdto) {
+        return ResponseEntity.ok(commentS.deleteComment(commentdto));
+    }
 }

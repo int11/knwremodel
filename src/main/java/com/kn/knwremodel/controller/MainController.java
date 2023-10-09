@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
 
 import com.kn.knwremodel.entity.Comment;
@@ -26,9 +27,9 @@ public class MainController {
         return "index";
     }
 
-    @GetMapping("/{type}")
-    public String searchNotice(@PathVariable String type, Model model) {
-        List<Notice> notices = noticeS.findByTypeContaining(type);
+    @GetMapping("/{Major}")
+    public String searchNotice(@PathVariable String Major, Model model) {
+        List<Notice> notices = noticeS.findByMajorContaining(Major);
         model.addAttribute("test", notices);
         return "index";
     }

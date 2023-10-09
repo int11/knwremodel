@@ -12,9 +12,10 @@ import com.kn.knwremodel.entity.Notice;
 @Repository
 public interface NoticeRepository extends JpaRepository<Notice, Long> {
     List<Notice> findByTypeContaining(String type);
-    boolean existsByBoardId(Long board_id);
+    boolean existsByBoardId(int board_id);
     boolean existsByMajor(String major);
 
     @Query("SELECT MAX(n.boardId) FROM Notice n WHERE n.major = :major")
     int findMaxBoardIdByMajor(@Param("major") String major);
+    
 }

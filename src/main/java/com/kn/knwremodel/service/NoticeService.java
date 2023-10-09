@@ -143,7 +143,7 @@ public class NoticeService {
         return noticeRepo.findAll();
     }
 
-    public List<Notice> findByTypeContaining(String type) {
-        return noticeRepo.findByTypeContaining(type);
+    public List<Notice> findByMajorContaining(String major) {
+        return noticeRepo.findByMajorContaining(major);
     }
 }
