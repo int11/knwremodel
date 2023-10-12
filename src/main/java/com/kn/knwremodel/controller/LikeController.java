@@ -10,17 +10,17 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RequiredArgsConstructor
-@RequestMapping("/")
+@RequestMapping("/like")
 @RestController
 public class LikeController {
     private final LikeService likeS;
 
-    @PostMapping("/add/like/")
+    @PostMapping("/add")
     public ResponseEntity addLike(@RequestBody LikeDTO.Request dto) throws Exception {
         return ResponseEntity.ok(likeS.addLike(dto));
     }
 
-    @PostMapping("/delete/like/")
+    @PostMapping("/delete")
     public ResponseEntity deleteLike(@RequestBody LikeDTO.Request dto) throws Exception {
         return ResponseEntity.ok(likeS.deleteLike(dto));
     }
