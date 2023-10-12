@@ -101,7 +101,8 @@ public class NoticeService {
                                     content.select("li.sliceDot6").next().text(),
                                     Integer.parseInt(content.select("li.sliceDot6").next().next().text().replace(",", "")),
                                     post,
-                                    img));
+                                    img,
+                                    0L));
                         }
                     }
                 }

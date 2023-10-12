@@ -45,13 +45,16 @@ public class Notice {
     @Column(columnDefinition = "TEXT", nullable = true)
     private String img;
 
+    @Column(nullable = false)
+    private Long likeCount;
+
     @OneToMany(mappedBy = "notice", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
     @OrderBy("id asc") // 댓글 정렬
     private List<Comment> comments = new ArrayList<>();
 
     @Builder
     public Notice(Long boardId, String title, String type, String major, String writer,
-                  String regdate, int view, String post, String img) {
+                  String regdate, int view, String post, String img, Long likeCount) {
         this.boardId = boardId;
         this.title = title;
         this.type = type;
@@ -62,5 +65,10 @@ public class Notice {
         this.post = post;
         this.img = img;
         this.comments = getComments();
+        this.likeCount = likeCount;
+    }
+
+    public void updateLikeCount(Long likeCount) {
+        this.likeCount = likeCount;
     }
 }
