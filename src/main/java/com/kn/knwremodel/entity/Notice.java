@@ -40,7 +40,7 @@ public class Notice {
     private int view;
 
     @Column(columnDefinition = "TEXT", nullable = true)
-    private String post;
+    private String body;
 
     @Column(columnDefinition = "TEXT", nullable = true)
     private String img;
@@ -51,7 +51,7 @@ public class Notice {
 
     @Builder
     public Notice(Long boardId, String title, String type, String major, String writer,
-                  String regdate, int view, String post, String img) {
+                  String regdate, int view, String body, String img) {
         this.boardId = boardId;
         this.title = title;
         this.type = type;
@@ -59,7 +59,7 @@ public class Notice {
         this.writer = writer;
         this.regdate = regdate;
         this.view = view;
-        this.post = post;
+        this.body = body;
         this.img = img;
         this.comments = getComments();
     }

@@ -3,6 +3,7 @@ package com.kn.knwremodel.service;
 import java.io.IOException;
 import java.util.List;
 
+import org.hibernate.query.sqm.tree.domain.SqmIndexAggregateFunction;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
@@ -13,6 +14,7 @@ import org.jsoup.select.Elements;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.kn.knwremodel.dto.CommentDTO.save;
 import com.kn.knwremodel.entity.College;
 import com.kn.knwremodel.entity.Notice;
 import com.kn.knwremodel.repository.CollegeRepository;
@@ -68,12 +70,12 @@ public class NoticeService {
                             Document articleDocument = Jsoup.connect(articleURL).get();
                             Elements articleContents = articleDocument.getElementsByClass("tbody").select("ul");
                             
-                            String post = "";
+                            String body = "";
                             for (Element i : articleContents.select("li p:not([style*='display:none'])")) {
                                 String temp = i.text();
                                 if (temp != ""){
-                                    post += temp;
-                                    post += "\n";
+                                    body += temp;
+                                    body += "\n";
                                 }
                         
                             }
@@ -100,7 +102,7 @@ public class NoticeService {
                                     content.select("li.sliceDot6").text(),
                                     content.select("li.sliceDot6").next().text(),
                                     Integer.parseInt(content.select("li.sliceDot6").next().next().text().replace(",", "")),
-                                    post,
+                                    body,
                                     img));
                         }
                     }
@@ -145,5 +147,23 @@ public class NoticeService {
 
     public List<Notice> findByMajorContaining(String major) {
         return noticeRepo.findByMajorContaining(major);
+    }
+
+    public List<Notice> findByMajorAndType(String major, String type, Long count, Long page) {
+        List<Notice> notices;
+        if (major == null && type == null){
+            notices = noticeRepo.findAll();
+        }else if(major == null){
+            notices = noticeRepo.findByType(type);
+        }else if(type == null){
+            notices = noticeRepo.findByMajor(major);
+        }else{
+            notices = noticeRepo.findByMajorAndType(major, type);
+        }
+         
+        Long e = Math.min(count * page, notices.size());
+
+        notices = notices.subList((int) (count * (page - 1)), e.intValue());
+        return notices;
     }
 }

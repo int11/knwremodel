@@ -1,7 +1,6 @@
 package com.kn.knwremodel;
 
 import com.kn.knwremodel.service.CollegeService;
-import com.kn.knwremodel.service.CommentService;
 import com.kn.knwremodel.service.NoticeService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.SpringApplication;
