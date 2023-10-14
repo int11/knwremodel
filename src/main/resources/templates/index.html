@@ -5,7 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>강남대</title>
 </head>
-<body>
+<body> 
+    <th:block th:if="${currentuser != null}">
+        <p th:text="${currentuser.name}"></p>
+        <p th:text="${currentuser.email}"></p>
+        <a th:href="@{logout}">로그아웃</a>
+    </th:block>
+    <th:block th:if="${currentuser == null}">
+        <a th:href="@{mainlogin}">로그인페이지</a>
+    </th:block>
     <table>
         <tr>
             <th>board_id</th>
@@ -24,7 +32,5 @@
             <td th:text="${i.view}"></td>
         </tr>
     </table>
-    
-    
 </body>
 </html>
