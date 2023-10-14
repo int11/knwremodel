@@ -39,6 +39,6 @@ public class MainController {
         List<haksa> haksas = haksaRe.findAll();
         model.addAttribute("test", haksas);
 
-        return "index1";
+        return "testhaksa";
     }
 }
