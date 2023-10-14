@@ -14,7 +14,7 @@ import com.kn.knwremodel.entity.Notice;
 import com.kn.knwremodel.entity.haksa;
 import com.kn.knwremodel.repository.NoticeRepository;
 import com.kn.knwremodel.repository.haksaRepository;
-import com.kn.knwremodel.service.haksaCrawlerService;
+import com.kn.knwremodel.service.haksaService;
 import com.kn.knwremodel.service.NoticeService;
 
 
@@ -24,10 +24,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 
 @RequiredArgsConstructor
 @Controller
-public class MainController {
-    private final haksaRepository haksaRe;
-    private final haksaCrawlerService haksaS;
-
+public class testController {
+    private final haksaService haksaS;
     private final NoticeService noticeS;
     private final HttpSession httpSession;
       
@@ -42,13 +40,13 @@ public class MainController {
         List<Notice> notices = noticeS.findAll();        
         model.addAttribute("test", notices);
 
-        return "index0";
+        return "index";
     }
 
     @GetMapping(value="/as")
     public String test111(Model model) throws IOException{
         haksaS.crawlAndSaveData();
-        List<haksa> haksas = haksaRe.findAll();
+        List<haksa> haksas = haksaS.findAll();
         model.addAttribute("test", haksas);
 
         return "testhaksa";

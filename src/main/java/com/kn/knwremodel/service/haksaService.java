@@ -1,5 +1,6 @@
 package com.kn.knwremodel.service;
 
+import com.kn.knwremodel.entity.Notice;
 import com.kn.knwremodel.entity.haksa;
 import com.kn.knwremodel.repository.haksaRepository;
 import org.jsoup.Jsoup;
@@ -9,11 +10,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.util.List;
 
 @Service
-public class haksaCrawlerService {
+public class haksaService {
     @Autowired
-    private haksaRepository haksaRepository;
+    private haksaRepository haksaRepo;
 
     public void crawlAndSaveData() {
         Document docu = null;
@@ -46,7 +48,7 @@ public class haksaCrawlerService {
                 event.setDateStart(date_start);
                 event.setDateEnd(date_end);
 
-                haksaRepository.save(event);
+                haksaRepo.save(event);
                 System.out.println("Date Start: " + date_start);
                 System.out.println("Date End: " + date_end);
                 System.out.println("Schedule: " + schedule);
@@ -55,4 +57,7 @@ public class haksaCrawlerService {
         }
     }
 
+    public List<haksa> findAll() {
+        return haksaRepo.findAll();
+    }
 }
