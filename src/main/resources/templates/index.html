@@ -6,6 +6,15 @@
     <title>강남대</title>
 </head>
 <body>
+<th:block th:if="${currentuser != null}">
+  <p th:text="${currentuser.name}"></p>
+  <p th:text="${currentuser.email}"></p>
+  <a th:href="@{logout}">로그아웃</a>
+</th:block>
+<th:block th:if="${currentuser == null}">
+  <a th:href="@{mainlogin}">로그인페이지</a>
+</th:block>
+  
 <button value="/"onclick="window.open(value,'_self');">전체</button>
 <button value="/스포츠복지"onclick="window.open(value,'_self');">스포츠복지전공</button>
 <button value="/유니버설"onclick="window.open(value,'_self');">유니버설아트디자인학과</button>
@@ -35,7 +44,5 @@
             <td th:text="${i.img}"></td>
         </tr>
     </table>
-    
-    
 </body>
 </html>
