@@ -29,7 +29,6 @@ public class KnwremodelApplication {
 	public void testSchedule() throws IOException {
 		collegeS.testdata();
 		noticeS.updata();
-		haksaS.crawlAndSaveData();
 		System.out.println("DataBase Update every 30 mininutes");
 	}
 
