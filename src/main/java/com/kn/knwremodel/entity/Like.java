@@ -14,11 +14,9 @@ public class Like {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long likeId;
 
-    //User 부분 임의 구성
-    //@ManyToOne(fetch = FetchType.LAZY)
-    //@JoinColumn(name = "MEMBER_ID")
-    @Column(nullable = false)
-    private String user;
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private User user;
 
     @ManyToOne
     @JoinColumn(name = "notice_id")

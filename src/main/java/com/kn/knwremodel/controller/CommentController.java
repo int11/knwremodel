@@ -20,12 +20,12 @@ public class CommentController {
     }
 
     @PostMapping("/modify")
-    public ResponseEntity modifyComment(@RequestBody CommentDTO.modify commentdto) {
+    public ResponseEntity modifyComment(@RequestBody CommentDTO.modify commentdto) throws Exception {
         return ResponseEntity.ok(commentS.modifyComment(commentdto));
     }
 
     @PostMapping("/delete")
-    public ResponseEntity deleteComment(@RequestBody CommentDTO.delete commentdto) {
+    public ResponseEntity deleteComment(@RequestBody CommentDTO.delete commentdto) throws Exception {
         return ResponseEntity.ok(commentS.deleteComment(commentdto));
     }
 }

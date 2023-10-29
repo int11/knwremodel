@@ -1,9 +1,10 @@
 package com.kn.knwremodel.service;
 
-import java.io.IOException;
-import java.util.List;
-
-import org.hibernate.query.sqm.tree.domain.SqmIndexAggregateFunction;
+import com.kn.knwremodel.entity.College;
+import com.kn.knwremodel.entity.Notice;
+import com.kn.knwremodel.repository.CollegeRepository;
+import com.kn.knwremodel.repository.NoticeRepository;
+import lombok.RequiredArgsConstructor;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
@@ -14,13 +15,8 @@ import org.jsoup.select.Elements;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.kn.knwremodel.dto.CommentDTO.save;
-import com.kn.knwremodel.entity.College;
-import com.kn.knwremodel.entity.Notice;
-import com.kn.knwremodel.repository.CollegeRepository;
-import com.kn.knwremodel.repository.NoticeRepository;
-
-import lombok.RequiredArgsConstructor;
+import java.io.IOException;
+import java.util.List;
 
 
 @RequiredArgsConstructor

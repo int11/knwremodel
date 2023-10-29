@@ -24,8 +24,9 @@ public class Comment {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
-    private String user; // 작성자
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user; // 작성자
 
     @Setter
     @Column(columnDefinition = "TEXT", nullable = false)

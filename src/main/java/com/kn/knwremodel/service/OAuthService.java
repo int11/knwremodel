@@ -1,8 +1,11 @@
 package com.kn.knwremodel.service;
 
 
-import java.util.Collections;
-
+import com.kn.knwremodel.dto.UserDTO;
+import com.kn.knwremodel.entity.User;
+import com.kn.knwremodel.repository.UserRepository;
+import jakarta.servlet.http.HttpSession;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
@@ -12,12 +15,7 @@ import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 
-import com.kn.knwremodel.dto.UserDTO;
-import com.kn.knwremodel.entity.User;
-import com.kn.knwremodel.repository.UserRepository;
-
-import jakarta.servlet.http.HttpSession;
-import lombok.RequiredArgsConstructor;
+import java.util.Collections;
 
 
 // service call by SecurityConfig.java. checking "oauth2Login.userInfoEndpoint.userService(OAuthService)" function
@@ -27,7 +25,7 @@ public class OAuthService implements OAuth2UserService<OAuth2UserRequest, OAuth2
  
     private final UserRepository userRepository;
     private final HttpSession session;
- 
+
     @Override
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
         OAuth2UserService<OAuth2UserRequest, OAuth2User> delegate = new DefaultOAuth2UserService();
@@ -46,8 +44,8 @@ public class OAuthService implements OAuth2UserService<OAuth2UserRequest, OAuth2
         User user = saveOrUpdate(dto);
         
         // 세션 정보를 저장하는 직렬화된 dto 클래스
-        session.setAttribute("user", new UserDTO.Session(user)); 
- 
+        session.setAttribute("user", new UserDTO.Session(user));
+
         return new DefaultOAuth2User(
                 Collections.singleton(new SimpleGrantedAuthority(user.getRoleKey())),
                 dto.getAttributes(),

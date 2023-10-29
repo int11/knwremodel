@@ -24,13 +24,13 @@
         <td th:text="${test.writer}"></td>
         <td th:text="${test.regdate}"></td>
         <td th:text="${test.view}"></td>
-        <td th:text="${test.post}"></td>
+        <td th:text="${test.body}"></td>
         <td th:text="${test.img}"></td>
     </tr>
 </table>
 <table>
     <tr th:each="i : ${comments}">
-        <td th:text="${i.user}"></td>
+        <td th:text="${i.user.name}"></td>
         <td th:text="${i.comment}"></td>
         <td th:text="${i.createdDate}"></td>
         <td th:text="${i.modifiedDate}"></td>

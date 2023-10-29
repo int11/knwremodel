@@ -1,26 +1,22 @@
 package com.kn.knwremodel.controller;
-import java.io.IOException;
-import java.util.List;
-
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-
 
 import com.kn.knwremodel.dto.UserDTO;
 import com.kn.knwremodel.entity.Comment;
-
 import com.kn.knwremodel.entity.Notice;
 import com.kn.knwremodel.entity.haksa;
-import com.kn.knwremodel.repository.NoticeRepository;
-import com.kn.knwremodel.repository.haksaRepository;
-import com.kn.knwremodel.service.haksaService;
+import com.kn.knwremodel.service.CommentService;
+import com.kn.knwremodel.service.LikeService;
 import com.kn.knwremodel.service.NoticeService;
-
-
+import com.kn.knwremodel.service.haksaService;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+
+import java.io.IOException;
+import java.util.List;
 
 @RequiredArgsConstructor
 @Controller
@@ -28,18 +24,27 @@ public class testController {
     private final haksaService haksaS;
     private final NoticeService noticeS;
     private final HttpSession httpSession;
+    private final CommentService commentService;
+    private final LikeService likeService;
       
     @GetMapping(value="/")
     public String test(Model model) throws IOException{
        UserDTO.Session user = (UserDTO.Session)httpSession.getAttribute("user");
 
         if(user != null) {
+            // 수정할 예정
+            commentService.setLoginUserId(user.getId());
+            likeService.setLoginUserId(user.getId());
             model.addAttribute("currentuser", user);
         }
-      
+        else {
+            // 수정할 예정
+            commentService.setLoginUserId(-1L);
+            likeService.setLoginUserId(-1L);
+        }
+
         List<Notice> notices = noticeS.findAll();        
         model.addAttribute("test", notices);
-
         return "index";
     }
 
@@ -67,9 +72,9 @@ public class testController {
     }
 
     @GetMapping("/logout")
-    public String logout(Model model) {
+    public String logout() {
         httpSession.invalidate();
-        return "index";
+        return "redirect:/";
     }
 
     @GetMapping("/read/{id}")

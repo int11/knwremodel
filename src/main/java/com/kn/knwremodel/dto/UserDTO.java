@@ -54,11 +54,14 @@ public class UserDTO {
     
     @Getter
     public static class Session implements Serializable {
+
+        private Long id;
         private String name;
         private String email;
         private String picture;
 
         public Session(User user) {
+            this.id = user.getId();
             this.name = user.getName();
             this.email = user.getEmail();
             this.picture = user.getPicture();

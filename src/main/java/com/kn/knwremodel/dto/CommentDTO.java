@@ -1,5 +1,6 @@
 package com.kn.knwremodel.dto;
 
+import com.kn.knwremodel.entity.User;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 
@@ -15,7 +16,6 @@ public class CommentDTO {
     @Getter
     public static class save{
         private Long noticeId;
-        private String user;
         private String comment;
     }
 
@@ -33,7 +33,7 @@ public class CommentDTO {
     @Getter
     public static class Comment{
         private Long id;
-        private String user;
+        private User user;
         private String comment;
         private String createdDate;
         private String modifiedDate;
