@@ -47,7 +47,7 @@ public class LikeService {
 
         Notice notice = noticeRepository.findById(dto.getNoticeId()).get();
         User loginUser = userRepository.findById(loginUserId).orElseThrow(() ->
-                new IllegalArgumentException("좋아요 추가 실패: 로그인 정보가 존재하지 않습니다." + loginUserId));
+                new IllegalArgumentException("좋아요 삭제 실패: 로그인 정보가 존재하지 않습니다." + loginUserId));
 
         //사용자가 해당 게시물에 좋아요를 눌렀던 기록이 없다면
         if (!likeRepository.existsByUserAndNotice(loginUser, notice)) {

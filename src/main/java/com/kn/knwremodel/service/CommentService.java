@@ -7,7 +7,6 @@ import com.kn.knwremodel.entity.User;
 import com.kn.knwremodel.repository.CommentRepository;
 import com.kn.knwremodel.repository.NoticeRepository;
 import com.kn.knwremodel.repository.UserRepository;
-import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import org.springframework.stereotype.Service;
@@ -19,14 +18,11 @@ public class CommentService {
     private final CommentRepository commentRepo;
     private final UserRepository userRepository;
     private final NoticeRepository noticeRepository;
-    private final HttpSession httpSession;
-
     @Setter
     private Long loginUserId;
 
     @Transactional
     public Long saveComment(CommentDTO.save dto) {
-        System.out.println("test값은: " + loginUserId);
 
         Notice notice = noticeRepository.findById(dto.getNoticeId()).orElseThrow(() ->
                 new IllegalArgumentException("댓글 쓰기 실패: 해당 게시글이 존재하지 않습니다." + dto.getNoticeId()));
@@ -64,7 +60,7 @@ public class CommentService {
         //추가
 
         if (comment.getUser().getId() != loginUserId)
-            throw new Exception("댓글 수정 실패: 해당 댓글을 작성한 사용자가 아님");
+            throw new Exception("댓글 삭제 실패: 해당 댓글을 작성한 사용자가 아님");
 
         commentRepo.deleteById(dto.getCommentId());
         return comment.getId();
