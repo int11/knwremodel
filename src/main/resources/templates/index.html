@@ -14,6 +14,10 @@
 <th:block th:if="${currentuser == null}">
   <a th:href="@{mainlogin}">로그인페이지</a>
 </th:block>
+<form method="get" action="/mail_ok.do" name="mailFrm">
+    <input type="text" name="email" placeholder="받는사람" />
+    <input type="submit" value="메일 전송" />
+</form>
 
 <button value="/"onclick="window.open(value,'_self');">전체</button>
 <button value="/스포츠복지"onclick="window.open(value,'_self');">스포츠복지전공</button>

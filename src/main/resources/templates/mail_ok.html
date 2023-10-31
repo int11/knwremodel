@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>메일 전송 결과</title>
+</head>
+<body>
+<script type='text/javascript'>
+    {{#success}}
+    alert('메일이 전송되었습니다.');
+    location.href='/main.do';
+    {{/success}}
+    {{^success}}
+    alert('메일 전송에 실패하였습니다.');
+    history.back();
+    {{/success}}
+</script>
+</body>
+</html>
