@@ -163,4 +163,9 @@ public class NoticeService {
         notices = notices.subList((int) (count * (page - 1)), e.intValue());
         return notices;
     }
+
+    @Transactional(readOnly = true) // 읽기 전용 트랜잭션
+    public List<Notice> findTop5ByView() {
+        return noticeRepo.findTop5ByOrderByViewDesc();
+    }
 }

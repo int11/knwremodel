@@ -21,4 +21,7 @@ public interface NoticeRepository extends JpaRepository<Notice, Long> {
     int findMaxBoardIdByMajor(@Param("major") String major);
 
     List<Notice> findByMajorAndType(String major, String type);
+
+    List<Notice> findTop5ByOrderByViewDesc();
+
 }
