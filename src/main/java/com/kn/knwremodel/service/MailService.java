@@ -1,52 +1,50 @@
 package com.kn.knwremodel.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.mail.MailException;
-import org.springframework.mail.SimpleMailMessage;
+import lombok.RequiredArgsConstructor;
 import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Service;
 
-import java.util.concurrent.ThreadLocalRandom;
+import jakarta.mail.MessagingException;
+import jakarta.mail.internet.MimeMessage;
 
-@Repository
+@Service
+@RequiredArgsConstructor
 public class MailService {
 
-    @Autowired
-    private JavaMailSender javaMailSender;
+    private final JavaMailSender javaMailSender;
+    private static final String senderEmail= "gohwangbong@gmail.com";
+    private static int number;
 
-    public int sendMail( String strTo ) {
-        // 받는사람을 담을 변수 선언
-        String to = strTo;
-        /*
-         * flag = 0 실패
-         * flag = 1 성공
-         * */
-        int flag = 0;
+    public static void createNumber(){
+        number = (int)(Math.random() * (90000)) + 100000;// (int) Math.random() * (최댓값-최소값+1) + 최소값
+    }
+
+    public MimeMessage CreateMail(String mail){
+        createNumber();
+        MimeMessage message = javaMailSender.createMimeMessage();
 
         try {
-            // 텍스트로 구성된 메일을 생성할때
-            SimpleMailMessage simpleMessage = new SimpleMailMessage();
-
-            // 인증키 6자리 랜덤으로 생성 후 초기화
-            String authKey = Integer.toString( ThreadLocalRandom.current().nextInt(100000, 1000000) );
-
-            // 받는사람 설정
-            simpleMessage.setTo( to );
-
-            // 제목
-            simpleMessage.setSubject("[메일 인증] 강남대레플리카에서 인증번호를 보냈습니다.");
-
-            // 메일 내용
-            simpleMessage.setText("인증번호는 " + authKey + " 입니다.\n정확하게 입력해주세요.");
-
-            System.out.println(javaMailSender);
-            // 메일 발송
-            javaMailSender.send(simpleMessage);
-            flag = 1;
-        } catch (MailException e) {
-            // TODO Auto-generated catch block
+            message.setFrom(senderEmail);
+            message.setRecipients(MimeMessage.RecipientType.TO, mail);
+            message.setSubject("이메일 인증");
+            String body = "";
+            body += "<h3>" + "요청하신 인증 번호입니다." + "</h3>";
+            body += "<h1>" + number + "</h1>";
+            body += "<h3>" + "감사합니다." + "</h3>";
+            message.setText(body,"UTF-8", "html");
+        } catch (MessagingException e) {
             e.printStackTrace();
         }
-        return flag;
+
+        return message;
+    }
+
+    public int sendMail(String mail){
+
+        MimeMessage message = CreateMail(mail);
+
+        javaMailSender.send(message);
+
+        return number;
     }
 }
