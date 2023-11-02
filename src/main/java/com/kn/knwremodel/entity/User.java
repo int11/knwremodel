@@ -56,6 +56,10 @@ public class User extends TimeEntity {
         return this.role.getKey();
     }
 
+    public void setRole(Role role) {
+        this.role = role;
+    }
+
 
 }
 
