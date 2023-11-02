@@ -81,12 +81,16 @@ public class testController {
     public String findNotice(@PathVariable Long id, Model model) {
         Notice notice = noticeS.findById(id);
         List<Comment> comments = notice.getComments();
+        boolean isCheckedLike;
 
         model.addAttribute("test", notice);
 
         if (comments != null && !comments.isEmpty()) {
             model.addAttribute("comments", comments);
         }
+
+        isCheckedLike = likeService.checkedLike(id);
+        model.addAttribute("like", isCheckedLike);
         return "index2";
     }
 

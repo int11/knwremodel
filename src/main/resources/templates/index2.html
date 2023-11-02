@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns="http://www.w3.org/1999/html">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -36,6 +36,27 @@
         <td th:text="${i.modifiedDate}"></td>
     </tr>
 </table>
+<button th:text="${like} ? '좋아요 취소' : '좋아요 누르기' "
+        th:url="${like} ? 'http://localhost:8080/like/delete' : 'http://localhost:8080/like/add'"
+        th:onclick="checkedLike(this.getAttribute('url'))"
+></button>
+
+<script th:inline="javascript">
+    function checkedLike(url) {
+        var id = [[${test.id}]];
+        fetch(url, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                noticeId: id
+            }),
+        }).then((response) => console.log(response));
+    }
+
+</script>
+<br>
 Likes:
 <div th:text="${test.likeCount}"></div>
 </body>

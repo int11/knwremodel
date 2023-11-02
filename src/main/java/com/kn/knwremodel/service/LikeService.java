@@ -22,13 +22,15 @@ public class LikeService {
     @Setter
     private Long loginUserId;
 
+    private boolean isCheckdLike;
+
     @Transactional
     public Long addLike(LikeDTO.Request dto) throws Exception {
         Notice notice = noticeRepository.findById(dto.getNoticeId()).get();
         User loginUser = userRepository.findById(loginUserId).orElseThrow(() ->
                 new IllegalArgumentException("좋아요 추가 실패: 로그인 정보가 존재하지 않습니다." + loginUserId));
 
-        //사용자가 해당 게시물에 좋아요를 눌렀던 기록이 있다면
+        //사용자가 해당 게시물에 좋아요를 눌렀던 기록이 없다면
         if (likeRepository.existsByUserAndNotice(loginUser, notice)) {
             throw new Exception("add_false");
         }
@@ -39,9 +41,9 @@ public class LikeService {
                 .build();
         likeRepository.save(like);
         notice.updateLikeCount(notice.getLikeCount() + 1);
-
         return like.getLikeId();
     }
+
     @Transactional
     public Long deleteLike(LikeDTO.Request dto) throws Exception {
 
@@ -49,7 +51,7 @@ public class LikeService {
         User loginUser = userRepository.findById(loginUserId).orElseThrow(() ->
                 new IllegalArgumentException("좋아요 삭제 실패: 로그인 정보가 존재하지 않습니다." + loginUserId));
 
-        //사용자가 해당 게시물에 좋아요를 눌렀던 기록이 없다면
+        //사용자가 해당 게시물에 좋아요를 눌렀던 기록이 있다면
         if (!likeRepository.existsByUserAndNotice(loginUser, notice)) {
             throw new Exception("delete_false");
         }
@@ -57,8 +59,13 @@ public class LikeService {
         Like like = likeRepository.findByUserAndNotice(loginUser, notice);
         likeRepository.delete(like);
         notice.updateLikeCount(notice.getLikeCount() - 1);
-
         return like.getLikeId();
     }
 
+    @Transactional
+    public boolean checkedLike(Long id) {
+        Notice notice = noticeRepository.findById(id).get();
+        User loginUser = userRepository.findById(loginUserId).orElse(null);
+       return likeRepository.existsByUserAndNotice(loginUser, notice);
+    }
 }
