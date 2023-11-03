@@ -34,7 +34,9 @@ public class testController {
         if(currentuserDTO != null) {
             model.addAttribute("currentuser", currentuserDTO);
         }
-        List<Notice> notices = noticeS.findByMajorAndType(major, type, 15L, page);      
+        Long noticesperPage = 15L;
+        List<Notice> notices = noticeS.findByMajorAndType(major, type, noticesperPage, page);
+        model.addAttribute("maxpage", noticeS.count()/noticesperPage + 1);      
         model.addAttribute("notices", notices);
         return "index";
     }

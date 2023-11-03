@@ -142,7 +142,7 @@ public class NoticeService {
         return noticeRepo.findAll();
     }
 
-    public List<Notice> findByMajorAndType(String major, String type, Long count, Long page) {
+    public List<Notice> findByMajorAndType(String major, String type, Long NoticesperPage, Long page) {
         List<Notice> notices;
         if (major == null && type == null){
             notices = noticeRepo.findAll();
@@ -154,9 +154,9 @@ public class NoticeService {
             notices = noticeRepo.findByMajorAndType(major, type);
         }
          
-        Long e = Math.min(count * page, notices.size());
+        Long e = Math.min(NoticesperPage * page, notices.size());
 
-        notices = notices.subList((int) (count * (page - 1)), e.intValue());
+        notices = notices.subList((int) (NoticesperPage * (page - 1)), e.intValue());
         return notices;
     }
 
@@ -167,5 +167,9 @@ public class NoticeService {
 
     public List<Notice> findTopLikesByMajor(String major) {
         return noticeRepo.findTop5ByMajorOrderByLikeCountDesc(major);
+    }
+
+    public Long count() {
+        return noticeRepo.count();
     }
 }

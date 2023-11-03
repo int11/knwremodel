@@ -24,4 +24,5 @@ public interface NoticeRepository extends JpaRepository<Notice, Long> {
 
     List<Notice> findTop5ByOrderByViewDesc();
     List<Notice> findTop5ByMajorOrderByLikeCountDesc(String major);
+    long count();
 }
