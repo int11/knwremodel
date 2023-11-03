@@ -9,12 +9,14 @@
     <table>
         <tr>
             <th>id</th>
-            <th>date</th>
+            <th>date_start</th>
+            <th>date_end</th>
             <th>schedule</th>
         </tr>
         <tr th:each="i : ${test}">
             <td th:text="${i.id}"></td>
-            <td th:text="${i.date}"></td>
+            <td th:text="${i.date_start}"></td>
+            <td th:text="${i.date_end}"></td>
             <td th:text="${i.schedule}"></td>
         </tr>
     </table>
