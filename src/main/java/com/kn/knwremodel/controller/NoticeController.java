@@ -4,10 +4,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.kn.knwremodel.dto.NoticeDTO;
 import com.kn.knwremodel.entity.Notice;
@@ -36,6 +33,12 @@ public class NoticeController {
     @PostMapping("/top5View")
     public ResponseEntity getTop5Notices() {
         List<Notice> topNotices = noticeS.findTop5ByView();
+        List<NoticeDTO.responsePage> result = topNotices.stream().map(NoticeDTO.responsePage::new).collect(Collectors.toList());
+        return ResponseEntity.ok(result);
+    }
+    @GetMapping("/top5likes/{major}")
+    public ResponseEntity getTopLikesByMajor(@PathVariable String major) {
+        List<Notice> topNotices = noticeS.findTopLikesByMajor(major);
         List<NoticeDTO.responsePage> result = topNotices.stream().map(NoticeDTO.responsePage::new).collect(Collectors.toList());
         return ResponseEntity.ok(result);
     }

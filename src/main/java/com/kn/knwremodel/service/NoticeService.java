@@ -168,4 +168,8 @@ public class NoticeService {
     public List<Notice> findTop5ByView() {
         return noticeRepo.findTop5ByOrderByViewDesc();
     }
+
+    public List<Notice> findTopLikesByMajor(String major) {
+        return noticeRepo.findTop5ByMajorOrderByLikeCountDesc(major);
+    }
 }
