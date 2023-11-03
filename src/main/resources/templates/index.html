@@ -36,7 +36,7 @@
     </tr>
     <tr th:each="i : ${notices}">
         <td >
-            <a th:href="@{read/${i.id}}" th:text="${i.id}"></a>
+            <a th:href="@{read/{id}(id=${i.id})}" th:text="${i.id}"></a>
         </td>
         <td th:text="${i.boardId}"></td>
         <td th:style="${'min-width:200px'}" th:text="${i.title}"></td>

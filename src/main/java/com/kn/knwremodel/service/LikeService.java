@@ -46,7 +46,6 @@ public class LikeService {
             likeRepository.save(like);
             return like.getId();
         }
-        
     }
 
     @Transactional
