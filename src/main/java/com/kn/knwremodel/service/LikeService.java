@@ -36,6 +36,7 @@ public class LikeService {
         if (likeRepository.existsByUserAndNotice(currentuser, notice)) {
             Like like = likeRepository.findByUserAndNotice(currentuser, notice);
             likeRepository.delete(like);
+            notice.updateLikeCount(notice.getLikeCount() - 1);
             return like.getId();
         }
         else{
@@ -44,6 +45,7 @@ public class LikeService {
                             .notice(notice)
                             .build();
             likeRepository.save(like);
+            notice.updateLikeCount(notice.getLikeCount() + 1);
             return like.getId();
         }
     }

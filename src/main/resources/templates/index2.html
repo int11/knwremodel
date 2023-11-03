@@ -4,25 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>강남대</title>
-    <link rel="stylesheet" href="style.css">
-    <script th:inline="javascript">
-        function checkedLike() {
-            var id = [[${notice.id}]];
-            fetch("http://localhost:8080/like/click", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({
-                    noticeId: id
-                }),
-            }).then((response) => console.log(response));
-            setTimeout(function() {
-                window.location.href = window.location.href;
-            }, 50); 
-        }
-    
-    </script>
+    <link rel="stylesheet" th:href="@{/style.css}">
+    <script th:src="@{/testjs.js}"></script>
 </head>
 <body>
 
@@ -36,6 +19,7 @@
         <th>writer</th>
         <th>regdate</th>
         <th>view</th>
+        <th>likeCount</th>
         <th>body</th>
         <th>img</th>
     </tr>
@@ -48,6 +32,7 @@
         <td th:text="${i.writer}"></td>
         <td th:text="${i.regdate}"></td>
         <td th:text="${i.view}"></td>
+        <td th:text="${i.likeCount}"></td>
         <td th:style="${'min-width:800px'}" th:text="${i.body}"></td>
         <td th:text="${i.img}"></td>
     </tr>
@@ -63,7 +48,7 @@
 </table>
 
 <button th:text="${like} ? '좋아요 취소' : '좋아요 누르기' "
-        onclick="checkedLike()"></button>
+        th:onclick="post_clickLike([[${notice.id}]])"></button>
 
 <div th:text="${'Likes : ' + likesize}"></div>
 

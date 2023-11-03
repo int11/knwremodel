@@ -4,7 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>강남대</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" th:href="@{/style.css}">
+    <script th:src="@{/testjs.js}"></script>
 </head>
 <body>
 <th:block th:if="${currentuser != null}">
@@ -31,12 +32,17 @@
         <th>writer</th>
         <th>regdate</th>
         <th>view</th>
+        <th>likeCount</th>
         <th>body</th>
         <th>img</th>
     </tr>
     <tr th:each="i : ${notices}">
+        
         <td >
             <a th:href="@{read/{id}(id=${i.id})}" th:text="${i.id}"></a>
+            <!-- noticedto 만들어서 notices 변수에 좋아요 눌렀는지 안눌렀는지 체크하는 boolen 넣어줘야함. -->
+            <!-- <button th:text="${i.checkedLike} ? '좋아요 취소' : '좋아요 누르기' " th:onclick="post_clickLike([[${i.id}]])"></button> -->
+            <button th:text="${like} ? '좋아요 취소' : '좋아요 누르기' " th:onclick="post_clickLike([[${i.id}]])"></button>
         </td>
         <td th:text="${i.boardId}"></td>
         <td th:style="${'min-width:200px'}" th:text="${i.title}"></td>
@@ -45,6 +51,7 @@
         <td th:text="${i.writer}"></td>
         <td th:text="${i.regdate}"></td>
         <td th:text="${i.view}"></td>
+        <td th:text="${i.likeCount}"></td>
         <td th:style="${'min-width:800px'}" th:text="${i.body}"></td>
         <td th:text="${i.img}"></td>
     </tr>
