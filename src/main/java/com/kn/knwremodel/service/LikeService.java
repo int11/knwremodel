@@ -1,6 +1,7 @@
 package com.kn.knwremodel.service;
 
 import com.kn.knwremodel.dto.LikeDTO;
+import com.kn.knwremodel.dto.UserDTO;
 import com.kn.knwremodel.entity.Like;
 import com.kn.knwremodel.entity.Notice;
 import com.kn.knwremodel.entity.User;
@@ -19,53 +20,43 @@ public class LikeService {
     private final LikeRepository likeRepository;
     private final NoticeRepository noticeRepository;
     private final UserRepository userRepository;
-    @Setter
-    private Long loginUserId;
-
-    private boolean isCheckdLike;
+    private final HttpSession httpSession;
 
     @Transactional
-    public Long addLike(LikeDTO.Request dto) throws Exception {
-        Notice notice = noticeRepository.findById(dto.getNoticeId()).get();
-        User loginUser = userRepository.findById(loginUserId).orElseThrow(() ->
-                new IllegalArgumentException("좋아요 추가 실패: 로그인 정보가 존재하지 않습니다." + loginUserId));
-
-        //사용자가 해당 게시물에 좋아요를 눌렀던 기록이 없다면
-        if (likeRepository.existsByUserAndNotice(loginUser, notice)) {
-            throw new Exception("add_false");
+    public Long clickLike(LikeDTO.click likedto) throws Exception {
+        UserDTO.Session currentuserDTO = (UserDTO.Session)httpSession.getAttribute("user");
+        Notice notice = noticeRepository.findById(likedto.getNoticeId()).get();
+        if (currentuserDTO == null){
+            throw new IllegalArgumentException("좋아요 추가 실패: 로그인이 필요합니다.");
         }
+        User currentuser = userRepository.findById(currentuserDTO.getId()).get();
 
-        Like like = Like.builder()
-                .user(loginUser)
-                .notice(notice)
-                .build();
-        likeRepository.save(like);
-        notice.updateLikeCount(notice.getLikeCount() + 1);
-        return like.getLikeId();
-    }
-
-    @Transactional
-    public Long deleteLike(LikeDTO.Request dto) throws Exception {
-
-        Notice notice = noticeRepository.findById(dto.getNoticeId()).get();
-        User loginUser = userRepository.findById(loginUserId).orElseThrow(() ->
-                new IllegalArgumentException("좋아요 삭제 실패: 로그인 정보가 존재하지 않습니다." + loginUserId));
 
         //사용자가 해당 게시물에 좋아요를 눌렀던 기록이 있다면
-        if (!likeRepository.existsByUserAndNotice(loginUser, notice)) {
-            throw new Exception("delete_false");
+        if (likeRepository.existsByUserAndNotice(currentuser, notice)) {
+            Like like = likeRepository.findByUserAndNotice(currentuser, notice);
+            likeRepository.delete(like);
+            return like.getId();
         }
-
-        Like like = likeRepository.findByUserAndNotice(loginUser, notice);
-        likeRepository.delete(like);
-        notice.updateLikeCount(notice.getLikeCount() - 1);
-        return like.getLikeId();
+        else{
+            Like like = Like.builder()
+                            .user(currentuser)
+                            .notice(notice)
+                            .build();
+            likeRepository.save(like);
+            return like.getId();
+        }
+        
     }
 
     @Transactional
-    public boolean checkedLike(Long id) {
-        Notice notice = noticeRepository.findById(id).get();
-        User loginUser = userRepository.findById(loginUserId).orElse(null);
-       return likeRepository.existsByUserAndNotice(loginUser, notice);
+    public boolean checkedLike(Long noticeid) {
+        UserDTO.Session currentuserDTO = (UserDTO.Session)httpSession.getAttribute("user");
+        Notice notice = noticeRepository.findById(noticeid).get();
+        if (currentuserDTO == null){
+            return false;
+        }
+        User currentuser = userRepository.findById(currentuserDTO.getId()).orElse(null);
+        return likeRepository.existsByUserAndNotice(currentuser, notice);
     }
 }

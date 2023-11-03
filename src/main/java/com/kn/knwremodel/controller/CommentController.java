@@ -1,6 +1,7 @@
 package com.kn.knwremodel.controller;
 
 import com.kn.knwremodel.dto.CommentDTO;
+import com.kn.knwremodel.dto.UserDTO;
 import com.kn.knwremodel.service.CommentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -10,12 +11,11 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/comments")
 @RestController
 public class CommentController {
-
     private final CommentService commentS;
 
     /* CREATE */
     @PostMapping("/save")
-    public ResponseEntity saveComment(@RequestBody CommentDTO.save commentdto) {
+    public ResponseEntity saveComment(@RequestBody CommentDTO.save commentdto) throws Exception {
         return ResponseEntity.ok(commentS.saveComment(commentdto));
     }
 

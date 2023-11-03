@@ -1,6 +1,6 @@
 package com.kn.knwremodel;
 
-import com.kn.knwremodel.service.CollegeService;
+import com.kn.knwremodel.service.testdatainsertService;
 import com.kn.knwremodel.service.NoticeService;
 import com.kn.knwremodel.service.haksaService;
 import lombok.RequiredArgsConstructor;
@@ -18,7 +18,7 @@ import java.io.IOException;
 @RequiredArgsConstructor
 public class KnwremodelApplication {
 	private final NoticeService noticeS;
-	private final CollegeService collegeS;
+	private final testdatainsertService testdatainsertS;
 	private final haksaService haksaS;
 
 
@@ -28,7 +28,7 @@ public class KnwremodelApplication {
 
 	@Scheduled(fixedRate = 1000 * 60 * 30 , initialDelay = 0)
 	public void testSchedule() throws IOException {
-		collegeS.testdata();
+		testdatainsertS.Gentestdata();
 		noticeS.updata();
 		System.out.println("DataBase Update every 30 mininutes");
 	}

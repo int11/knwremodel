@@ -142,10 +142,6 @@ public class NoticeService {
         return noticeRepo.findAll();
     }
 
-    public List<Notice> findByMajorContaining(String major) {
-        return noticeRepo.findByMajorContaining(major);
-    }
-
     public List<Notice> findByMajorAndType(String major, String type, Long count, Long page) {
         List<Notice> notices;
         if (major == null && type == null){

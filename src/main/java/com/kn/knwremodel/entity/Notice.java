@@ -45,12 +45,15 @@ public class Notice {
     @Column(columnDefinition = "TEXT", nullable = true)
     private String img;
 
-    @Column(nullable = false)
-    private Long likeCount;
-
     @OneToMany(mappedBy = "notice", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
     @OrderBy("id asc") // 댓글 정렬
     private List<Comment> comments = new ArrayList<>();
+
+    @OneToMany(mappedBy = "notice", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
+    private List<Like> likes = new ArrayList<>();
+
+    @Column(nullable = false)
+    private Long likeCount;
 
     @Builder
     public Notice(Long boardId, String title, String type, String major, String writer,
