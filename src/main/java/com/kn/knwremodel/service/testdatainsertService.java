@@ -14,11 +14,11 @@ import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 @Service
-public class CollegeService {
+public class testdatainsertService {
     private final CollegeRepository CollegeRepo;
 
     @Transactional
-    public void testdata() {
+    public void Gentestdata() {
         List<College> Colleges = new ArrayList<>();
         // hard coding for test
         Colleges.add(new College(1L,"강남대학교", "강남대학교",  "https://web.kangnam.ac.kr/menu/f19069e6134f8f8aa7f689a4a675e66f.do"));

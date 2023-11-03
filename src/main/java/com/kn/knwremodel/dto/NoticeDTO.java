@@ -1,17 +1,9 @@
 package com.kn.knwremodel.dto;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
-
-import com.kn.knwremodel.dto.CommentDTO;
-import com.kn.knwremodel.entity.Comment;
 import com.kn.knwremodel.entity.Notice;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.OneToMany;
-import lombok.Builder;
 import lombok.Getter;
 
 

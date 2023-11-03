@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>강남대</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
 <th:block th:if="${currentuser != null}">
@@ -16,33 +17,45 @@
 </th:block>
 
 <button value="/"onclick="window.open(value,'_self');">전체</button>
-<button value="/스포츠복지"onclick="window.open(value,'_self');">스포츠복지전공</button>
-<button value="/유니버설"onclick="window.open(value,'_self');">유니버설아트디자인학과</button>
-<button value="/실버산업"onclick="window.open(value,'_self');">실버산업학과</button>
-<button value="/사회복지"onclick="window.open(value,'_self');">사회복지학부</button>
-    <table>
-        <tr>
-            <th>id</th>
-            <th>title</th>
-            <th>type</th>
-            <th>major</th>
-            <th>writer</th>
-            <th>regdate</th>
-            <th>view</th>
-            <th>post</th>
-            <th>img</th>
-        </tr>
-        <tr th:each="i : ${test}">
-            <td th:text="${i.boardId}"></td>
-            <td th:text="${i.title}"></td>
-            <td th:text="${i.type}"></td>
-            <td th:text="${i.major}"></td>
-            <td th:text="${i.writer}"></td>
-            <td th:text="${i.regdate}"></td>
-            <td th:text="${i.view}"></td>
-            <td th:text="${i.body}"></td>
-            <td th:text="${i.img}"></td>
-        </tr>
-    </table>
+<button value="/?major=스포츠복지전공"onclick="window.open(value,'_self');">스포츠복지전공</button>
+<button value="/?major=유니버설아트디자인학과"onclick="window.open(value,'_self');">유니버설아트디자인학과</button>
+<button value="/?major=실버산업학과"onclick="window.open(value,'_self');">실버산업학과</button>
+<button value="/?major=사회복지학부"onclick="window.open(value,'_self');">사회복지학부</button>
+<table>
+    <tr>
+        <th>id</th>
+        <th>boardid</th>
+        <th>title</th>
+        <th>type</th>
+        <th>major</th>
+        <th>writer</th>
+        <th>regdate</th>
+        <th>view</th>
+        <th>body</th>
+        <th>img</th>
+    </tr>
+    <tr th:each="i : ${notices}">
+        <td >
+            <a th:href="@{read/${i.id}}" th:text="${i.id}"></a>
+        </td>
+        <td th:text="${i.boardId}"></td>
+        <td th:style="${'min-width:200px'}" th:text="${i.title}"></td>
+        <td th:text="${i.type}"></td>
+        <td th:text="${i.major}"></td>
+        <td th:text="${i.writer}"></td>
+        <td th:text="${i.regdate}"></td>
+        <td th:text="${i.view}"></td>
+        <td th:style="${'min-width:800px'}" th:text="${i.body}"></td>
+        <td th:text="${i.img}"></td>
+    </tr>
+</table>
+
+<ul style="list-style:none;">
+    <li style="float: left;">page</li>
+    <li th:style="${'float: left; margin: 0px 5px;'}" th:each="i : ${#numbers.sequence(1, maxpage)}">
+        <a th:href="@{'/?page=' + ${i}}" th:text="${i}">1</a>
+    </li>
+</ul>
+
 </body>
 </html>
