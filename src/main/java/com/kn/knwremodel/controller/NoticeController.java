@@ -31,13 +31,6 @@ public class NoticeController {
         Notice notice = noticeS.findById(noticedto.getDbid());
         return ResponseEntity.ok(new NoticeDTO.responsebody(notice));
     }
-    
-    @PostMapping("/top5View")
-    public ResponseEntity getTop5Notices() {
-        List<Notice> topNotices = noticeS.findTop5ByView();
-        List<NoticeDTO.responsePage> result = topNotices.stream().map(NoticeDTO.responsePage::new).collect(Collectors.toList());
-        return ResponseEntity.ok(result);
-    }
 
     @GetMapping("/top5likes/{major}")
     public ResponseEntity getTopLikesByMajor(@PathVariable String major) {

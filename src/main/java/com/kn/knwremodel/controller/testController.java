@@ -80,4 +80,12 @@ public class testController {
         model.addAttribute("like", isCheckedLike);
         return "index2";
     }
+
+    @GetMapping("/top5View")
+    public String getTop5View(Model model) {
+        List<Notice> topNotices = noticeS.findTop5ByView();
+        model.addAttribute("topNotices", topNotices);
+        return "top5View";
+    }
+
 }
