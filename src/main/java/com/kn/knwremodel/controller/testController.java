@@ -1,5 +1,6 @@
 package com.kn.knwremodel.controller;
 
+import com.kn.knwremodel.dto.NoticeDTO;
 import com.kn.knwremodel.dto.UserDTO;
 import com.kn.knwremodel.entity.Comment;
 import com.kn.knwremodel.entity.Notice;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Controller

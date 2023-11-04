@@ -16,6 +16,7 @@
 <body>
 <table>
     <tr>
+        <th>Ranking</th>
         <th>id</th>
         <th>boardid</th>
         <th>title</th>
@@ -28,7 +29,8 @@
         <th>body</th>
         <th>img</th>
     </tr>
-    <tr th:each="i : ${topNotices}">
+    <tr th:each="i, iterStat : ${topNotices}">
+        <td th:text="${iterStat.index + 1} + '위'"></td>
         <td th:text="${i.id}"></td>
         <td th:text="${i.boardId}"></td>
         <td th:text="${i.title}"></td>

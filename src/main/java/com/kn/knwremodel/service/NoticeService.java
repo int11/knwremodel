@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -166,7 +167,20 @@ public class NoticeService {
     }
 
     public List<Notice> findTopLikesByMajor(String major) {
-        return noticeRepo.findTop5ByMajorOrderByLikeCountDesc(major);
+        List<Notice> topNotices = noticeRepo.findTop5ByMajorOrderByLikeCountDesc(major);
+
+        // 좋아요의 갯수가 1 이상인 경우만 결과에 포함 - 동점인 경우 처리할 방법 코드 수정 필요
+        List<Notice> result = new ArrayList<>();
+
+        if (topNotices != null && !topNotices.isEmpty()) {
+            for (Notice notice : topNotices) {
+                if (notice.getLikeCount() > 0) {
+                    result.add(notice);
+                }
+            }
+        }
+
+        return result;
     }
 
     public Long count() {

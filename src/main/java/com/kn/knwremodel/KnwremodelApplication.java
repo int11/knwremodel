@@ -33,9 +33,15 @@ public class KnwremodelApplication {
 		System.out.println("DataBase Update every 30 mininutes");
 	}
 
-	@Scheduled(cron = "0 0 1 */6 * ?") // 반기별 1일 0시에 실행
+	@Scheduled(fixedRate = 1000 * 60 * 30 , initialDelay = 0)// 임의로 넣어둔 것. 수정 필요
 	public void updateHaksa() throws IOException {
 		haksaS.crawlAndSaveData();
 		System.out.println("Haksa Data Updated every 6 months");
+
+		// 만약, 학사 DB가 비어있다면 추가적인 크롤링 - 테이블이 생성 자체만으로도 비어있지 않다고 인식. 수정 필요
+		if (haksaS.checkIfHaksaDBIsEmpty()) {
+			haksaS.crawlAndSaveData();
+			System.out.println("Database is empty, perform additional crawling");
+		}
 	}
 }
