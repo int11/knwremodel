@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @RequiredArgsConstructor
 public class MailController {
     private final MailService mailService;
-    private final AuthChangeGuestUserService authChangeGuestUserService; // AuthChangeGuestUserService를 주입합니다.
+    private final AuthChangeGuestUserService authChangeGuestUserService;
     private final HttpSession httpSession;
 
     @GetMapping("/mailaccess")
@@ -29,12 +29,15 @@ public class MailController {
     @PostMapping("/mail")
     public String MailSend(String mail) {
         int number = mailService.sendMail(mail);
-
-        // AuthChangeGuestUserService의 인스턴스를 사용하여 updateUserRole 메서드를 호출합니다.
-        authChangeGuestUserService.updateUserRole(Role.USER);
-
         String num = "" + number;
-
         return num;
+    }
+
+    @ResponseBody
+    @PostMapping("/updateUserRole")
+    public String UpdateUserRole() {
+        // 이 부분에서 사용자 역할을 업데이트하는 로직을 수행합니다.
+        authChangeGuestUserService.updateUserRole(Role.USER);
+        return "사용자 역할이 업데이트되었습니다.";
     }
 }

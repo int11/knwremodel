@@ -38,6 +38,7 @@ public class User extends TimeEntity {
     @Column
     private String authKey; // 추가: 인증 키 필드
 
+
     @Builder
     public User(String name, String email, String picture, Role role) {
         this.name = name;
@@ -55,11 +56,10 @@ public class User extends TimeEntity {
     public String getRoleKey(){
         return this.role.getKey();
     }
-
+    //AuthChangeGuestUserService에서 사용하기 위해 만듬
     public void setRole(Role role) {
         this.role = role;
     }
 
 
 }
-

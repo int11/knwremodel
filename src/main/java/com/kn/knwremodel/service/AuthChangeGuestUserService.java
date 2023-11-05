@@ -17,7 +17,7 @@ import java.util.Optional;
 public class AuthChangeGuestUserService {
     private final UserRepository userRepository;
     private final HttpSession httpSession;
-    
+
     public void updateUserRole(Role newRole) {
         UserDTO.Session userDTO = (UserDTO.Session)httpSession.getAttribute("user");
         User user = userRepository.findByEmail(userDTO.getEmail()).get();
