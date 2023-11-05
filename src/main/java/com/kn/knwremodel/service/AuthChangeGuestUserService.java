@@ -1,8 +1,11 @@
 package com.kn.knwremodel.service;
 
+import com.kn.knwremodel.dto.UserDTO;
 import com.kn.knwremodel.entity.Role;
 import com.kn.knwremodel.entity.User;
 import com.kn.knwremodel.repository.UserRepository;
+
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.stereotype.Service;
@@ -13,14 +16,12 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class AuthChangeGuestUserService {
     private final UserRepository userRepository;
-
-    public void updateUserRole(String userEmail, Role newRole) {
-        Optional<User> optionalUser = userRepository.findByEmail(userEmail);
-
-        if (optionalUser.isPresent()) {
-            User user = optionalUser.get();
-            user.setRole(newRole);
-            userRepository.save(user);
-        }
+    private final HttpSession httpSession;
+    
+    public void updateUserRole(Role newRole) {
+        UserDTO.Session userDTO = (UserDTO.Session)httpSession.getAttribute("user");
+        User user = userRepository.findByEmail(userDTO.getEmail()).get();
+        user.setRole(newRole);
+        userRepository.save(user);
     }
 }

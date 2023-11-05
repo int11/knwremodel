@@ -8,14 +8,17 @@ import org.springframework.web.bind.annotation.PostMapping;
 
 import com.kn.knwremodel.service.AuthChangeGuestUserService;
 import com.kn.knwremodel.service.MailService;
+
+import jakarta.servlet.http.HttpSession;
+
 import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
 @RequiredArgsConstructor
 public class MailController {
-
     private final MailService mailService;
     private final AuthChangeGuestUserService authChangeGuestUserService; // AuthChangeGuestUserService를 주입합니다.
+    private final HttpSession httpSession;
 
     @GetMapping("/mailaccess")
     public String MailPage() {
@@ -28,7 +31,7 @@ public class MailController {
         int number = mailService.sendMail(mail);
 
         // AuthChangeGuestUserService의 인스턴스를 사용하여 updateUserRole 메서드를 호출합니다.
-        authChangeGuestUserService.updateUserRole(mail, Role.USER);
+        authChangeGuestUserService.updateUserRole(Role.USER);
 
         String num = "" + number;
 
