@@ -11,6 +11,8 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 
 import java.io.IOException;
+import java.time.LocalDate;
+import java.util.Locale;
 
 @SpringBootApplication
 @EnableScheduling
@@ -21,7 +23,6 @@ public class KnwremodelApplication {
 	private final testdatainsertService testdatainsertS;
 	private final haksaService haksaS;
 
-
 	public static void main(String[] args) {
 		SpringApplication.run(KnwremodelApplication.class, args);
 	}
@@ -31,6 +32,7 @@ public class KnwremodelApplication {
 		testdatainsertS.Gentestdata();
 		noticeS.updata();
 		System.out.println("DataBase Update every 30 mininutes");
+		noticeS.setNowDate(LocalDate.now());
 	}
 
 	@Scheduled(fixedRate = 1000 * 60 * 30 , initialDelay = 0)// 임의로 넣어둔 것. 수정 필요

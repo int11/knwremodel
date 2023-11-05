@@ -1,5 +1,6 @@
 package com.kn.knwremodel.dto;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 import com.kn.knwremodel.entity.Notice;
@@ -22,7 +23,7 @@ public class NoticeDTO {
         private Long boardId;
         private String title;
         private String writer;
-        private String regdate;
+        private LocalDate regdate;
         private int view;
 
         public responsePage(Notice notice) {

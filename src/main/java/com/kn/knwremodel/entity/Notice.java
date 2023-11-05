@@ -4,6 +4,7 @@ package com.kn.knwremodel.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,7 +35,7 @@ public class Notice {
     private String writer;
 
     @Column(nullable = false)
-    private String regdate;
+    private LocalDate regdate;
 
     @Column(nullable = false)
     private int view;
@@ -57,7 +58,7 @@ public class Notice {
 
     @Builder
     public Notice(Long boardId, String title, String type, String major, String writer,
-                  String regdate, int view, String body, String img, Long likeCount) {
+                  LocalDate regdate, int view, String body, String img, Long likeCount) {
         this.boardId = boardId;
         this.title = title;
         this.type = type;
