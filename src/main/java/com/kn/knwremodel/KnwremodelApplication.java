@@ -12,6 +12,8 @@ import org.springframework.scheduling.annotation.Scheduled;
 
 import java.io.IOException;
 import java.time.LocalDate;
+import java.time.Year;
+import java.time.YearMonth;
 import java.util.Locale;
 
 @SpringBootApplication
@@ -27,7 +29,7 @@ public class KnwremodelApplication {
 		SpringApplication.run(KnwremodelApplication.class, args);
 	}
 
-	@Scheduled(fixedRate = 1000 * 60 * 30 , initialDelay = 0)
+	@Scheduled(fixedRate = 1000 * 60 * 30, initialDelay = 0)
 	public void testSchedule() throws IOException {
 		testdatainsertS.Gentestdata();
 		noticeS.updata();
@@ -35,15 +37,18 @@ public class KnwremodelApplication {
 		noticeS.setNowDate(LocalDate.now());
 	}
 
-	@Scheduled(fixedRate = 1000 * 60 * 30 , initialDelay = 0)// 임의로 넣어둔 것. 수정 필요
+	@Scheduled(fixedDelay = 15768000000L)// 최초 실행 후, 6개월 지나 실행
 	public void updateHaksa() throws IOException {
 		haksaS.crawlAndSaveData();
-		System.out.println("Haksa Data Updated every 6 months");
+		System.out.println("Haksa Data Updated every 6 months.");
 
-		// 만약, 학사 DB가 비어있다면 추가적인 크롤링 - 테이블이 생성 자체만으로도 비어있지 않다고 인식. 수정 필요
-		if (haksaS.checkIfHaksaDBIsEmpty()) {
+		Year initialUpdateYear = Year.of(YearMonth.now().getYear());
+		Year currentYear = Year.now();
+
+		// 만약 (최초 업데이트한 연도 ≠ 현재 연도), 추가적인 크롤링
+		if (!currentYear.equals(initialUpdateYear)) {
 			haksaS.crawlAndSaveData();
-			System.out.println("Database is empty, perform additional crawling");
+			System.out.println("Additional Crawling performed.");
 		}
 	}
 }

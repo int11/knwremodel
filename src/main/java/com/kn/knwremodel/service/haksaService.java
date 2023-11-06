@@ -57,11 +57,6 @@ public class haksaService {
         }
     }
 
-    public boolean checkIfHaksaDBIsEmpty() {
-        List<haksa> haksaList = haksaRepo.findAll();
-        return haksaList.isEmpty();
-    }
-
     public List<haksa> findAll() {
         return haksaRepo.findAll();
     }
