@@ -29,15 +29,19 @@ public class MailController {
     @PostMapping("/mail")
     public String MailSend(String mail) {
         int number = mailService.sendMail(mail);
-        String num = "" + number;
-        return num;
+        httpSession.setAttribute("authNumber", number); // 생성된 인증 번호를 세션에 저장
+        return "인증번호 발송";
     }
 
     @ResponseBody
-    @PostMapping("/updateUserRole")
-    public String UpdateUserRole() {
-        // 이 부분에서 사용자 역할을 업데이트하는 로직을 수행합니다.
-        authChangeGuestUserService.updateUserRole(Role.USER);
-        return "사용자 역할이 업데이트되었습니다.";
+    @PostMapping("/confirmNumber")
+    public String ConfirmNumber(String enteredNumber) {
+        int generatedNumber = Integer.parseInt(httpSession.getAttribute("authNumber").toString());
+        if (generatedNumber == Integer.parseInt(enteredNumber)) {
+            authChangeGuestUserService.updateUserRole(Role.USER);
+            return "이메일 인증이 성공했습니다.";
+        } else {
+            return "인증 번호가 다릅니다.";
+        }
     }
 }
