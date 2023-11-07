@@ -14,17 +14,18 @@
 <th:block th:if="${currentuser == null}">
   <a th:href="@{mainlogin}">로그인페이지</a>
 </th:block>
-<div id="mail_input" name="mail_input">
+<div id="mail_input" name="mail_input" th:if="${currentuser != null}">
     <input type="text" name="mail" id="mail" placeholder="이메일 입력">
     <button type="button" id="sendBtn" name="sendBtn" onclick="sendNumber()">인증번호</button>
 </div>
 <br>
-<div id="mail_number" name="mail_number" style="display: none">
+<div id="mail_number" name="mail_number" th:if="${currentuser != null}" style="display: none">
     <input type="text" name="number" id="number" placeholder="인증번호 입력">
     <button type="button" name="confirmBtn" id="confirmBtn" onclick="confirmNumber()">이메일 인증</button>
 </div>
 <br>
 <input type="text" id="Confirm" name="Confirm" style="display: none" value="">
+
 </body>
 </form>
 
@@ -64,35 +65,25 @@
         $.ajax({
             url: "/mail",
             type: "post",
-            dataType: "json",
+            dataType: "text",
             data: { "mail": $("#mail").val() },
             success: function (data) {
-                alert("인증번호 발송");
-                $("#Confirm").attr("value", data);
+                alert(data);
             }
         });
     }
 
     function confirmNumber() {
         var number1 = $("#number").val();
-        var number2 = $("#Confirm").val();
-
-        if (number1 == number2) {
-            alert("이메일 인증이 성공했습니다.");
-            // 성공적인 인증 후 사용자 역할을 업데이트하기 위한 새로운 엔드포인트 호출
-            $.ajax({
-                url: "/updateUserRole", // 사용자 역할을 업데이트하는 엔드포인트
-                type: "post",
-                success: function (data) {
-                    alert("사용자 역할이 업데이트되었습니다.");
-                },
-                error: function (error) {
-                    alert("사용자 역할 업데이트 중 오류가 발생했습니다.");
-                }
-            });
-        } else {
-            alert("인증 번호가 다릅니다.");
-        }
+        $.ajax({
+            url: "/confirmNumber",
+            type: "post",
+            dataType: "text",
+            data: { "enteredNumber": number1 },
+            success: function (data) {
+                alert(data);
+            }
+        });
     }
 </script>
 </body>

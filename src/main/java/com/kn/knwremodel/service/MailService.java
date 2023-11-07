@@ -12,7 +12,7 @@ import jakarta.mail.internet.MimeMessage;
 public class MailService {
 
     private final JavaMailSender javaMailSender;
-    private static final String senderEmail= "gohwangbong@gmail.com";
+    private static final String senderEmail= "knureplica@gmail.com";
     private static int number;
 
     public static void createNumber(){
