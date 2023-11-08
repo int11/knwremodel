@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.io.IOException;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -86,8 +87,13 @@ public class testController {
     @GetMapping("/top5View")
     public String getTop5View(Model model) {
         List<Notice> topNotices = noticeS.findTop5ByView();
+
+        topNotices.sort(Comparator.comparing(Notice::getView).reversed()
+                .thenComparing(Notice::getCreateDate, Comparator.reverseOrder()));
+
         model.addAttribute("topNotices", topNotices);
         return "top5View";
     }
+
 
 }

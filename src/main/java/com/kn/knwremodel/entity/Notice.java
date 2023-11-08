@@ -75,4 +75,10 @@ public class Notice {
     public void updateLikeCount(Long likeCount) {
         this.likeCount = likeCount;
     }
+
+    public LocalDate getCreateDate() {
+        return regdate;
+    }
+
+
 }

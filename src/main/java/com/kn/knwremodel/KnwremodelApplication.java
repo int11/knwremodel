@@ -35,20 +35,19 @@ public class KnwremodelApplication {
 		noticeS.updata();
 		System.out.println("DataBase Update every 30 mininutes");
 		noticeS.setNowDate(LocalDate.now());
-	}
 
-	@Scheduled(fixedDelay = 15768000000L)// 최초 실행 후, 6개월 지나 실행
-	public void updateHaksa() throws IOException {
-		haksaS.crawlAndSaveData();
-		System.out.println("Haksa Data Updated every 6 months.");
-
+		// haksa 크롤링 예외
 		Year initialUpdateYear = Year.of(YearMonth.now().getYear());
 		Year currentYear = Year.now();
 
-		// 만약 (최초 업데이트한 연도 ≠ 현재 연도), 추가적인 크롤링
 		if (!currentYear.equals(initialUpdateYear)) {
 			haksaS.crawlAndSaveData();
 			System.out.println("Additional Crawling performed.");
 		}
+	}
+	@Scheduled(fixedDelay = 15768000000L)// 최초 실행 후, 6개월 지나 실행
+	public void updateHaksa() throws IOException {
+		haksaS.crawlAndSaveData();
+		System.out.println("Haksa Data Updated every 6 months.");
 	}
 }

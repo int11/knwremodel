@@ -1,5 +1,6 @@
 package com.kn.knwremodel.controller;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -35,6 +36,10 @@ public class NoticeController {
     @GetMapping("/top5likes/{major}")
     public ResponseEntity getTopLikesByMajor(@PathVariable String major) {
         List<Notice> topNotices = noticeS.findTopLikesByMajor(major);
+
+        topNotices.sort(Comparator.comparing(Notice::getLikeCount).reversed()
+                .thenComparing(Notice::getCreateDate, Comparator.reverseOrder()));
+
         List<NoticeDTO.responsePage> result = topNotices.stream().map(NoticeDTO.responsePage::new).collect(Collectors.toList());
         return ResponseEntity.ok(result);
     }
