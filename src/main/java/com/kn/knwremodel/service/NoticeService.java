@@ -31,7 +31,7 @@ public class NoticeService {
     private int maxPage = 1; //크롤링할 공지사항 페이지의 수
 
     @Setter
-    private LocalDate localDate, nowDate;
+    private LocalDate  nowDate;
     @Transactional
     public void updata() {
         List<Notice> notices = noticeRepo.findAll();
@@ -97,6 +97,7 @@ public class NoticeService {
                                 }
                             }
 
+                            LocalDate localDate;
                             String regDate = content.select("li.sliceDot6").next().text();
                             DateTimeFormatter JEFormatter = DateTimeFormatter.ofPattern("yyyy.MM.dd");
                             localDate = LocalDate.parse("20" + regDate, JEFormatter);
@@ -153,10 +154,13 @@ public class NoticeService {
         return noticeRepo.findAll();
     }
 
-    public List<Notice> findByMajorAndType(String major, String type, Long NoticesperPage, Long page) {
+    public List<Notice> findByMajorAndType(String major, String type, Long NoticesperPage, Long page, String keyword) {
         List<Notice> notices;
         if (major == null && type == null){
-            notices = noticeRepo.findAll();
+            if (keyword == null)
+                notices = noticeRepo.findAll();
+            else
+                notices = noticeRepo.findByTitleContaining(keyword);
         }else if(major == null){
             notices = noticeRepo.findByType(type);
         }else if(type == null){
@@ -173,8 +177,8 @@ public class NoticeService {
 
     @Transactional(readOnly = true) // 읽기 전용 트랜잭션
     public List<Notice> findTop5ByView() {
-        //일주일동안
-        List<Notice> notices = noticeRepo.findTop5ByOrderByViewDescWhereByRegDate(nowDate.minusDays(7), nowDate);
+        //한달 동안
+        List<Notice> notices = noticeRepo.findTop5ByOrderByViewDescWhereByRegDate(nowDate.minusDays(30), nowDate);
         return notices.subList(0,5);
     }
 

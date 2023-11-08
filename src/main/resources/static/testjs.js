@@ -14,7 +14,7 @@ function post_clickLike(noticeId) {
 }
 
 function commentSave(noticeId) {
-    var comment = document.getElementById("comments").value;
+    let comment = document.getElementById("comments").value;
     fetch("http://localhost:8080/comments/save", {
         method: "POST",
         headers: {
@@ -31,7 +31,7 @@ function commentSave(noticeId) {
 }
 
 function commentModify(commentId) {
-    var comment = document.getElementById("comments").value;
+    let comment = document.getElementById("comments").value;
     fetch("http://localhost:8080/comments/modify", {
         method: "POST",
         headers: {

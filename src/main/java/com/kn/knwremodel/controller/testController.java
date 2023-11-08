@@ -31,14 +31,16 @@ public class testController {
     private final LikeService likeService;
       
     @GetMapping(value={"/"})
-    public String test(@RequestParam(defaultValue = "1") Long page, @RequestParam(required = false) String major, @RequestParam(required = false) String type, Model model) throws IOException{
+    public String test(@RequestParam(defaultValue = "1") Long page, @RequestParam(required = false) String major,
+                       @RequestParam(required = false) String type, @RequestParam(required = false) String keyword,
+                       Model model) throws IOException{
         UserDTO.Session currentuserDTO = (UserDTO.Session)httpSession.getAttribute("user");
 
         if(currentuserDTO != null) {
             model.addAttribute("currentuser", currentuserDTO);
         }
         Long noticesperPage = 15L;
-        List<Notice> notices = noticeS.findByMajorAndType(major, type, noticesperPage, page);
+        List<Notice> notices = noticeS.findByMajorAndType(major, type, noticesperPage, page, keyword);
         model.addAttribute("maxpage", noticeS.count()/noticesperPage + 1);      
         model.addAttribute("notices", notices);
         return "index";

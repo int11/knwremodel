@@ -13,6 +13,7 @@ public class NoticeDTO {
     public static class requestPage{
         private String major;
         private String type;
+        private String title;
         private Long count;
         private Long page;
     }
