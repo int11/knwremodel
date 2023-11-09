@@ -9,29 +9,44 @@
 </head>
 <body>
 <th:block th:if="${currentuser != null}">
-  <p th:text="${currentuser.name}"></p>
-  <p th:text="${currentuser.email}"></p>
-  <a th:href="@{logout}">로그아웃</a>
+    <p th:text="${currentuser.name}"></p>
+    <p th:text="${currentuser.email}"></p>
+    <a th:href="@{logout}">로그아웃</a>
 </th:block>
 <th:block th:if="${currentuser == null}">
-  <a th:href="@{mainlogin}">로그인페이지</a>
+    <a th:href="@{mainlogin}">로그인페이지</a>
 </th:block>
 
 <button value="/top5View" onclick="window.open(value,'_self');">조회수 Top5</button>
-<button value="/as" onclick="window.open(value,'_self');">학사 크롤링</button><br>
-
-<br>
-<button value="/"onclick="window.open(value,'_self');">전체</button>
-<button value="/?major=스포츠복지전공"onclick="window.open(value,'_self');">스포츠복지전공</button>
-<button value="/?major=유니버설아트디자인학과"onclick="window.open(value,'_self');">유니버설아트디자인학과</button>
-<button value="/?major=실버산업학과"onclick="window.open(value,'_self');">실버산업학과</button>
-<button value="/?major=사회복지학부"onclick="window.open(value,'_self');">사회복지학부</button>
+<button value="/as" onclick="window.open(value,'_self');">학사 크롤링</button>
 <br>
 
-<label  for="keyword">
-    <input id="keyword" type="text" placeholder="검색어를 입력하세요">
+<br>
+<button value="/" onclick="window.open(value,'_self');">전체</button>
+<button value="/?major=스포츠복지전공" onclick="window.open(value,'_self');">스포츠복지전공</button>
+<button value="/?major=유니버설아트디자인학과" onclick="window.open(value,'_self');">유니버설아트디자인학과</button>
+<button value="/?major=실버산업학과" onclick="window.open(value,'_self');">실버산업학과</button>
+<button value="/?major=사회복지학부" onclick="window.open(value,'_self');">사회복지학부</button>
+<br>
+
+<label for="keyword">
+    <input id="keyword" type="text" required placeholder="검색어를 입력하세요">
     <button onclick="window.open('/?keyword=' + document.getElementById('keyword').value,'_self');">검색</button>
 </label>
+
+<br>
+<table id="keywordRanking">
+    <tr>
+        <th>순위</th>
+        <th>검색어</th>
+        <th>검색수</th>
+    <tr th:each="i, iterStat : ${keywords}">
+        <td th:text="${iterStat.index + 1} + '위'"></td>
+        <td th:text="${i.keyword}"></td>
+        <td th:text="${i.counts}"></td>
+    </tr>
+</table>
+<br>
 
 <table>
     <tr>
@@ -48,8 +63,8 @@
         <th>img</th>
     </tr>
     <tr th:each="i : ${notices}">
-        
-        <td >
+
+        <td>
             <a th:href="@{read/{id}(id=${i.id})}" th:text="${i.id}"></a>
             <!-- noticedto 만들어서 notices 변수에 좋아요 눌렀는지 안눌렀는지 체크하는 boolen 넣어줘야함. -->
             <!-- <button th:text="${i.checkedLike} ? '좋아요 취소' : '좋아요 누르기' " th:onclick="post_clickLike([[${i.id}]])"></button> -->
@@ -74,6 +89,7 @@
         <a th:href="@{'/?page=' + ${i}}" th:text="${i}">1</a>
     </li>
 </ul>
+
 
 </body>
 </html>

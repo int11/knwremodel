@@ -3,6 +3,7 @@ package com.kn.knwremodel.controller;
 import com.kn.knwremodel.dto.NoticeDTO;
 import com.kn.knwremodel.dto.UserDTO;
 import com.kn.knwremodel.entity.Comment;
+import com.kn.knwremodel.entity.Keyword;
 import com.kn.knwremodel.entity.Notice;
 import com.kn.knwremodel.entity.haksa;
 import com.kn.knwremodel.service.haksaService;
@@ -11,11 +12,16 @@ import com.kn.knwremodel.service.LikeService;
 import com.kn.knwremodel.service.NoticeService;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
+
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
+
 
 import java.io.IOException;
 import java.util.Comparator;
@@ -29,7 +35,7 @@ public class testController {
     private final NoticeService noticeS;
     private final HttpSession httpSession;
     private final LikeService likeService;
-      
+
     @GetMapping(value={"/"})
     public String test(@RequestParam(defaultValue = "1") Long page, @RequestParam(required = false) String major,
                        @RequestParam(required = false) String type, @RequestParam(required = false) String keyword,
@@ -40,9 +46,13 @@ public class testController {
             model.addAttribute("currentuser", currentuserDTO);
         }
         Long noticesperPage = 15L;
-        List<Notice> notices = noticeS.findByMajorAndType(major, type, noticesperPage, page, keyword);
-        model.addAttribute("maxpage", noticeS.count()/noticesperPage + 1);      
+        List<Notice> notices = noticeS.findByMajorAndTypeOrKeyword(major, type, noticesperPage, page, keyword);
+        List<Keyword> keywords = noticeS.findTop5ByKeyword(keyword);
+
+        model.addAttribute("maxpage", noticeS.count()/noticesperPage + 1);
         model.addAttribute("notices", notices);
+        model.addAttribute("keywords", keywords);
+
         return "index";
     }
 
@@ -71,7 +81,7 @@ public class testController {
         Notice notice = noticeS.findById(noticeid);
         List<Comment> comments = notice.getComments();
         boolean isCheckedLike;
-        
+
         model.addAttribute("likesize", notice.getLikes().size());
         model.addAttribute("notice", notice);
 
@@ -87,8 +97,8 @@ public class testController {
     }
 
     @GetMapping("/top5View")
-    public String getTop5View(Model model) {
-        List<Notice> topNotices = noticeS.findTop5ByView();
+    public String getTop5View(Model model, @PageableDefault(size = 5, sort = "view", direction = Sort.Direction.DESC) Pageable pageable) {
+        List<Notice> topNotices = noticeS.findTop5ByView(pageable);
 
         topNotices.sort(Comparator.comparing(Notice::getView).reversed()
                 .thenComparing(Notice::getCreateDate, Comparator.reverseOrder()));

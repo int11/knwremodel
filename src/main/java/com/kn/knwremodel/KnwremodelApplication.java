@@ -50,4 +50,10 @@ public class KnwremodelApplication {
 		haksaS.crawlAndSaveData();
 		System.out.println("Haksa Data Updated every 6 months.");
 	}
+
+	@Scheduled(fixedRate = 1000 * 60 * 60 *24)
+	public void updateKeywordRanking() {
+		noticeS.resetRanking();
+		System.out.println("Keyword Ranking has been reset.");
+	}
 }

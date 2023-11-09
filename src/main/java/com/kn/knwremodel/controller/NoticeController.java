@@ -22,7 +22,7 @@ public class NoticeController {
 
     @PostMapping("/requestPage")
     public ResponseEntity requestPageNotice(@RequestBody NoticeDTO.requestPage noticedto) {
-        List<Notice> notices = noticeS.findByMajorAndType(noticedto.getMajor(), noticedto.getType(), noticedto.getCount(), noticedto.getPage(), noticedto.getTitle());
+        List<Notice> notices = noticeS.findByMajorAndTypeOrKeyword(noticedto.getMajor(), noticedto.getType(), noticedto.getCount(), noticedto.getPage(), noticedto.getTitle());
         List<NoticeDTO.responsePage> result = notices.stream().map(NoticeDTO.responsePage::new).collect(Collectors.toList());
         return ResponseEntity.ok(result);
     }

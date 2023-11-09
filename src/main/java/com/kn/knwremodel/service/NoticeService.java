@@ -1,8 +1,10 @@
 package com.kn.knwremodel.service;
 
 import com.kn.knwremodel.entity.College;
+import com.kn.knwremodel.entity.Keyword;
 import com.kn.knwremodel.entity.Notice;
 import com.kn.knwremodel.repository.CollegeRepository;
+import com.kn.knwremodel.repository.KeywordRepository;
 import com.kn.knwremodel.repository.NoticeRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
@@ -13,6 +15,7 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -28,10 +31,13 @@ import java.util.List;
 public class NoticeService {
     private final NoticeRepository noticeRepo;
     private final CollegeRepository CollegeRepo;
+    private final KeywordRepository keywordRepo;
+
     private int maxPage = 1; //크롤링할 공지사항 페이지의 수
 
     @Setter
-    private LocalDate  nowDate;
+    private LocalDate nowDate;
+
     @Transactional
     public void updata() {
         List<Notice> notices = noticeRepo.findAll();
@@ -56,12 +62,12 @@ public class NoticeService {
                             Long id = Long.parseLong(columnNumber);
                             Elements titlElements = content.select("a");
 
-                            if (noticeRepo.existsByBoardId(id)){
+                            if (noticeRepo.existsByBoardId(id)) {
                                 break loopout;
                             }
 
                             //게시물 내용, 사진 크롤링
-                            JSONObject jsonObject = (JSONObject)parser.parse(titlElements.attr("data-params"));
+                            JSONObject jsonObject = (JSONObject) parser.parse(titlElements.attr("data-params"));
                             String encMenuSeq = (String) jsonObject.get("encMenuSeq");
                             String encMenuBoardSeq = (String) jsonObject.get("encMenuBoardSeq");
 
@@ -76,7 +82,7 @@ public class NoticeService {
                             String body = "";
                             for (Element i : articleContents.select("li p:not([style*='display:none'])")) {
                                 String temp = i.text();
-                                if (temp != ""){
+                                if (temp != "") {
                                     body += temp;
                                     body += "\n";
                                 }
@@ -90,9 +96,9 @@ public class NoticeService {
                             for (Element i : articleContents.select("img")) {
                                 String temp = i.attr("abs:src");
                                 // img tag inline data
-                                if (temp.substring(0, 30).contains("data:image")){
+                                if (temp.substring(0, 30).contains("data:image")) {
                                     continue;
-                                }else{
+                                } else {
                                     img += temp + ";";
                                 }
                             }
@@ -146,6 +152,7 @@ public class NoticeService {
             return boardId;
         }
     }
+
     public Notice findById(Long id) {
         return noticeRepo.findById(id).orElseThrow(() -> new IllegalArgumentException("not found: " + id));
     }
@@ -154,32 +161,53 @@ public class NoticeService {
         return noticeRepo.findAll();
     }
 
-    public List<Notice> findByMajorAndType(String major, String type, Long NoticesperPage, Long page, String keyword) {
+    @Transactional
+    public List<Notice> findByMajorAndTypeOrKeyword(String major, String type, Long NoticesperPage, Long page, String keyword) {
         List<Notice> notices;
-        if (major == null && type == null){
+        if (major == null && type == null) {
             if (keyword == null)
                 notices = noticeRepo.findAll();
             else
                 notices = noticeRepo.findByTitleContaining(keyword);
-        }else if(major == null){
+        } else if (major == null) {
             notices = noticeRepo.findByType(type);
-        }else if(type == null){
+        } else if (type == null) {
             notices = noticeRepo.findByMajor(major);
-        }else{
+        } else {
             notices = noticeRepo.findByMajorAndType(major, type);
         }
-
         Long e = Math.min(NoticesperPage * page, notices.size());
-
         notices = notices.subList((int) (NoticesperPage * (page - 1)), e.intValue());
         return notices;
     }
 
+    @Transactional
+    public List<Keyword> findTop5ByKeyword(String keyword) {
+        System.out.println("키워드 값은?" + keyword);
+        List<Keyword> keywords;
+        if (keyword != null)
+            if (!keyword.isEmpty()) {
+                Keyword onKeyword = keywordRepo.findByKeyword(keyword);
+                if (onKeyword == null) {
+                    Keyword word = Keyword.builder().keyword(keyword).counts(1L).build();
+                    keywordRepo.save(word);
+                } else
+                    onKeyword.updateKeywordCount(onKeyword.getCounts() + 1);
+            }
+        keywords = keywordRepo.findTop5ByOrderByCountsDesc();
+        return keywords;
+    }
+
+    @Transactional
+    public void resetRanking() {
+        keywordRepo.deleteAllInBatch();
+    }
+
     @Transactional(readOnly = true) // 읽기 전용 트랜잭션
-    public List<Notice> findTop5ByView() {
+    public List<Notice> findTop5ByView(Pageable pageable) {
         //한달 동안
-        List<Notice> notices = noticeRepo.findTop5ByOrderByViewDescWhereByRegDate(nowDate.minusDays(30), nowDate);
-        return notices.subList(0,5);
+        List<Notice> notices = noticeRepo.findByOrderByViewDescWhereByRegDate(nowDate.minusDays(30), nowDate, pageable);
+        return notices;
     }
 
     public List<Notice> findTopLikesByMajor(String major) {
