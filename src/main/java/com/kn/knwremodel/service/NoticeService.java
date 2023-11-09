@@ -183,7 +183,6 @@ public class NoticeService {
 
     @Transactional
     public List<Keyword> findTop5ByKeyword(String keyword) {
-        System.out.println("키워드 값은?" + keyword);
         List<Keyword> keywords;
         if (keyword != null)
             if (!keyword.isEmpty()) {
