@@ -5,8 +5,9 @@ import com.kn.knwremodel.dto.UserDTO;
 import com.kn.knwremodel.entity.Comment;
 import com.kn.knwremodel.entity.Keyword;
 import com.kn.knwremodel.entity.Notice;
-import com.kn.knwremodel.entity.haksa;
-import com.kn.knwremodel.service.haksaService;
+import com.kn.knwremodel.entity.Haksa;
+import com.kn.knwremodel.service.HaksaService;
+import com.kn.knwremodel.service.CollegeService;
 import com.kn.knwremodel.service.CommentService;
 import com.kn.knwremodel.service.LikeService;
 import com.kn.knwremodel.service.NoticeService;
@@ -31,8 +32,9 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @Controller
 public class testController {
-    private final haksaService haksaS;
+    private final HaksaService haksaS;
     private final NoticeService noticeS;
+    private final CollegeService collegeS;
     private final HttpSession httpSession;
     private final LikeService likeService;
 
@@ -45,12 +47,21 @@ public class testController {
         if(currentuserDTO != null) {
             model.addAttribute("currentuser", currentuserDTO);
         }
+        if (major == ""){
+            major = null;
+        }
+        if (keyword == ""){
+            keyword = null;
+        }
         Long noticesperPage = 15L;
-        List<Notice> notices = noticeS.findByMajorAndTypeOrKeyword(major, type, noticesperPage, page, keyword);
+        List<Notice> notices = noticeS.findByMajorAndTypeOrKeyword(major, type, keyword);
         List<Keyword> keywords = noticeS.findTop5ByKeyword(keyword);
 
-        model.addAttribute("maxpage", noticeS.count()/noticesperPage + 1);
-        model.addAttribute("notices", notices);
+        Long e = Math.min(noticesperPage * page, notices.size());
+        
+        model.addAttribute("majorlist",  collegeS.findAllMajor());
+        model.addAttribute("maxpage", notices.size()/noticesperPage + 1);
+        model.addAttribute("notices", notices.subList((int) (noticesperPage * (page - 1)), e.intValue()));
         model.addAttribute("keywords", keywords);
 
         return "index";
@@ -58,7 +69,7 @@ public class testController {
 
     @GetMapping(value="/as")
     public String test111(Model model) throws IOException{
-        List<haksa> haksas = haksaS.findAll();
+        List<Haksa> haksas = haksaS.findAll();
         model.addAttribute("test", haksas);
 
         return "testhaksa";
@@ -106,6 +117,4 @@ public class testController {
         model.addAttribute("topNotices", topNotices);
         return "top5View";
     }
-
-
 }

@@ -19,8 +19,9 @@ import java.util.Collections;
 
 
 // service call by SecurityConfig.java. checking "oauth2Login.userInfoEndpoint.userService(OAuthService)" function
-@RequiredArgsConstructor
+
 @Service
+@RequiredArgsConstructor
 public class OAuthService implements OAuth2UserService<OAuth2UserRequest, OAuth2User> {
  
     private final UserRepository userRepository;

@@ -7,7 +7,11 @@
     <link rel="stylesheet" th:href="@{/style.css}">
     <script th:src="@{/testjs.js}"></script>
 </head>
+
+
 <body>
+
+
 <th:block th:if="${currentuser != null}">
     <p th:text="${currentuser.name}"></p>
     <p th:text="${currentuser.email}"></p>
@@ -17,24 +21,50 @@
     <a th:href="@{mainlogin}">로그인페이지</a>
 </th:block>
 
+<br>
+
 <button value="/top5View" onclick="window.open(value,'_self');">조회수 Top5</button>
 <button value="/as" onclick="window.open(value,'_self');">학사 크롤링</button>
-<br>
 
 <br>
-<button value="/" onclick="window.open(value,'_self');">전체</button>
-<button value="/?major=스포츠복지전공" onclick="window.open(value,'_self');">스포츠복지전공</button>
-<button value="/?major=유니버설아트디자인학과" onclick="window.open(value,'_self');">유니버설아트디자인학과</button>
-<button value="/?major=실버산업학과" onclick="window.open(value,'_self');">실버산업학과</button>
-<button value="/?major=사회복지학부" onclick="window.open(value,'_self');">사회복지학부</button>
-<br>
 
+<select id="MajorDropdown">
+    <option value="">전체</option>
+    <option th:each="item : ${majorlist}" th:value="${item}" th:text="${item}">Option Text</option>
+</select>
 <label for="keyword">
     <input id="keyword" type="text" required placeholder="검색어를 입력하세요">
-    <button onclick="window.open('/?keyword=' + document.getElementById('keyword').value,'_self');">검색</button>
+    <button onclick="window.open('/?major=' + document.getElementById('MajorDropdown').value + '&keyword=' + document.getElementById('keyword').value,'_self');">검색</button>
 </label>
 
 <br>
+<table>
+    <tr>
+        <th>Ranking</th>
+        <th>id</th>
+        <th>boardid</th>
+        <th>title</th>
+        <th>type</th>
+        <th>major</th>
+        <th>writer</th>
+        <th>regdate</th>
+        <th>view</th>
+        <th>likeCount</th>
+    </tr>
+    <tr th:each="i, iterStat : ${topNotices}">
+        <td th:text="${iterStat.index + 1} + '위'"></td>
+        <td th:text="${i.id}"></td>
+        <td th:text="${i.boardId}"></td>
+        <td th:text="${i.title}"></td>
+        <td th:text="${i.type}"></td>
+        <td th:text="${i.major}"></td>
+        <td th:text="${i.writer}"></td>
+        <td th:text="${i.regdate}"></td>
+        <td th:text="${i.view}"></td>
+        <td th:text="${i.likeCount}"></td>
+    </tr>
+</table>
+
 <table id="keywordRanking">
     <tr>
         <th>순위</th>

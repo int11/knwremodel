@@ -26,8 +26,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-@RequiredArgsConstructor
+
 @Service
+@RequiredArgsConstructor
 public class NoticeService {
     private final NoticeRepository noticeRepo;
     private final CollegeRepository CollegeRepo;
@@ -39,7 +40,7 @@ public class NoticeService {
     private LocalDate nowDate;
 
     @Transactional
-    public void updata() {
+    public void update() {
         List<Notice> notices = noticeRepo.findAll();
         JSONParser parser = new JSONParser();
 
@@ -103,10 +104,9 @@ public class NoticeService {
                                 }
                             }
 
-                            LocalDate localDate;
                             String regDate = content.select("li.sliceDot6").next().text();
                             DateTimeFormatter JEFormatter = DateTimeFormatter.ofPattern("yyyy.MM.dd");
-                            localDate = LocalDate.parse("20" + regDate, JEFormatter);
+                            LocalDate localDate = LocalDate.parse("20" + regDate, JEFormatter);
 
 
                             notices.add(new Notice(id,
@@ -117,8 +117,7 @@ public class NoticeService {
                                     localDate,
                                     Integer.parseInt(content.select("li.sliceDot6").next().next().text().replace(",", "")),
                                     body,
-                                    img,
-                                    0L));
+                                    img));
                         }
                     }
                 }
@@ -162,7 +161,7 @@ public class NoticeService {
     }
 
     @Transactional
-    public List<Notice> findByMajorAndTypeOrKeyword(String major, String type, Long NoticesperPage, Long page, String keyword) {
+    public List<Notice> findByMajorAndTypeOrKeyword(String major, String type, String keyword) {
         List<Notice> notices;
         if (major == null && type == null) {
             if (keyword == null)
@@ -176,8 +175,6 @@ public class NoticeService {
         } else {
             notices = noticeRepo.findByMajorAndType(major, type);
         }
-        Long e = Math.min(NoticesperPage * page, notices.size());
-        notices = notices.subList((int) (NoticesperPage * (page - 1)), e.intValue());
         return notices;
     }
 

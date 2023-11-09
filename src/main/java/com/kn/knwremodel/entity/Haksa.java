@@ -10,7 +10,7 @@ import lombok.ToString;
 @Entity
 @Getter
 @ToString
-public class haksa {
+public class Haksa {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

@@ -58,7 +58,7 @@ public class Notice {
 
     @Builder
     public Notice(Long boardId, String title, String type, String major, String writer,
-                  LocalDate regdate, int view, String body, String img, Long likeCount) {
+                  LocalDate regdate, int view, String body, String img) {
         this.boardId = boardId;
         this.title = title;
         this.type = type;
@@ -69,7 +69,7 @@ public class Notice {
         this.body = body;
         this.img = img;
         this.comments = getComments();
-        this.likeCount = likeCount;
+        this.likeCount = 0L;
     }
 
     public void updateLikeCount(Long likeCount) {

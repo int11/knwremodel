@@ -14,8 +14,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import org.springframework.stereotype.Service;
 
-@RequiredArgsConstructor
+
 @Service
+@RequiredArgsConstructor
 public class LikeService {
     private final LikeRepository likeRepository;
     private final NoticeRepository noticeRepository;
