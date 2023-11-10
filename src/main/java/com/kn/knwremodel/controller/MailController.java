@@ -1,17 +1,14 @@
 package com.kn.knwremodel.controller;
 
 import com.kn.knwremodel.entity.Role;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-
 import com.kn.knwremodel.service.AuthChangeGuestUserService;
 import com.kn.knwremodel.service.MailService;
-
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.*;
 import jakarta.servlet.http.HttpSession;
-
-import org.springframework.web.bind.annotation.ResponseBody;
+import java.util.Timer;
+import java.util.TimerTask;
 
 @Controller
 @RequiredArgsConstructor
@@ -20,28 +17,75 @@ public class MailController {
     private final AuthChangeGuestUserService authChangeGuestUserService;
     private final HttpSession httpSession;
 
-    @GetMapping("/mailaccess")
-    public String MailPage() {
-        return "index";
-    }
+    private Timer expirationTimer;
 
     @ResponseBody
     @PostMapping("/mail")
-    public String MailSend(String mail) {
+    public synchronized String MailSend(String mail) {
         int number = mailService.sendMail(mail);
-        httpSession.setAttribute("authNumber", number); // 생성된 인증 번호를 세션에 저장
+        long expirationTime = System.currentTimeMillis() + 90 * 1000; // 현재 시간 + 90초
+        httpSession.setAttribute("authNumber", new AuthInfo(number, expirationTime));
+
+        // 타이머를 설정하여 1분 30초 후에 인증 번호를 만료시킴
+        scheduleExpirationTimer(90 * 1000, number);
+
         return "인증번호 발송";
     }
 
     @ResponseBody
     @PostMapping("/confirmNumber")
-    public String ConfirmNumber(String enteredNumber) {
-        int generatedNumber = Integer.parseInt(httpSession.getAttribute("authNumber").toString());
-        if (generatedNumber == Integer.parseInt(enteredNumber)) {
-            authChangeGuestUserService.updateUserRole(Role.USER);
-            return "이메일 인증이 성공했습니다.";
+    public synchronized String ConfirmNumber(String enteredNumber) {
+        AuthInfo authInfo = (AuthInfo) httpSession.getAttribute("authNumber");
+
+        // 만료 여부를 체크하고 만료된 경우에만 제거
+        if (authInfo != null && authInfo.getNumber() == Integer.parseInt(enteredNumber)) {
+            if (authInfo.isValid()) {
+                authChangeGuestUserService.updateUserRole(Role.USER);
+                cancelExpirationTimer(); // 인증이 성공하면 타이머를 취소
+                httpSession.removeAttribute("authNumber");
+                return "이메일 인증이 성공했습니다.";
+            } else {
+                httpSession.removeAttribute("authNumber");
+                return "인증 번호가 만료되었습니다.";
+            }
         } else {
-            return "인증 번호가 다릅니다.";
+            return "인증 번호가 다르거나 만료되었습니다.";
+        }
+    }
+
+    private void scheduleExpirationTimer(long delay, int number) {
+        expirationTimer = new Timer();
+        expirationTimer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                httpSession.removeAttribute("authNumber");
+                expirationTimer.cancel(); // 작업 완료 후 타이머 종료
+            }
+        }, delay);
+    }
+
+    private void cancelExpirationTimer() {
+        if (expirationTimer != null) {
+            expirationTimer.cancel();
+        }
+    }
+
+    private static class AuthInfo {
+        private final int number;
+        private final long expirationTime;
+
+        public AuthInfo(int number, long expirationTime) {
+            this.number = number;
+            this.expirationTime = expirationTime;
+        }
+
+        public int getNumber() {
+            return number;
+        }
+
+        public boolean isValid() {
+            return System.currentTimeMillis() <= expirationTime;
         }
     }
 }
+
