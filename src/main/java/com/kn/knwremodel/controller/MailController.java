@@ -17,8 +17,9 @@ public class MailController {
     private final AuthChangeGuestUserService authChangeGuestUserService;
     private final HttpSession httpSession;
 
-    private Timer expirationTimer;
+    private Timer expirationTimer; // 인증 번호 만료를 위한 타이머
 
+    // 인증 번호 발송
     @ResponseBody
     @PostMapping("/mail")
     public synchronized String MailSend(String mail) {
@@ -32,6 +33,7 @@ public class MailController {
         return "인증번호 발송";
     }
 
+    // 인증 번호 확인
     @ResponseBody
     @PostMapping("/confirmNumber")
     public synchronized String ConfirmNumber(String enteredNumber) {
@@ -43,16 +45,17 @@ public class MailController {
                 authChangeGuestUserService.updateUserRole(Role.USER);
                 cancelExpirationTimer(); // 인증이 성공하면 타이머를 취소
                 httpSession.removeAttribute("authNumber");
-                return "이메일 인증이 성공했습니다.";
+                return "이메일 인증이 성공했습니다. 1분 30초 안에 입력하시오.";
             } else {
                 httpSession.removeAttribute("authNumber");
-                return "인증 번호가 만료되었습니다.";
+                return "인증 번호가 만료되었습니다. 다시 시도해주세요";
             }
         } else {
             return "인증 번호가 다르거나 만료되었습니다.";
         }
     }
 
+    // 타이머를 설정하여 주어진 시간(delay)이 경과하면 인증 번호를 만료시킴
     private void scheduleExpirationTimer(long delay, int number) {
         expirationTimer = new Timer();
         expirationTimer.schedule(new TimerTask() {
@@ -64,12 +67,14 @@ public class MailController {
         }, delay);
     }
 
+    // 타이머를 취소
     private void cancelExpirationTimer() {
         if (expirationTimer != null) {
             expirationTimer.cancel();
         }
     }
 
+    // 인증 번호와 만료 시간을 저장하는 내부 클래스
     private static class AuthInfo {
         private final int number;
         private final long expirationTime;
@@ -88,4 +93,3 @@ public class MailController {
         }
     }
 }
-
