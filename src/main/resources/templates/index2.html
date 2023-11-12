@@ -20,11 +20,13 @@
         <th>regdate</th>
         <th>view</th>
         <th>likeCount</th>
-        <th>body</th>
-        <th>img</th>
+
     </tr>
     <tr th:each="i : ${notice}">
-        <td th:text="${i.dbid}"></td>
+        <td >
+            <p th:text="${i.dbid}"></p>
+            <button th:text="${i.checkLike} ? '좋아요 취소' : '좋아요' " th:onclick="post_clickLike([[${i.dbid}]])"></button>
+        </td>
         <td th:text="${i.boardId}"></td>
         <td th:style="${'min-width:200px'}" th:text="${i.title}"></td>
         <td th:text="${i.type}"></td>
@@ -33,7 +35,16 @@
         <td th:text="${i.regdate}"></td>
         <td th:text="${i.view}"></td>
         <td th:text="${i.likeCount}"></td>
-        <td th:style="${'min-width:800px'}" th:text="${i.body}"></td>
+    </tr>
+</table>
+
+<table th:style="${'min-width:50px'}">
+    <tr>
+        <th>body</th>
+        <th>img</th>
+    </tr>
+    <tr th:each="i : ${notice}">
+        <td th:text="${i.body}"></td>
         <td th:text="${i.img}"></td>
     </tr>
 </table>
@@ -49,8 +60,6 @@
     </tr>
 </table>
 
-<button th:text="${notice.checkLike} ? '좋아요 취소' : '좋아요' "
-        th:onclick="post_clickLike([[${notice.dbid}]])"></button>
 <br>
 <label for="comments">
     <textarea placeholder="댓글을 입력하세요" id="comments" cols="20" rows="5"></textarea>
