@@ -14,7 +14,7 @@ public class pageDTO<T> {
         this.page = page;
 
         Long e = Math.min(perPage * page, data.size());
-        this.pageSize = data.size()/perPage + 1;
+        this.pageSize = (long)Math.ceil((float)data.size()/perPage);
         this.data = data.subList((int) (perPage * (page - 1)), e.intValue());
     }
 }

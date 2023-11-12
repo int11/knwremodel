@@ -14,9 +14,7 @@ import com.kn.knwremodel.entity.Notice;
 
 @Repository
 public interface NoticeRepository extends JpaRepository<Notice, Long> {
-    List<Notice> findByMajorContaining(String major);
-    List<Notice> findByMajor(String major);
-    List<Notice> findByType(String type);
+    List<Notice> findByMajorContainingAndTypeContainingAndTitleContaining(String major, String type, String title);
     boolean existsByBoardId(Long board_id);
     boolean existsByMajor(String major);
 
@@ -25,9 +23,6 @@ public interface NoticeRepository extends JpaRepository<Notice, Long> {
 
     @Query("SELECT n FROM Notice n WHERE n.regdate >= :beforeDate AND n.regdate <= :nowDate")
     List<Notice> findByOrderByViewDescWhereByRegDate(@Param("beforeDate") LocalDate beforeDate, @Param("nowDate") LocalDate nowDate, Pageable pageable);
-    List<Notice> findByMajorAndType(String major, String type);
     List<Notice> findTop5ByMajorOrderByLikeCountDesc(String major);
-
-    List<Notice> findByTitleContaining(String title);
     long count();
 }

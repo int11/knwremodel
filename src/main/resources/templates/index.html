@@ -34,7 +34,7 @@
 </select>
 <label for="keyword">
     <input id="keyword" type="text" required placeholder="검색어를 입력하세요">
-    <button onclick="window.open('/?major=' + document.getElementById('MajorDropdown').value + '&keyword=' + document.getElementById('keyword').value,'_self');">검색</button>
+    <button onclick="mysearch();">검색</button>
 </label>
 
 <br>
@@ -64,7 +64,7 @@
         <th>view</th>
         <th>likeCount</th>
     </tr>
-    <tr th:each="i : ${data}">
+    <tr th:each="i : ${page.data}">
 
         <td>
             <a th:href="@{read/{id}(id=${i.dbid})}" th:text="${i.dbid}"></a>
@@ -83,8 +83,8 @@
 
 <ul style="list-style:none;">
     <li style="float: left;">page</li>
-    <li th:style="${'float: left; margin: 0px 5px;'}" th:each="i : ${#numbers.sequence(1, pagesize)}">
-        <a th:href="@{'/?page=' + ${i}}" th:text="${i}">1</a>
+    <li th:style="${'float: left; margin: 0px 5px;'}" th:each="i : ${#numbers.sequence(1, page.pageSize)}">
+        <a href="javascript:void(0)" th:onclick="myopen([[${i}]]);" th:text="${i}">1</a>
     </li>
 </ul>
 

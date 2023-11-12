@@ -51,22 +51,15 @@ public class testController {
         if(currentuserDTO != null) {
             model.addAttribute("currentuser", currentuserDTO);
         }
-        if (major == ""){
-            major = null;
-        }
-        if (keyword == ""){
-            keyword = null;
-        }
 
-        List<Notice> notices = noticeS.findByMajorAndTypeOrKeyword(major, type, keyword);
+        List<Notice> notices = noticeS.search(major, type, keyword);
         List<NoticeDTO.responsePage> result = notices.stream().map(notice -> new NoticeDTO.responsePage(likeS, notice)).collect(Collectors.toList());
         pageDTO<NoticeDTO.responsePage> pagedto = new pageDTO<>(result, page, perPage);
 
         List<Keyword> keywords = noticeS.findTop5ByKeyword(keyword);
         
         model.addAttribute("majorlist",  collegeS.findAllMajor());
-        model.addAttribute("pagesize", pagedto.getPageSize());
-        model.addAttribute("data", pagedto.getData());
+        model.addAttribute("page", pagedto);
         model.addAttribute("keywords", keywords);
 
         return "index";

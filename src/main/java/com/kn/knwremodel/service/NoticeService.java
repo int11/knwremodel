@@ -161,21 +161,11 @@ public class NoticeService {
     }
 
     @Transactional
-    public List<Notice> findByMajorAndTypeOrKeyword(String major, String type, String keyword) {
-        List<Notice> notices;
-        if (major == null && type == null) {
-            if (keyword == null)
-                notices = noticeRepo.findAll();
-            else
-                notices = noticeRepo.findByTitleContaining(keyword);
-        } else if (major == null) {
-            notices = noticeRepo.findByType(type);
-        } else if (type == null) {
-            notices = noticeRepo.findByMajor(major);
-        } else {
-            notices = noticeRepo.findByMajorAndType(major, type);
-        }
-        return notices;
+    public List<Notice> search(String major, String type, String keyword) {
+        major = (major == null) ? "" : major;
+        type = (type == null) ? "" : type;
+        keyword = (keyword == null) ? "" : keyword;
+        return noticeRepo.findByMajorContainingAndTypeContainingAndTitleContaining(major, type, keyword);
     }
 
     @Transactional
