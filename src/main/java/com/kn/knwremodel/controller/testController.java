@@ -62,7 +62,7 @@ public class testController {
         model.addAttribute("page", pagedto);
         model.addAttribute("keywords", keywords);
 
-        return "index";
+        return "mainpage";
     }
 
     @GetMapping("/read/{noticeid}")
@@ -75,15 +75,15 @@ public class testController {
             model.addAttribute("comments", comments);
         }
 
-        return "index2";
+        return "noticebody";
     }
 
-    @GetMapping(value="/as")
+    @GetMapping(value="/haksa")
     public String test111(Model model) throws IOException{
         List<Haksa> haksas = haksaS.findAll();
         model.addAttribute("test", haksas);
 
-        return "testhaksa";
+        return "haksa";
     }
 
     @GetMapping("/mainlogin")
