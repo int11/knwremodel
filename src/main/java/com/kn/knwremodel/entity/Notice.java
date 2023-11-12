@@ -26,10 +26,10 @@ public class Notice {
     private String title;
 
     @Column(nullable = false)
-    private String type;
+    private String major;
 
     @Column(nullable = false)
-    private String major;
+    private String type;
 
     @Column(nullable = false)
     private String writer;
@@ -38,7 +38,7 @@ public class Notice {
     private LocalDate regdate;
 
     @Column(nullable = false)
-    private int view;
+    private Long view;
 
     @Column(columnDefinition = "TEXT", nullable = true)
     private String body;
@@ -58,7 +58,7 @@ public class Notice {
 
     @Builder
     public Notice(Long boardId, String title, String type, String major, String writer,
-                  LocalDate regdate, int view, String body, String img) {
+                  LocalDate regdate, Long view, String body, String img) {
         this.boardId = boardId;
         this.title = title;
         this.type = type;

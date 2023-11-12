@@ -1,7 +1,9 @@
 package com.kn.knwremodel.controller;
 
+import com.kn.knwremodel.dto.CommentDTO;
 import com.kn.knwremodel.dto.NoticeDTO;
 import com.kn.knwremodel.dto.UserDTO;
+import com.kn.knwremodel.dto.pageDTO;
 import com.kn.knwremodel.entity.Comment;
 import com.kn.knwremodel.entity.Keyword;
 import com.kn.knwremodel.entity.Notice;
@@ -35,12 +37,14 @@ public class testController {
     private final HaksaService haksaS;
     private final NoticeService noticeS;
     private final CollegeService collegeS;
+    private final LikeService likeS;
     private final HttpSession httpSession;
-    private final LikeService likeService;
+    
 
     @GetMapping(value={"/"})
-    public String test(@RequestParam(defaultValue = "1") Long page, @RequestParam(required = false) String major,
-                       @RequestParam(required = false) String type, @RequestParam(required = false) String keyword,
+    public String test(@RequestParam(defaultValue = "1") Long page, @RequestParam(defaultValue = "20") Long perPage,
+                       @RequestParam(required = false) String major, @RequestParam(required = false) String type,
+                       @RequestParam(required = false) String keyword,
                        Model model) throws IOException{
         UserDTO.Session currentuserDTO = (UserDTO.Session)httpSession.getAttribute("user");
 
@@ -53,18 +57,32 @@ public class testController {
         if (keyword == ""){
             keyword = null;
         }
-        Long noticesperPage = 15L;
-        List<Notice> notices = noticeS.findByMajorAndTypeOrKeyword(major, type, keyword);
-        List<Keyword> keywords = noticeS.findTop5ByKeyword(keyword);
 
-        Long e = Math.min(noticesperPage * page, notices.size());
+        List<Notice> notices = noticeS.findByMajorAndTypeOrKeyword(major, type, keyword);
+        List<NoticeDTO.responsePage> result = notices.stream().map(notice -> new NoticeDTO.responsePage(likeS, notice)).collect(Collectors.toList());
+        pageDTO<NoticeDTO.responsePage> pagedto = new pageDTO<>(result, page, perPage);
+
+        List<Keyword> keywords = noticeS.findTop5ByKeyword(keyword);
         
         model.addAttribute("majorlist",  collegeS.findAllMajor());
-        model.addAttribute("maxpage", notices.size()/noticesperPage + 1);
-        model.addAttribute("notices", notices.subList((int) (noticesperPage * (page - 1)), e.intValue()));
+        model.addAttribute("pagesize", pagedto.getPageSize());
+        model.addAttribute("data", pagedto.getData());
         model.addAttribute("keywords", keywords);
 
         return "index";
+    }
+
+    @GetMapping("/read/{noticeid}")
+    public String findNotice(@PathVariable Long noticeid, Model model) {
+        NoticeDTO.responsebody notice = new NoticeDTO.responsebody(likeS, noticeS.findById(noticeid));
+        List<CommentDTO.Comment> comments = notice.getComments();
+
+        model.addAttribute("notice", notice);
+        if (comments != null && !comments.isEmpty()) {
+            model.addAttribute("comments", comments);
+        }
+
+        return "index2";
     }
 
     @GetMapping(value="/as")
@@ -85,26 +103,6 @@ public class testController {
     public String logout() {
         httpSession.invalidate();
         return "redirect:/";
-    }
-
-    @GetMapping("/read/{noticeid}")
-    public String findNotice(@PathVariable Long noticeid, Model model) {
-        Notice notice = noticeS.findById(noticeid);
-        List<Comment> comments = notice.getComments();
-        boolean isCheckedLike;
-
-        model.addAttribute("likesize", notice.getLikes().size());
-        model.addAttribute("notice", notice);
-
-        if (comments != null && !comments.isEmpty()) {
-            model.addAttribute("comments", comments);
-        }
-
-        isCheckedLike = likeService.checkedLike(noticeid);
-
-
-        model.addAttribute("like", isCheckedLike);
-        return "index2";
     }
 
     @GetMapping("/top5View")

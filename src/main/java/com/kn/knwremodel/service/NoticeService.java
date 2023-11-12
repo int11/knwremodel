@@ -115,7 +115,7 @@ public class NoticeService {
                                     e.getMajor(),
                                     content.select("li.sliceDot6").text(),
                                     localDate,
-                                    Integer.parseInt(content.select("li.sliceDot6").next().next().text().replace(",", "")),
+                                    Long.parseLong(content.select("li.sliceDot6").next().next().text().replace(",", "")),
                                     body,
                                     img));
                         }

@@ -38,32 +38,6 @@
 </label>
 
 <br>
-<table>
-    <tr>
-        <th>Ranking</th>
-        <th>id</th>
-        <th>boardid</th>
-        <th>title</th>
-        <th>type</th>
-        <th>major</th>
-        <th>writer</th>
-        <th>regdate</th>
-        <th>view</th>
-        <th>likeCount</th>
-    </tr>
-    <tr th:each="i, iterStat : ${topNotices}">
-        <td th:text="${iterStat.index + 1} + '위'"></td>
-        <td th:text="${i.id}"></td>
-        <td th:text="${i.boardId}"></td>
-        <td th:text="${i.title}"></td>
-        <td th:text="${i.type}"></td>
-        <td th:text="${i.major}"></td>
-        <td th:text="${i.writer}"></td>
-        <td th:text="${i.regdate}"></td>
-        <td th:text="${i.view}"></td>
-        <td th:text="${i.likeCount}"></td>
-    </tr>
-</table>
 
 <table id="keywordRanking">
     <tr>
@@ -80,42 +54,36 @@
 
 <table>
     <tr>
-        <th>id</th>
+        <th>dbid</th>
         <th>boardid</th>
         <th>title</th>
-        <th>type</th>
         <th>major</th>
+        <th>type</th>
         <th>writer</th>
         <th>regdate</th>
         <th>view</th>
         <th>likeCount</th>
-        <th>body</th>
-        <th>img</th>
     </tr>
-    <tr th:each="i : ${notices}">
+    <tr th:each="i : ${data}">
 
         <td>
-            <a th:href="@{read/{id}(id=${i.id})}" th:text="${i.id}"></a>
-            <!-- noticedto 만들어서 notices 변수에 좋아요 눌렀는지 안눌렀는지 체크하는 boolen 넣어줘야함. -->
-            <!-- <button th:text="${i.checkedLike} ? '좋아요 취소' : '좋아요 누르기' " th:onclick="post_clickLike([[${i.id}]])"></button> -->
-            <button th:text="${like} ? '좋아요 취소' : '좋아요 누르기' " th:onclick="post_clickLike([[${i.id}]])"></button>
+            <a th:href="@{read/{id}(id=${i.dbid})}" th:text="${i.dbid}"></a>
+            <button th:text="${i.checkLike} ? '좋아요 취소' : '좋아요' " th:onclick="post_clickLike([[${i.dbid}]])"></button>
         </td>
         <td th:text="${i.boardId}"></td>
         <td th:style="${'min-width:200px'}" th:text="${i.title}"></td>
-        <td th:text="${i.type}"></td>
         <td th:text="${i.major}"></td>
+        <td th:text="${i.type}"></td>
         <td th:text="${i.writer}"></td>
         <td th:text="${i.regdate}"></td>
         <td th:text="${i.view}"></td>
         <td th:text="${i.likeCount}"></td>
-        <td th:style="${'min-width:800px'}" th:text="${i.body}"></td>
-        <td th:text="${i.img}"></td>
     </tr>
 </table>
 
 <ul style="list-style:none;">
     <li style="float: left;">page</li>
-    <li th:style="${'float: left; margin: 0px 5px;'}" th:each="i : ${#numbers.sequence(1, maxpage)}">
+    <li th:style="${'float: left; margin: 0px 5px;'}" th:each="i : ${#numbers.sequence(1, pagesize)}">
         <a th:href="@{'/?page=' + ${i}}" th:text="${i}">1</a>
     </li>
 </ul>
