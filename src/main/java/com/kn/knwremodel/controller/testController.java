@@ -4,6 +4,7 @@ import com.kn.knwremodel.dto.CommentDTO;
 import com.kn.knwremodel.dto.NoticeDTO;
 import com.kn.knwremodel.dto.UserDTO;
 import com.kn.knwremodel.dto.pageDTO;
+import com.kn.knwremodel.dto.NoticeDTO.responsebody;
 import com.kn.knwremodel.entity.Comment;
 import com.kn.knwremodel.entity.Keyword;
 import com.kn.knwremodel.entity.Notice;
@@ -19,6 +20,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -37,14 +39,12 @@ public class testController {
     private final HaksaService haksaS;
     private final NoticeService noticeS;
     private final CollegeService collegeS;
-    private final LikeService likeS;
     private final HttpSession httpSession;
-    
+    private final NoticeController noticeC;
 
     @GetMapping(value={"/"})
-    public String test(@RequestParam(defaultValue = "1") Long page, @RequestParam(defaultValue = "20") Long perPage,
-                       @RequestParam(required = false) String major, @RequestParam(required = false) String type,
-                       @RequestParam(required = false) String keyword,
+    public String test(@RequestParam(required = false) String major, @RequestParam(required = false) String type, @RequestParam(required = false) String keyword,
+                       @RequestParam(defaultValue = "1") Long page, @RequestParam(defaultValue = "20") Long perPage,
                        Model model) throws IOException{
         UserDTO.Session currentuserDTO = (UserDTO.Session)httpSession.getAttribute("user");
 
@@ -52,14 +52,12 @@ public class testController {
             model.addAttribute("currentuser", currentuserDTO);
         }
 
-        List<Notice> notices = noticeS.search(major, type, keyword);
-        List<NoticeDTO.responsePage> result = notices.stream().map(notice -> new NoticeDTO.responsePage(likeS, notice)).collect(Collectors.toList());
-        pageDTO<NoticeDTO.responsePage> pagedto = new pageDTO<>(result, page, perPage);
+        ResponseEntity result = noticeC.requestPage(new NoticeDTO.requestPage(major, type, keyword, page, perPage));
 
         List<Keyword> keywords = noticeS.findTop5ByKeyword(keyword);
         
         model.addAttribute("majorlist",  collegeS.findAllMajor());
-        model.addAttribute("page", pagedto);
+        model.addAttribute("page", result.getBody());
         model.addAttribute("keywords", keywords);
 
         return "mainpage";
@@ -67,10 +65,12 @@ public class testController {
 
     @GetMapping("/read/{noticeid}")
     public String findNotice(@PathVariable Long noticeid, Model model) {
-        NoticeDTO.responsebody notice = new NoticeDTO.responsebody(likeS, noticeS.findById(noticeid));
+        ResponseEntity result = noticeC.requestbody(new NoticeDTO.requestbody(noticeid));
+        NoticeDTO.responsebody notice = (responsebody) result.getBody();
+        model.addAttribute("notice", notice);
+
         List<CommentDTO.Comment> comments = notice.getComments();
 
-        model.addAttribute("notice", notice);
         if (comments != null && !comments.isEmpty()) {
             model.addAttribute("comments", comments);
         }

@@ -24,7 +24,7 @@ public class NoticeController {
     private final LikeService likeS;
     
     @PostMapping("/requestPage")
-    public ResponseEntity requestPageNotice(@RequestBody NoticeDTO.requestPage dto) {
+    public ResponseEntity requestPage(@RequestBody NoticeDTO.requestPage dto) {
         List<Notice> notices = noticeS.search(dto.getMajor(), dto.getType(), dto.getKeyword());
         List<NoticeDTO.responsePage> result = notices.stream().map(notice -> new NoticeDTO.responsePage(likeS, notice)).collect(Collectors.toList());
         pageDTO<NoticeDTO.responsePage> pagedto = new pageDTO<>(result, dto.getPage(), dto.getPerPage());
