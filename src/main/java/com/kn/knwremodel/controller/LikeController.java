@@ -1,10 +1,8 @@
 package com.kn.knwremodel.controller;
 
 import com.kn.knwremodel.dto.LikeDTO;
-import com.kn.knwremodel.dto.UserDTO;
 import com.kn.knwremodel.service.LikeService;
 
-import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;

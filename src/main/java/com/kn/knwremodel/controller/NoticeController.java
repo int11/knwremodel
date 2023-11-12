@@ -13,7 +13,6 @@ import com.kn.knwremodel.entity.Notice;
 import com.kn.knwremodel.service.LikeService;
 import com.kn.knwremodel.service.NoticeService;
 
-import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor

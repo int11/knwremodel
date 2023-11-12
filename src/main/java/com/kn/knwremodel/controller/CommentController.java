@@ -1,7 +1,6 @@
 package com.kn.knwremodel.controller;
 
 import com.kn.knwremodel.dto.CommentDTO;
-import com.kn.knwremodel.dto.UserDTO;
 import com.kn.knwremodel.service.CommentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

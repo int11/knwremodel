@@ -1,14 +1,6 @@
 package com.kn.knwremodel.dto;
 
 import com.kn.knwremodel.entity.User;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
-
-import com.kn.knwremodel.entity.Notice;
-
-import jakarta.persistence.Column;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 import lombok.*;
 
 

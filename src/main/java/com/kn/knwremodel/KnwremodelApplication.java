@@ -12,9 +12,6 @@ import org.springframework.scheduling.annotation.Scheduled;
 
 import java.io.IOException;
 import java.time.LocalDate;
-import java.time.Year;
-import java.time.YearMonth;
-import java.util.Locale;
 
 @SpringBootApplication
 @EnableScheduling
