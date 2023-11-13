@@ -13,6 +13,9 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
+import java.util.List;
+
 
 @Service
 @RequiredArgsConstructor
@@ -59,5 +62,21 @@ public class LikeService {
         }
         User currentuser = userRepository.findById(currentuserDTO.getId()).orElse(null);
         return likeRepository.existsByUserAndNotice(currentuser, notice);
+    }
+
+    public List<Notice> getLikedNotices() {
+        Long currentUserId = getCurrentUserId();
+        if (currentUserId == null) {
+            return Collections.emptyList();
+        }
+        return likeRepository.findLikedNoticesByUser(currentUserId);
+    }
+
+    public Long getCurrentUserId() {
+        UserDTO.Session currentUserDTO = (UserDTO.Session) httpSession.getAttribute("user");
+        if (currentUserDTO == null) {
+            return null;
+        }
+        return currentUserDTO.getId();
     }
 }

@@ -40,6 +40,8 @@ public class testController {
     private final CollegeService collegeS;
     private final HttpSession httpSession;
     private final NoticeController noticeC;
+    private final LikeService likeS;
+
 
     @GetMapping(value={"/"})
     public String test(@RequestParam(required = false) String major, @RequestParam(required = false) String type, @RequestParam(required = false) String keyword,
@@ -106,5 +108,12 @@ public class testController {
 
         model.addAttribute("topNotices", topNotices);
         return "top5View";
+    }
+
+    @GetMapping("/likePage")
+    public String showLikedNotices(Model model) {
+        List<Notice> likedNotices = likeS.getLikedNotices();
+        model.addAttribute("likedNotices", likedNotices);
+        return "likePage";
     }
 }
