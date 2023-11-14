@@ -87,3 +87,27 @@ function commentDelete(commentId) {
         window.location.href = window.location.href;
     }, 50);
 }
+
+function abbreviateEmail(email) {
+    if (email.indexOf('@') > 0) {
+        var parts = email.split('@');
+        var username = parts[0];
+        var obscured = username.substring(0, 2);
+
+        for (var i = 2; i < username.length; i++) {
+            obscured += '*';
+        }
+        return obscured;
+    } else {
+        return email;
+    }
+}
+
+document.addEventListener('DOMContentLoaded', function () {
+    var emailElements = document.querySelectorAll('.abbreviate-email');
+
+    emailElements.forEach(function (element) {
+        var originalEmail = element.textContent;
+        element.textContent = abbreviateEmail(originalEmail);
+    });
+});

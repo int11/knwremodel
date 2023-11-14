@@ -38,6 +38,10 @@ public class CommentService {
         User loginUser = userRepository.findById(currentUserDTO.getId()).orElseThrow(() ->
                 new IllegalArgumentException("댓글 쓰기 실패: 로그인 정보가 존재하지 않습니다."));
 
+        if (dto.getComment().trim().isEmpty()) {
+            throw new IllegalArgumentException("댓글 쓰기 실패: 빈 내용의 댓글은 작성할 수 없습니다.");
+        }
+
         Comment comment = Comment.builder()
                 .comment(dto.getComment())
                 .user(loginUser)
