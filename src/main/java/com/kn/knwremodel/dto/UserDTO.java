@@ -59,12 +59,17 @@ public class UserDTO {
         private String name;
         private String email;
         private String picture;
-
+        private String role;  // 역할 정보 추가
         public Session(User user) {
             this.id = user.getId();
             this.name = user.getName();
             this.email = user.getEmail();
             this.picture = user.getPicture();
+            this.role = user.getRoleKey(); // 변경된 부분
         }
+        // setRole 메서드 추가
+        public void setRole(String role) {
+            this.role = role;
+        }//세션을 임시로 저장하기 위해 만듬 추후에 삭제할 예정
     }
 }
