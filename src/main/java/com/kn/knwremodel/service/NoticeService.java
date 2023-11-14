@@ -168,26 +168,7 @@ public class NoticeService {
         return noticeRepo.findByMajorContainingAndTypeContainingAndTitleContaining(major, type, keyword);
     }
 
-    @Transactional
-    public List<Keyword> findTop5ByKeyword(String keyword) {
-        List<Keyword> keywords;
-        if (keyword != null)
-            if (!keyword.isEmpty()) {
-                Keyword onKeyword = keywordRepo.findByKeyword(keyword);
-                if (onKeyword == null) {
-                    Keyword word = Keyword.builder().keyword(keyword).counts(1L).build();
-                    keywordRepo.save(word);
-                } else
-                    onKeyword.updateKeywordCount(onKeyword.getCounts() + 1);
-            }
-        keywords = keywordRepo.findTop5ByOrderByCountsDesc();
-        return keywords;
-    }
-
-    @Transactional
-    public void resetRanking() {
-        keywordRepo.deleteAllInBatch();
-    }
+ 
 
     @Transactional(readOnly = true) // 읽기 전용 트랜잭션
     public List<Notice> findTop5ByView(Pageable pageable) {

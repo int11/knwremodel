@@ -1,5 +1,6 @@
 package com.kn.knwremodel;
 
+import com.kn.knwremodel.service.KeywordService;
 import com.kn.knwremodel.service.testdatainsertService;
 import com.kn.knwremodel.service.NoticeService;
 import com.kn.knwremodel.service.HaksaService;
@@ -21,6 +22,7 @@ public class KnwremodelApplication {
 	private final NoticeService noticeS;
 	private final testdatainsertService testdatainsertS;
 	private final HaksaService haksaS;
+	private final KeywordService keywordS;
 
 	public static void main(String[] args) {
 		SpringApplication.run(KnwremodelApplication.class, args);
@@ -37,7 +39,7 @@ public class KnwremodelApplication {
 
 	@Scheduled(fixedRate = 1000 * 60 * 60 *24)
 	public void updateKeywordRanking() {
-		noticeS.resetRanking();
+		keywordS.resetRanking();
 		System.out.println("Keyword Ranking has been reset.");
 	}
 }

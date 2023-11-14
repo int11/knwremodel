@@ -9,11 +9,9 @@ import com.kn.knwremodel.entity.Comment;
 import com.kn.knwremodel.entity.Keyword;
 import com.kn.knwremodel.entity.Notice;
 import com.kn.knwremodel.entity.Haksa;
-import com.kn.knwremodel.service.HaksaService;
-import com.kn.knwremodel.service.CollegeService;
-import com.kn.knwremodel.service.CommentService;
-import com.kn.knwremodel.service.LikeService;
-import com.kn.knwremodel.service.NoticeService;
+import com.kn.knwremodel.service.*;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 
@@ -41,12 +39,15 @@ public class testController {
     private final HttpSession httpSession;
     private final NoticeController noticeC;
     private final LikeService likeS;
+    private final KeywordService keywordS;
 
 
     @GetMapping(value={"/"})
-    public String test(@RequestParam(required = false) String major, @RequestParam(required = false) String type, @RequestParam(required = false) String keyword,
-                       @RequestParam(defaultValue = "1") Long page, @RequestParam(defaultValue = "20") Long perPage,
-                       Model model) throws IOException{
+    public String test(@RequestParam(defaultValue = "1") Long page, @RequestParam(defaultValue = "20") Long perPage,
+                       @RequestParam(required = false) String major, @RequestParam(required = false) String type,
+                       @RequestParam(required = false) String keyword, HttpServletRequest request,
+                       HttpServletResponse response,
+                       Model model) throws IOException {
         UserDTO.Session currentuserDTO = (UserDTO.Session)httpSession.getAttribute("user");
 
         if(currentuserDTO != null) {
@@ -55,12 +56,14 @@ public class testController {
 
         ResponseEntity result = noticeC.requestPage(new NoticeDTO.requestPage(major, type, keyword, page, perPage));
 
-        List<Keyword> keywords = noticeS.findTop5ByKeyword(keyword);
-        
+        List<Keyword> keywords = keywordS.findTop5ByKeyword(keyword, request);
+        List<String> recentlyKeywords = keywordS.recentKeywords(keyword, request, response);
+
+
         model.addAttribute("majorlist",  collegeS.findAllMajor());
         model.addAttribute("page", result.getBody());
         model.addAttribute("keywords", keywords);
-
+        model.addAttribute("recentlyKeywords", recentlyKeywords);
         return "mainpage";
     }
 
