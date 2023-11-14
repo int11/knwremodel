@@ -21,6 +21,18 @@
     <a th:href="@{mainlogin}">로그인페이지</a>
 </th:block>
 
+<div id="mail_input" name="mail_input" th:if="${currentuser != null}">
+    <input type="text" name="mail" id="mail" placeholder="이메일 입력">
+    <button type="button" id="sendBtn" name="sendBtn" onclick="sendNumber()">인증번호</button>
+</div>
+<br>
+<div id="mail_number" name="mail_number" th:if="${currentuser != null}" style="display: none">
+    <input type="text" name="number" id="number" placeholder="인증번호 입력">
+    <button type="button" name="confirmBtn" id="confirmBtn" onclick="confirmNumber()">이메일 인증</button>
+</div>
+<br>
+<input type="text" id="Confirm" name="Confirm" style="display: none" value="">
+
 <br>
 
 <button value="/top5View" onclick="window.open(value,'_self');">조회수 Top5</button>

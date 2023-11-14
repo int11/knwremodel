@@ -87,3 +87,29 @@ function commentDelete(commentId) {
         window.location.href = window.location.href;
     }, 50);
 }
+
+function sendNumber() {
+    $("#mail_number").css("display", "block");
+    $.ajax({
+        url: "/mail",
+        type: "post",
+        dataType: "text",
+        data: { "mail": $("#mail").val() },
+        success: function (data) {
+            alert(data);
+        }
+    });
+}
+
+function confirmNumber() {
+    var number1 = $("#number").val();
+    $.ajax({
+        url: "/confirmNumber",
+        type: "post",
+        dataType: "text",
+        data: { "enteredNumber": number1 },
+        success: function (data) {
+            alert(data);
+        }
+    });
+}
