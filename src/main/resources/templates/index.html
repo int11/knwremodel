@@ -14,6 +14,20 @@
 <th:block th:if="${currentuser == null}">
   <a th:href="@{mainlogin}">로그인페이지</a>
 </th:block>
+<div id="mail_input" name="mail_input" th:if="${currentuser != null}">
+    <input type="text" name="mail" id="mail" placeholder="이메일 입력">
+    <button type="button" id="sendBtn" name="sendBtn" onclick="sendNumber()">인증번호</button>
+</div>
+<br>
+<div id="mail_number" name="mail_number" th:if="${currentuser != null}" style="display: none">
+    <input type="text" name="number" id="number" placeholder="인증번호 입력">
+    <button type="button" name="confirmBtn" id="confirmBtn" onclick="confirmNumber()">이메일 인증</button>
+</div>
+<br>
+<input type="text" id="Confirm" name="Confirm" style="display: none" value="">
+
+</body>
+</form>
 
 <button value="/"onclick="window.open(value,'_self');">전체</button>
 <button value="/스포츠복지"onclick="window.open(value,'_self');">스포츠복지전공</button>
@@ -44,5 +58,33 @@
             <td th:text="${i.img}"></td>
         </tr>
     </table>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script type="text/javascript">
+    function sendNumber() {
+        $("#mail_number").css("display", "block");
+        $.ajax({
+            url: "/mail",
+            type: "post",
+            dataType: "text",
+            data: { "mail": $("#mail").val() },
+            success: function (data) {
+                alert(data);
+            }
+        });
+    }
+
+    function confirmNumber() {
+        var number1 = $("#number").val();
+        $.ajax({
+            url: "/confirmNumber",
+            type: "post",
+            dataType: "text",
+            data: { "enteredNumber": number1 },
+            success: function (data) {
+                alert(data);
+            }
+        });
+    }
+</script>
 </body>
 </html>

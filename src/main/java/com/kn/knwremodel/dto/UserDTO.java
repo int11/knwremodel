@@ -51,7 +51,7 @@ public class UserDTO {
                     .build();
         }
     }
-    
+
     @Getter
     public static class Session implements Serializable {
         private String name;
