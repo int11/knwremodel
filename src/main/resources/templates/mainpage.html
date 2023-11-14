@@ -6,6 +6,7 @@
     <title>강남대</title>
     <link rel="stylesheet" th:href="@{/style.css}">
     <script th:src="@{/testjs.js}"></script>
+    
 </head>
 
 
@@ -15,11 +16,13 @@
 <th:block th:if="${currentuser != null}">
     <p th:text="${currentuser.name}"></p>
     <p th:text="${currentuser.email}"></p>
+    <p th:text="${currentuser.role}"></p>
     <a th:href="@{logout}">로그아웃</a>
 </th:block>
 <th:block th:if="${currentuser == null}">
     <a th:href="@{mainlogin}">로그인페이지</a>
 </th:block>
+
 
 <div id="mail_input" name="mail_input" th:if="${currentuser != null}">
     <input type="text" name="mail" id="mail" placeholder="이메일 입력">
@@ -110,6 +113,34 @@
     </li>
 </ul>
 
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script type="text/javascript">
+    function sendNumber() {
+        $("#mail_number").css("display", "block");
+        $.ajax({
+            url: "/mail",
+            type: "post",
+            dataType: "text",
+            data: { "mail": $("#mail").val() },
+            success: function (data) {
+                alert(data);
+            }
+        });
+    }
+
+    function confirmNumber() {
+        var number1 = $("#number").val();
+        $.ajax({
+            url: "/confirmNumber",
+            type: "post",
+            dataType: "text",
+            data: { "enteredNumber": number1 },
+            success: function (data) {
+                alert(data);
+            }
+        });
+    }
+</script>
 
 </body>
 </html>

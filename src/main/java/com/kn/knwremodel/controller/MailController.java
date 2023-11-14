@@ -1,5 +1,6 @@
 package com.kn.knwremodel.controller;
 
+import com.kn.knwremodel.dto.UserDTO;
 import com.kn.knwremodel.entity.Role;
 import com.kn.knwremodel.service.AuthChangeGuestUserService;
 import com.kn.knwremodel.service.MailService;
@@ -30,7 +31,7 @@ public class MailController {
         // 타이머를 설정하여 1분 30초 후에 인증 번호를 만료시킴
         scheduleExpirationTimer(90 * 1000, number);
 
-        return "인증번호 발송";
+        return "인증번호 발송. 1분 30초 안에 입력하시오.";
     }
 
     // 인증 번호 확인
@@ -43,9 +44,14 @@ public class MailController {
         if (authInfo != null && authInfo.getNumber() == Integer.parseInt(enteredNumber)) {
             if (authInfo.isValid()) {
                 authChangeGuestUserService.updateUserRole(Role.USER);
+
+                UserDTO.Session currentuserDTO = (UserDTO.Session)httpSession.getAttribute("user");
+                currentuserDTO.setRole("USER");
+                
                 cancelExpirationTimer(); // 인증이 성공하면 타이머를 취소
+                httpSession.setAttribute("user", currentuserDTO);
                 httpSession.removeAttribute("authNumber");
-                return "이메일 인증이 성공했습니다. 1분 30초 안에 입력하시오.";
+                return "이메일 인증이 성공했습니다.";
             } else {
                 httpSession.removeAttribute("authNumber");
                 return "인증 번호가 만료되었습니다. 다시 시도해주세요";

@@ -27,12 +27,6 @@ public class CommentService {
     public Long saveComment(CommentDTO.save dto) {
         UserDTO.Session currentUserDTO = (UserDTO.Session) httpSession.getAttribute("user");
 
-        // 세션에 저장된 역할 USER로 업데이트 코드 추가(로그인한 계정의 세션에 임시로 권한 바꾸는 것 추후에 삭제 예정)
-        if (currentUserDTO != null) {
-            currentUserDTO.setRole("USER");
-            httpSession.setAttribute("user", currentUserDTO);
-        }
-
         // 사용자가 "USER" 역할을 가지고 있는지 확인
         if (currentUserDTO == null || !currentUserDTO.getRole().equals("USER")) {
             throw new IllegalArgumentException("댓글 쓰기 실패: 권한이 없습니다.");
@@ -72,13 +66,6 @@ public class CommentService {
     @Transactional
     public Long deleteComment(CommentDTO.delete dto) {
         UserDTO.Session currentuserDTO = (UserDTO.Session) httpSession.getAttribute("user");
-
-        // 역할을 업데이트
-        String newRole = "ADMIN";  // 업데이트하고자 하는 새로운 역할
-        currentuserDTO.setRole(newRole);
-
-        // 세션 업데이트
-        httpSession.setAttribute("user", currentuserDTO);
 
         Comment comment = commentRepo.findById(dto.getCommentId()).orElseThrow(() ->
                 new IllegalArgumentException("댓글 삭제 실패: 해당 댓글이 존재하지 않습니다."));
