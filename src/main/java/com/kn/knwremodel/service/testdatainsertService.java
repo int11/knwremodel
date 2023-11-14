@@ -12,8 +12,9 @@ import com.kn.knwremodel.repository.CollegeRepository;
 
 import lombok.RequiredArgsConstructor;
 
-@RequiredArgsConstructor
+
 @Service
+@RequiredArgsConstructor
 public class testdatainsertService {
     private final CollegeRepository CollegeRepo;
 

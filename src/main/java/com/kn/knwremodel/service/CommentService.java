@@ -11,12 +11,12 @@ import com.kn.knwremodel.repository.UserRepository;
 
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
-import lombok.Setter;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-@RequiredArgsConstructor
+
 @Service
+@RequiredArgsConstructor
 public class CommentService {
     private final CommentRepository commentRepo;
     private final UserRepository userRepository;

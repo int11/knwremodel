@@ -1,8 +1,10 @@
 package com.kn.knwremodel.service;
 
 import com.kn.knwremodel.entity.College;
+import com.kn.knwremodel.entity.Keyword;
 import com.kn.knwremodel.entity.Notice;
 import com.kn.knwremodel.repository.CollegeRepository;
+import com.kn.knwremodel.repository.KeywordRepository;
 import com.kn.knwremodel.repository.NoticeRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
@@ -13,6 +15,7 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,17 +26,21 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-@RequiredArgsConstructor
+
 @Service
+@RequiredArgsConstructor
 public class NoticeService {
     private final NoticeRepository noticeRepo;
     private final CollegeRepository CollegeRepo;
+    private final KeywordRepository keywordRepo;
+
     private int maxPage = 1; //크롤링할 공지사항 페이지의 수
 
     @Setter
-    private LocalDate localDate, nowDate;
+    private LocalDate nowDate;
+
     @Transactional
-    public void updata() {
+    public void update() {
         List<Notice> notices = noticeRepo.findAll();
         JSONParser parser = new JSONParser();
 
@@ -56,12 +63,12 @@ public class NoticeService {
                             Long id = Long.parseLong(columnNumber);
                             Elements titlElements = content.select("a");
 
-                            if (noticeRepo.existsByBoardId(id)){
+                            if (noticeRepo.existsByBoardId(id)) {
                                 break loopout;
                             }
 
                             //게시물 내용, 사진 크롤링
-                            JSONObject jsonObject = (JSONObject)parser.parse(titlElements.attr("data-params"));
+                            JSONObject jsonObject = (JSONObject) parser.parse(titlElements.attr("data-params"));
                             String encMenuSeq = (String) jsonObject.get("encMenuSeq");
                             String encMenuBoardSeq = (String) jsonObject.get("encMenuBoardSeq");
 
@@ -76,7 +83,7 @@ public class NoticeService {
                             String body = "";
                             for (Element i : articleContents.select("li p:not([style*='display:none'])")) {
                                 String temp = i.text();
-                                if (temp != ""){
+                                if (temp != "") {
                                     body += temp;
                                     body += "\n";
                                 }
@@ -90,16 +97,16 @@ public class NoticeService {
                             for (Element i : articleContents.select("img")) {
                                 String temp = i.attr("abs:src");
                                 // img tag inline data
-                                if (temp.substring(0, 30).contains("data:image")){
+                                if (temp.substring(0, 30).contains("data:image")) {
                                     continue;
-                                }else{
+                                } else {
                                     img += temp + ";";
                                 }
                             }
 
                             String regDate = content.select("li.sliceDot6").next().text();
                             DateTimeFormatter JEFormatter = DateTimeFormatter.ofPattern("yyyy.MM.dd");
-                            localDate = LocalDate.parse("20" + regDate, JEFormatter);
+                            LocalDate localDate = LocalDate.parse("20" + regDate, JEFormatter);
 
 
                             notices.add(new Notice(id,
@@ -108,10 +115,9 @@ public class NoticeService {
                                     e.getMajor(),
                                     content.select("li.sliceDot6").text(),
                                     localDate,
-                                    Integer.parseInt(content.select("li.sliceDot6").next().next().text().replace(",", "")),
+                                    Long.parseLong(content.select("li.sliceDot6").next().next().text().replace(",", "")),
                                     body,
-                                    img,
-                                    0L));
+                                    img));
                         }
                     }
                 }
@@ -145,6 +151,7 @@ public class NoticeService {
             return boardId;
         }
     }
+
     public Notice findById(Long id) {
         return noticeRepo.findById(id).orElseThrow(() -> new IllegalArgumentException("not found: " + id));
     }
@@ -153,35 +160,26 @@ public class NoticeService {
         return noticeRepo.findAll();
     }
 
-    public List<Notice> findByMajorAndType(String major, String type, Long NoticesperPage, Long page) {
-        List<Notice> notices;
-        if (major == null && type == null){
-            notices = noticeRepo.findAll();
-        }else if(major == null){
-            notices = noticeRepo.findByType(type);
-        }else if(type == null){
-            notices = noticeRepo.findByMajor(major);
-        }else{
-            notices = noticeRepo.findByMajorAndType(major, type);
-        }
-
-        Long e = Math.min(NoticesperPage * page, notices.size());
-
-        notices = notices.subList((int) (NoticesperPage * (page - 1)), e.intValue());
-        return notices;
+    @Transactional
+    public List<Notice> search(String major, String type, String keyword) {
+        major = (major == null) ? "" : major;
+        type = (type == null) ? "" : type;
+        keyword = (keyword == null) ? "" : keyword;
+        return noticeRepo.findByMajorContainingAndTypeContainingAndTitleContaining(major, type, keyword);
     }
 
+ 
+
     @Transactional(readOnly = true) // 읽기 전용 트랜잭션
-    public List<Notice> findTop5ByView() {
-        //일주일동안
-        List<Notice> notices = noticeRepo.findTop5ByOrderByViewDescWhereByRegDate(nowDate.minusDays(7), nowDate);
-        return notices.subList(0,5);
+    public List<Notice> findTop5ByView(Pageable pageable) {
+        //한달 동안
+        List<Notice> notices = noticeRepo.findByOrderByViewDescWhereByRegDate(nowDate.minusDays(30), nowDate, pageable);
+        return notices;
     }
 
     public List<Notice> findTopLikesByMajor(String major) {
         List<Notice> topNotices = noticeRepo.findTop5ByMajorOrderByLikeCountDesc(major);
 
-        // 좋아요의 갯수가 1 이상인 경우만 결과에 포함 - 동점인 경우 처리할 방법 코드 수정 필요
         List<Notice> result = new ArrayList<>();
 
         if (topNotices != null && !topNotices.isEmpty()) {

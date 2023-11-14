@@ -1,3 +1,29 @@
+window.onload = function(){
+    const URLSearch = new URLSearchParams(location.search);
+
+    if (URLSearch.get("keyword")){
+        document.getElementById('keyword').value = URLSearch.get("keyword");
+    }
+
+    if (URLSearch.get("major")){
+        document.getElementById('MajorDropdown').value = URLSearch.get("major")
+    }
+}
+
+function mysearch(){
+    const URLSearch = new URLSearchParams(location.search);
+    URLSearch.delete("page");
+    URLSearch.set("major", document.getElementById('MajorDropdown').value);
+    URLSearch.set("keyword", document.getElementById('keyword').value);
+    location.href = location.href.split("?")[0] + '?' + URLSearch.toString();
+}
+
+function myopen(page=1){
+    const URLSearch = new URLSearchParams(location.search);
+    URLSearch.set("page", page);
+    location.href = location.href.split("?")[0] + '?' + URLSearch.toString();
+}
+
 function post_clickLike(noticeId) {
     fetch("http://localhost:8080/like/click", {
         method: "POST",
@@ -14,7 +40,7 @@ function post_clickLike(noticeId) {
 }
 
 function commentSave(noticeId) {
-    var comment = document.getElementById("comments").value;
+    let comment = document.getElementById("comments").value;
     fetch("http://localhost:8080/comments/save", {
         method: "POST",
         headers: {
@@ -31,7 +57,7 @@ function commentSave(noticeId) {
 }
 
 function commentModify(commentId) {
-    var comment = document.getElementById("comments").value;
+    let comment = document.getElementById("comments").value;
     fetch("http://localhost:8080/comments/modify", {
         method: "POST",
         headers: {

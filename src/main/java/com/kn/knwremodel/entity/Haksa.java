@@ -1,16 +1,12 @@
 package com.kn.knwremodel.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import lombok.Getter;
-import lombok.ToString;
+import jakarta.persistence.*;
+import lombok.*;
 
 @Entity
 @Getter
 @ToString
-public class haksa {
+public class Haksa {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
