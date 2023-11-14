@@ -4,7 +4,6 @@ import jakarta.persistence.*;
 import lombok.*;
 
 @Entity(name = "likes") //이거 이름 안바꿔 주면 충돌남 SQL 예약어라서..
-@Setter
 @Getter
 @NoArgsConstructor
 @Builder
@@ -12,13 +11,11 @@ import lombok.*;
 public class Like {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long likeId;
+    private Long id;
 
-    //User 부분 임의 구성
-    //@ManyToOne(fetch = FetchType.LAZY)
-    //@JoinColumn(name = "MEMBER_ID")
-    @Column(nullable = false)
-    private String user;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private User user;
 
     @ManyToOne
     @JoinColumn(name = "notice_id")

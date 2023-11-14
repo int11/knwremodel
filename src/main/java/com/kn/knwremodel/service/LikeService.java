@@ -1,56 +1,82 @@
 package com.kn.knwremodel.service;
 
 import com.kn.knwremodel.dto.LikeDTO;
+import com.kn.knwremodel.dto.UserDTO;
 import com.kn.knwremodel.entity.Like;
 import com.kn.knwremodel.entity.Notice;
+import com.kn.knwremodel.entity.User;
 import com.kn.knwremodel.repository.LikeRepository;
 import com.kn.knwremodel.repository.NoticeRepository;
+import com.kn.knwremodel.repository.UserRepository;
+import jakarta.servlet.http.HttpSession;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-@RequiredArgsConstructor
+import java.util.Collections;
+import java.util.List;
+
+
 @Service
+@RequiredArgsConstructor
 public class LikeService {
     private final LikeRepository likeRepository;
     private final NoticeRepository noticeRepository;
+    private final UserRepository userRepository;
+    private final HttpSession httpSession;
 
-    //User 임의 구성
     @Transactional
-    public Long addLike(LikeDTO.Request dto) throws Exception {
-        Notice notice = noticeRepository.findById(dto.getNoticeId()).get();
-        String loginUser = dto.getUser();
+    public Long clickLike(LikeDTO.click likedto) throws Exception {
+        UserDTO.Session currentuserDTO = (UserDTO.Session)httpSession.getAttribute("user");
+        Notice notice = noticeRepository.findById(likedto.getNoticeId()).get();
+        if (currentuserDTO == null){
+            throw new IllegalArgumentException("좋아요 추가 실패: 로그인이 필요합니다.");
+        }
+        User currentuser = userRepository.findById(currentuserDTO.getId()).get();
+
 
         //사용자가 해당 게시물에 좋아요를 눌렀던 기록이 있다면
-        if (likeRepository.existsByUserAndNotice(loginUser, notice)) {
-            throw new Exception("add_false");
+        if (likeRepository.existsByUserAndNotice(currentuser, notice)) {
+            Like like = likeRepository.findByUserAndNotice(currentuser, notice);
+            likeRepository.delete(like);
+            notice.updateLikeCount(notice.getLikeCount() - 1);
+            return like.getId();
         }
-
-        Like like = Like.builder()
-                .user(loginUser)
-                .notice(notice)
-                .build();
-        likeRepository.save(like);
-        notice.updateLikeCount(notice.getLikeCount() + 1);
-
-        return like.getLikeId();
+        else{
+            Like like = Like.builder()
+                            .user(currentuser)
+                            .notice(notice)
+                            .build();
+            likeRepository.save(like);
+            notice.updateLikeCount(notice.getLikeCount() + 1);
+            return like.getId();
+        }
     }
+
     @Transactional
-    public Long deleteLike(LikeDTO.Request dto) throws Exception {
-
-        Notice notice = noticeRepository.findById(dto.getNoticeId()).get();
-        String loginUser = dto.getUser();
-
-        //사용자가 해당 게시물에 좋아요를 눌렀던 기록이 없다면
-        if (!likeRepository.existsByUserAndNotice(loginUser, notice)) {
-            throw new Exception("delete_false");
+    public boolean checkedLike(Long noticeid) {
+        UserDTO.Session currentuserDTO = (UserDTO.Session)httpSession.getAttribute("user");
+        Notice notice = noticeRepository.findById(noticeid).get();
+        if (currentuserDTO == null){
+            return false;
         }
-
-        Like like = likeRepository.findByUserAndNotice(loginUser, notice);
-        likeRepository.delete(like);
-        notice.updateLikeCount(notice.getLikeCount() - 1);
-
-        return like.getLikeId();
+        User currentuser = userRepository.findById(currentuserDTO.getId()).orElse(null);
+        return likeRepository.existsByUserAndNotice(currentuser, notice);
     }
 
+    public List<Notice> getLikedNotices() {
+        Long currentUserId = getCurrentUserId();
+        if (currentUserId == null) {
+            return Collections.emptyList();
+        }
+        return likeRepository.findLikedNoticesByUser(currentUserId);
+    }
+
+    public Long getCurrentUserId() {
+        UserDTO.Session currentUserDTO = (UserDTO.Session) httpSession.getAttribute("user");
+        if (currentUserDTO == null) {
+            return null;
+        }
+        return currentUserDTO.getId();
+    }
 }

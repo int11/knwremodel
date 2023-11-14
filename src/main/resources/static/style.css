@@ -1,0 +1,13 @@
+table {
+    border-collapse: collapse;
+}
+th, td {
+    border-collapse: collapse;
+    border: 1px solid #444444;
+    min-width:100px;
+}
+
+#keywordRanking {
+    width: 10%;
+    border-collapse: collapse;
+}

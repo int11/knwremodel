@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>강남대</title>
+    <link rel="stylesheet" th:href="@{/style.css}">
+    <script th:src="@{/testjs.js}"></script>
+</head>
+<body>
+
+<table>
+    <tr>
+        <th>id</th>
+        <th>boardid</th>
+        <th>title</th>
+        <th>type</th>
+        <th>major</th>
+        <th>writer</th>
+        <th>regdate</th>
+        <th>view</th>
+        <th>likeCount</th>
+
+    </tr>
+    <tr th:each="i : ${notice}">
+        <td >
+            <p th:text="${i.dbid}"></p>
+            <button th:text="${i.checkLike} ? '좋아요 취소' : '좋아요' " th:onclick="post_clickLike([[${i.dbid}]])"></button>
+        </td>
+        <td th:text="${i.boardId}"></td>
+        <td th:style="${'min-width:200px'}" th:text="${i.title}"></td>
+        <td th:text="${i.type}"></td>
+        <td th:text="${i.major}"></td>
+        <td th:text="${i.writer}"></td>
+        <td th:text="${i.regdate}"></td>
+        <td th:text="${i.view}"></td>
+        <td th:text="${i.likeCount}"></td>
+    </tr>
+</table>
+
+<table th:style="${'min-width:50px'}">
+    <tr>
+        <th>body</th>
+        <th>img</th>
+    </tr>
+    <tr th:each="i : ${notice}">
+        <td th:text="${i.body}"></td>
+        <td th:text="${i.img}"></td>
+    </tr>
+</table>
+
+<table>
+    <tr th:each="i : ${comments}">
+        <td th:text="${i.user.name}"></td>
+        <td th:text="${i.comment}"></td>
+        <td th:text="${i.createdDate}"></td>
+        <td th:text="${i.modifiedDate}"></td>
+        <td><button th:onclick="commentModify([[${i.id}]])">댓글 수정</button></td>
+        <td><button th:onclick="commentDelete([[${i.id}]])">댓글 삭제</button></td>
+    </tr>
+</table>
+
+<br>
+<label for="comments">
+    <textarea placeholder="댓글을 입력하세요" id="comments" cols="20" rows="5"></textarea>
+    <button th:onclick="commentSave([[${notice.dbid}]])">댓글 작성</button>
+</label>
+
+</body>
+</html>

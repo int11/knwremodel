@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" th:href="@{/style.css}">
+</head>
+<body>
+<table>
+    <tr>
+        <th>Ranking</th>
+        <th>id</th>
+        <th>boardid</th>
+        <th>title</th>
+        <th>type</th>
+        <th>major</th>
+        <th>writer</th>
+        <th>regdate</th>
+        <th>view</th>
+        <th>likeCount</th>
+    </tr>
+    <tr th:each="i, iterStat : ${topNotices}">
+        <td th:text="${iterStat.index + 1} + '위'"></td>
+        <td th:text="${i.id}"></td>
+        <td th:text="${i.boardId}"></td>
+        <td th:text="${i.title}"></td>
+        <td th:text="${i.type}"></td>
+        <td th:text="${i.major}"></td>
+        <td th:text="${i.writer}"></td>
+        <td th:text="${i.regdate}"></td>
+        <td th:text="${i.view}"></td>
+        <td th:text="${i.likeCount}"></td>
+    </tr>
+</table>
+</body>
+</html>

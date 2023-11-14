@@ -4,8 +4,7 @@ import lombok.Getter;
 
 public class LikeDTO {
     @Getter
-    public static class Request{
-        private String user;
+    public static class click{
         private Long noticeId;
     }
 }

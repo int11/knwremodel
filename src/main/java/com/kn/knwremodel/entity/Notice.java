@@ -4,6 +4,7 @@ package com.kn.knwremodel.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,19 +26,19 @@ public class Notice {
     private String title;
 
     @Column(nullable = false)
-    private String type;
+    private String major;
 
     @Column(nullable = false)
-    private String major;
+    private String type;
 
     @Column(nullable = false)
     private String writer;
 
     @Column(nullable = false)
-    private String regdate;
+    private LocalDate regdate;
 
     @Column(nullable = false)
-    private int view;
+    private Long view;
 
     @Column(columnDefinition = "TEXT", nullable = true)
     private String body;
@@ -45,16 +46,19 @@ public class Notice {
     @Column(columnDefinition = "TEXT", nullable = true)
     private String img;
 
-    @Column(nullable = false)
-    private Long likeCount;
-
     @OneToMany(mappedBy = "notice", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
     @OrderBy("id asc") // 댓글 정렬
     private List<Comment> comments = new ArrayList<>();
 
+    @OneToMany(mappedBy = "notice", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
+    private List<Like> likes = new ArrayList<>();
+
+    @Column(nullable = false)
+    private Long likeCount;
+
     @Builder
     public Notice(Long boardId, String title, String type, String major, String writer,
-                  String regdate, int view, String body, String img, Long likeCount) {
+                  LocalDate regdate, Long view, String body, String img) {
         this.boardId = boardId;
         this.title = title;
         this.type = type;
@@ -65,10 +69,16 @@ public class Notice {
         this.body = body;
         this.img = img;
         this.comments = getComments();
-        this.likeCount = likeCount;
+        this.likeCount = 0L;
     }
 
     public void updateLikeCount(Long likeCount) {
         this.likeCount = likeCount;
     }
+
+    public LocalDate getCreateDate() {
+        return regdate;
+    }
+
+
 }
