@@ -40,7 +40,7 @@ public class testController {
     private final NoticeController noticeC;
     private final LikeService likeS;
     private final KeywordService keywordS;
-
+    private final CommentService commentService;
 
     @GetMapping(value={"/"})
     public String test(@RequestParam(defaultValue = "1") Long page, @RequestParam(defaultValue = "20") Long perPage,
@@ -113,10 +113,15 @@ public class testController {
         return "top5View";
     }
 
-    @GetMapping("/likePage")
-    public String showLikedNotices(Model model) {
+    @GetMapping("/myPage")
+    public String showLikedNoticesAndComments(Model model) {
         List<Notice> likedNotices = likeS.getLikedNotices();
         model.addAttribute("likedNotices", likedNotices);
-        return "likePage";
+
+        UserDTO.Session currentUserDTO = (UserDTO.Session) httpSession.getAttribute("user");
+        List<Comment> userComments = commentService.getCommentsByUser(currentUserDTO.getId());
+        model.addAttribute("comments", userComments);
+
+        return "myPage";
     }
 }
