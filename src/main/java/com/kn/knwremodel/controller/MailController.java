@@ -46,7 +46,7 @@ public class MailController {
                 authChangeGuestUserService.updateUserRole(Role.USER);
 
                 UserDTO.Session currentuserDTO = (UserDTO.Session)httpSession.getAttribute("user");
-                currentuserDTO.setRole("USER");
+                currentuserDTO.setRole("ROLE_USER");
                 
                 cancelExpirationTimer(); // 인증이 성공하면 타이머를 취소
                 httpSession.setAttribute("user", currentuserDTO);

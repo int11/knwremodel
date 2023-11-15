@@ -30,7 +30,7 @@ public class CommentService {
         UserDTO.Session currentUserDTO = (UserDTO.Session) httpSession.getAttribute("user");
 
         // 사용자가 "USER" 역할을 가지고 있는지 확인
-        if (currentUserDTO == null || !currentUserDTO.getRole().equals("USER")) {
+        if (currentUserDTO == null || !currentUserDTO.getRole().equals("ROLE_USER")) {
             throw new IllegalArgumentException("댓글 쓰기 실패: 권한이 없습니다.");
         }
 
