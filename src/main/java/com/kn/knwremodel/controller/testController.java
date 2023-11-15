@@ -96,12 +96,6 @@ public class testController {
         return "mainlogin";
     }
 
-    @GetMapping("/logout")
-    public String logout() {
-        httpSession.invalidate();
-        return "redirect:/";
-    }
-
     @GetMapping("/top5View")
     public String getTop5View(Model model, @PageableDefault(size = 5, sort = "view", direction = Sort.Direction.DESC) Pageable pageable) {
         List<Notice> topNotices = noticeS.findTop5ByView(pageable);

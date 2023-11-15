@@ -32,7 +32,6 @@ import java.util.List;
 public class NoticeService {
     private final NoticeRepository noticeRepo;
     private final CollegeRepository CollegeRepo;
-    private final KeywordRepository keywordRepo;
 
     private int maxPage = 1; //크롤링할 공지사항 페이지의 수
 

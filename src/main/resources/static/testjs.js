@@ -1,3 +1,8 @@
+// jquery import 코드
+var script = document.createElement('script');
+script.src = "https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"; // Check https://jquery.com/ for the current version
+document.getElementsByTagName('head')[0].appendChild(script);
+
 window.onload = function(){
     const URLSearch = new URLSearchParams(location.search);
 
@@ -9,6 +14,33 @@ window.onload = function(){
         document.getElementById('MajorDropdown').value = URLSearch.get("major")
     }
 }
+
+function sendNumber() {
+    $("#mail_number").css("display", "block");
+    $.ajax({
+        url: "/mail",
+        type: "post",
+        dataType: "text",
+        data: { "mail": $("#mail").val() },
+        success: function (data) {
+            alert(data);
+        }
+    });
+}
+
+function confirmNumber() {
+    var number1 = $("#number").val();
+    $.ajax({
+        url: "/confirmNumber",
+        type: "post",
+        dataType: "text",
+        data: { "enteredNumber": number1 },
+        success: function (data) {
+            alert(data);
+        }
+    });
+}
+
 
 function mysearch(){
     const URLSearch = new URLSearchParams(location.search);
@@ -111,3 +143,4 @@ document.addEventListener('DOMContentLoaded', function () {
         element.textContent = abbreviateEmail(originalEmail);
     });
 });
+
