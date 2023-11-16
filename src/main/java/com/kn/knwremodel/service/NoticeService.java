@@ -177,7 +177,7 @@ public class NoticeService {
     }
 
     public List<Notice> findTopLikesByMajor(String major) {
-        List<Notice> topNotices = noticeRepo.findTop5ByMajorOrderByLikeCountDesc(major);
+        List<Notice> topNotices = noticeRepo.findTop3ByMajorOrderByLikeCountDesc(major);
 
         List<Notice> result = new ArrayList<>();
 

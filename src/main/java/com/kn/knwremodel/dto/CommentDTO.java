@@ -9,6 +9,8 @@ public class CommentDTO {
     public static class save{
         private Long noticeId;
         private String comment;
+        private String noticeTitle;
+
     }
 
     @Getter

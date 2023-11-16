@@ -23,6 +23,6 @@ public interface NoticeRepository extends JpaRepository<Notice, Long> {
 
     @Query("SELECT n FROM Notice n WHERE n.regdate >= :beforeDate AND n.regdate <= :nowDate")
     List<Notice> findByOrderByViewDescWhereByRegDate(@Param("beforeDate") LocalDate beforeDate, @Param("nowDate") LocalDate nowDate, Pageable pageable);
-    List<Notice> findTop5ByMajorOrderByLikeCountDesc(String major);
+    List<Notice> findTop3ByMajorOrderByLikeCountDesc(String major);
     long count();
 }

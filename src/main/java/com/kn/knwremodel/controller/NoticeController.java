@@ -36,7 +36,7 @@ public class NoticeController {
         return ResponseEntity.ok(new NoticeDTO.responsebody(likeS, notice));
     }
 
-    @GetMapping("/top5likes/{major}")
+    @GetMapping("/top3likes/{major}")
     public ResponseEntity getTopLikesByMajor(@PathVariable String major) {
         List<Notice> topNotices = noticeS.findTopLikesByMajor(major);
 

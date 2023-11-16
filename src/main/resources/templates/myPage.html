@@ -5,11 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>마이페이지</title>
     <link rel="stylesheet" th:href="@{/style.css}">
+    <script th:src="@{/testjs.js}"></script>
+
 </head>
 <body>
 <h1>내가 좋아요한 공지사항</h1>
 
-<!-- 좋아요한 공지사항 테이블 -->
 <table>
     <thead>
     <tr>
@@ -45,6 +46,7 @@
     <tr>
         <th>User Email</th>
         <th>Comment</th>
+        <th>Title</th>
         <th>Created Date</th>
         <th>Modified Date</th>
         <th>Modify</th>
@@ -55,6 +57,11 @@
     <tr th:each="i : ${comments}">
         <td class="abbreviate-email" th:text="${i.user.email}"></td>
         <td th:text="${i.comment}"></td>
+        <td>
+            <a th:href="@{'/read/' + ${i.notice.id}}">
+                <span th:text="${i.notice.title}"></span>
+            </a>
+        </td>
         <td th:text="${i.createdDate}"></td>
         <td th:text="${i.modifiedDate}"></td>
         <td><button th:onclick="commentModify([[${i.id}]])">댓글 수정</button></td>
