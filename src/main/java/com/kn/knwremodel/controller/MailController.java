@@ -2,7 +2,9 @@ package com.kn.knwremodel.controller;
 
 import com.kn.knwremodel.dto.UserDTO;
 import com.kn.knwremodel.entity.Role;
+import com.kn.knwremodel.entity.User;
 import com.kn.knwremodel.service.AuthChangeGuestUserService;
+import com.kn.knwremodel.service.DepartmentSaveService;
 import com.kn.knwremodel.service.MailService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -17,8 +19,28 @@ public class MailController {
     private final MailService mailService;
     private final AuthChangeGuestUserService authChangeGuestUserService;
     private final HttpSession httpSession;
-
+    private final DepartmentSaveService departmentSaveService;
     private Timer expirationTimer; // 인증 번호 만료를 위한 타이머
+
+    @PostMapping("/saveDepartment")
+    @ResponseBody
+    public String saveDepartment(@RequestParam String department, HttpSession session) {
+        try {
+            departmentSaveService.updateUserDepartment(department);
+
+            // 세션에도 부서 정보 저장
+            UserDTO.Session currentUserDTO = (UserDTO.Session) session.getAttribute("user");
+            if (currentUserDTO != null) {
+                currentUserDTO.setDepartment(department);
+                session.setAttribute("user", currentUserDTO);
+            }
+
+            return "Department saved successfully!";
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "Failed to save department.";
+        }
+    }
 
     // 인증 번호 발송
     @ResponseBody
@@ -59,6 +81,8 @@ public class MailController {
         } else {
             return "인증 번호가 다르거나 만료되었습니다.";
         }
+
+
     }
 
     // 타이머를 설정하여 주어진 시간(delay)이 경과하면 인증 번호를 만료시킴

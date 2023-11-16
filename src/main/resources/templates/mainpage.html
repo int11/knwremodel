@@ -17,6 +17,7 @@
     <p th:text="${currentuser.name}"></p>
     <p th:text="${currentuser.email}"></p>
     <p th:text="${currentuser.role}"></p>
+    <p th:text="${currentuser.department}"></p>
     <a th:href="@{logout}">로그아웃</a>
 </th:block>
 <th:block th:if="${currentuser == null}">
@@ -28,12 +29,28 @@
     <input type="text" name="mail" id="mail" placeholder="이메일 입력">
     <button type="button" id="sendBtn" name="sendBtn" onclick="sendNumber()">인증번호</button>
 </div>
+
 <br>
+
 <div id="mail_number" name="mail_number" th:if="${currentuser != null}" style="display: none">
     <input type="text" name="number" id="number" placeholder="인증번호 입력">
     <button type="button" name="confirmBtn" id="confirmBtn" onclick="confirmNumber()">이메일 인증</button>
 </div>
+
 <br>
+
+<div id="departmentInput" th:if="${currentuser != null}">
+    <label for="department">학부 선택:
+        <select id="department" name="department">
+            <option value="ICT공학부">ICT공학부</option>
+            <option value="ICT융합공학부">ICT융합공학부</option>
+            <!-- 다른 학부도 필요에 따라 추가 -->
+        </select>
+        <button onclick="saveDepartment()">학부 저장</button>
+    </label>
+</div>
+<br>
+
 <input type="text" id="Confirm" name="Confirm" style="display: none" value="">
 
 <br>

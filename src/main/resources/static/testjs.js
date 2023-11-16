@@ -3,6 +3,23 @@ var script = document.createElement('script');
 script.src = "https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"; // Check https://jquery.com/ for the current version
 document.getElementsByTagName('head')[0].appendChild(script);
 
+function saveDepartment() {
+    var department = document.getElementById('department').value;
+
+    // jQuery AJAX를 사용하여 서버에 부서 정보 저장 요청
+    $.ajax({
+        type: 'POST',
+        url: '/saveDepartment',
+        data: {department: department},
+        success: function (response) {
+            alert(response); // 서버로부터의 응답을 알림으로 표시
+        },
+        error: function (xhr, status, error) {
+            console.error(xhr.responseText); // 에러 발생 시 콘솔에 출력
+        }
+    });
+}
+
 window.onload = function(){
     const URLSearch = new URLSearchParams(location.search);
 
