@@ -5,10 +5,8 @@ import com.kn.knwremodel.dto.NoticeDTO;
 import com.kn.knwremodel.dto.UserDTO;
 import com.kn.knwremodel.dto.pageDTO;
 import com.kn.knwremodel.dto.NoticeDTO.responsebody;
-import com.kn.knwremodel.entity.Comment;
-import com.kn.knwremodel.entity.Keyword;
-import com.kn.knwremodel.entity.Notice;
-import com.kn.knwremodel.entity.Haksa;
+import com.kn.knwremodel.entity.*;
+import com.kn.knwremodel.repository.EventRepository;
 import com.kn.knwremodel.service.*;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -41,7 +39,7 @@ public class testController {
     private final LikeService likeS;
     private final KeywordService keywordS;
     private final CommentService commentService;
-
+    private final EventRepository eventRepository;
     @GetMapping(value={"/"})
     public String test(@RequestParam(defaultValue = "1") Long page, @RequestParam(defaultValue = "20") Long perPage,
                        @RequestParam(required = false) String major, @RequestParam(required = false) String type,
@@ -118,4 +116,16 @@ public class testController {
 
         return "myPage";
     }
+
+    @GetMapping("/eventPage")
+    public String showEventPage(@RequestParam(defaultValue = "1") Long page,
+                                Model model) {
+        // 페이징처리, 검색, 추가 해야됨
+        // 추가할 내용이 많음 (댓글 좋아요)
+        // 기본적인 뼈대
+        List<Event> events = eventRepository.findAll();
+        model.addAttribute("events", events);
+        return "eventPage";
+    }
+
 }
