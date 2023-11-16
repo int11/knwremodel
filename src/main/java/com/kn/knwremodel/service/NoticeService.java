@@ -60,14 +60,14 @@ public class NoticeService {
                             }
 
                             Long id = Long.parseLong(columnNumber);
-                            Elements titlElements = content.select("a");
+                            Elements titleElements = content.select("a");
 
                             if (noticeRepo.existsByBoardId(id)) {
                                 break loopout;
                             }
 
                             //게시물 내용, 사진 크롤링
-                            JSONObject jsonObject = (JSONObject) parser.parse(titlElements.attr("data-params"));
+                            JSONObject jsonObject = (JSONObject) parser.parse(titleElements.attr("data-params"));
                             String encMenuSeq = (String) jsonObject.get("encMenuSeq");
                             String encMenuBoardSeq = (String) jsonObject.get("encMenuBoardSeq");
 
@@ -109,7 +109,7 @@ public class NoticeService {
 
 
                             notices.add(new Notice(id,
-                                    titlElements.text(),
+                                    titleElements.text(),
                                     content.select("li.ali").text(),
                                     e.getMajor(),
                                     content.select("li.sliceDot6").text(),
