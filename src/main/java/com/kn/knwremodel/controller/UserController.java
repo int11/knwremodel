@@ -28,10 +28,10 @@ public class UserController {
                 session.setAttribute("user", currentUserDTO);
             }
 
-            return "Department saved successfully!";
+            return "학부 저장을 성공했습니다.";
         } catch (Exception e) {
             e.printStackTrace();
-            return "Failed to save department.";
+            return "학부 저장을 실패했습니다.";
         }
     }
 }
