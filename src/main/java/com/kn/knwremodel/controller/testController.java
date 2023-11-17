@@ -41,9 +41,12 @@ public class testController {
     private final CommentService commentService;
     private final EventRepository eventRepository;
     @GetMapping(value={"/"})
-    public String test(@RequestParam(defaultValue = "1") Long page, @RequestParam(defaultValue = "20") Long perPage,
-                       @RequestParam(required = false) String major, @RequestParam(required = false) String type,
-                       @RequestParam(required = false) String keyword, HttpServletRequest request,
+    public String test(@RequestParam(defaultValue = "1") Long page,
+                       @RequestParam(defaultValue = "20") Long perPage,
+                       @RequestParam(required = false) String major,
+                       @RequestParam(required = false) String type,
+                       @RequestParam(required = false) String keyword,
+                       HttpServletRequest request,
                        HttpServletResponse response,
                        Model model) throws IOException {
         UserDTO.Session currentuserDTO = (UserDTO.Session)httpSession.getAttribute("user");

@@ -9,7 +9,7 @@ import org.springframework.security.config.annotation.web.configurers.HeadersCon
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
-import com.kn.knwremodel.service.OAuthService;
+import com.kn.knwremodel.service.UserService;
 
 import lombok.RequiredArgsConstructor;
 
@@ -17,7 +17,7 @@ import lombok.RequiredArgsConstructor;
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
-    private final OAuthService OAuthService;
+    private final UserService OAuthService;
 
     @Bean
     protected SecurityFilterChain configure(HttpSecurity http) throws Exception {
