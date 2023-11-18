@@ -21,8 +21,8 @@ import java.util.List;
 @RequiredArgsConstructor
 public class CommentService {
     private final CommentRepository commentRepo;
-    private final UserRepository userRepository;
-    private final NoticeRepository noticeRepository;
+    private final UserRepository userRepo;
+    private final NoticeRepository noticeRepo;
     private final HttpSession httpSession;
 
     @Transactional
@@ -38,10 +38,10 @@ public class CommentService {
             throw new IllegalArgumentException("댓글 쓰기 실패: 빈 내용의 댓글은 작성할 수 없습니다.");
         }
 
-        Notice notice = noticeRepository.findById(dto.getNoticeId()).orElseThrow(() ->
+        Notice notice = noticeRepo.findById(dto.getNoticeId()).orElseThrow(() ->
                 new IllegalArgumentException("댓글 쓰기 실패: 해당 게시글이 존재하지 않습니다." + dto.getNoticeId()));
 
-        User loginUser = userRepository.findById(currentuserDTO.getId()).get();
+        User loginUser = userRepo.findById(currentuserDTO.getId()).get();
 
         Comment comment = Comment.builder()
                 .comment(dto.getComment())
