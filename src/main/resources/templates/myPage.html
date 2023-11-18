@@ -6,7 +6,6 @@
     <title>마이페이지</title>
     <link rel="stylesheet" th:href="@{/style.css}">
     <script th:src="@{/testjs.js}"></script>
-
 </head>
 <body>
 
@@ -24,7 +23,7 @@
 
 <br>
 
-<div id="departmentInput" th:if="${currentuser == null}">
+<div id="departmentInput">
     <label for="department">학부 선택:
         <select id="department" name="department">
             <option value="ICT공학부">ICT공학부</option>
@@ -34,11 +33,17 @@
         
         <button onclick="saveDepartment()">학부 저장</button>
     </label>
-
 </div>
-<br>
-<h1>내가 좋아요한 공지사항</h1>
 
+<div>
+    <p>최초로 한하여 소셜로그인이름으로 닉네임이 설정됩니다. 닉네임 미변경시 개인정보보호를 위해 변경해주세요.</p>
+    <input type="text" id="inputNickname" placeholder="닉네임 입력">
+    <button type="button" id="confirmBtn" onclick="setNickname()">닉네임 변경</button>
+</div>
+
+<br>
+
+<h1>내가 좋아요한 공지사항</h1>
 <table>
     <thead>
     <tr>
@@ -72,7 +77,6 @@
 <table>
     <thead>
     <tr>
-        <th>User Email</th>
         <th>Comment</th>
         <th>Title</th>
         <th>Created Date</th>
@@ -83,7 +87,6 @@
     </thead>
     <tbody>
     <tr th:each="i : ${comments}">
-        <td class="abbreviate-email" th:text="${i.user.email}"></td>
         <td th:text="${i.comment}"></td>
         <td>
             <a th:href="@{'/read/' + ${i.notice.id}}">

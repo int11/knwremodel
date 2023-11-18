@@ -22,8 +22,6 @@ public class MailController {
 
     private Timer expirationTimer; // 인증 번호 만료를 위한 타이머
 
-
-
     // 인증 번호 발송
     @ResponseBody
     @PostMapping("/mail")
@@ -47,7 +45,7 @@ public class MailController {
         // 만료 여부를 체크하고 만료된 경우에만 제거
         if (authInfo != null && authInfo.getNumber() == Integer.parseInt(enteredNumber)) {
             if (authInfo.isValid()) {
-                userS.updateUserRole(Role.USER);
+                userS.setRole(Role.USER);
 
                 UserDTO.Session currentuserDTO = (UserDTO.Session)httpSession.getAttribute("user");
                 currentuserDTO.setRole("ROLE_USER");

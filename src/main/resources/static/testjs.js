@@ -9,13 +9,29 @@ function saveDepartment() {
     // jQuery AJAX를 사용하여 서버에 부서 정보 저장 요청
     $.ajax({
         type: 'POST',
-        url: '/saveDepartment',
+        url: '/user/saveDepartment',
         data: {department: department},
         success: function (response) {
             alert(response); // 서버로부터의 응답을 알림으로 표시
         },
         error: function (xhr, status, error) {
             console.error(xhr.responseText); // 에러 발생 시 콘솔에 출력
+        }
+    });
+}
+
+function setNickname() {
+    var nickname = document.getElementById('inputNickname').value;
+
+    $.ajax({
+        type: 'POST',
+        url: '/user/setNickname',
+        data: {nickname: nickname},
+        success: function (data) {
+            alert(data);
+        },
+        error: function (data) {
+            console.error(data.responseText);
         }
     });
 }
@@ -83,6 +99,7 @@ function post_clickLike(noticeId, target) {
             noticeId: noticeId
         }),
         success: function (data) {
+            console.log(data)
             var a = target.parentNode.parentNode.lastElementChild;
             if (target.innerText == "좋아요"){
                 a.innerText = parseInt(a.innerText) + 1;
@@ -165,17 +182,3 @@ function commentDelete(commentId) {
     }, 50);
 
 }
-
-function abbreviateEmail(email) {
-    return email.substring(0, 2) + '*'.repeat(9)
-}
-
-document.addEventListener('DOMContentLoaded', function () {
-    var emailElements = document.querySelectorAll('.abbreviate-email');
-
-    emailElements.forEach(function (element) {
-        var originalEmail = element.textContent;
-        element.textContent = abbreviateEmail(originalEmail);
-    });
-});
-

@@ -18,7 +18,7 @@ public class LikeController {
     public ResponseEntity clickLike(@RequestBody LikeDTO.click dto) throws Exception {
         try{
             return ResponseEntity.ok(likeS.clickLike(dto));
-        }catch (IllegalArgumentException e) {
+        }catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }

@@ -64,7 +64,7 @@ public class UserService implements OAuth2UserService<OAuth2UserRequest, OAuth2U
         return userRepo.save(user);
     }
 
-    public void updateUserDepartment(String newDepartment) {
+    public void setDepartment(String newDepartment) {
         // 세션에서 현재 사용자 정보를 가져옵니다.
         UserDTO.Session userDTO = (UserDTO.Session)httpSession.getAttribute("user");
 
@@ -76,13 +76,21 @@ public class UserService implements OAuth2UserService<OAuth2UserRequest, OAuth2U
 
         // 업데이트된 사용자 정보를 UserRepository를 통해 저장합니다.
         userRepo.save(user);
+        httpSession.setAttribute("user", new UserDTO.Session(user));
     }
 
-    public void updateUserRole(Role newRole) {
+    public void setRole(Role newRole) {
         UserDTO.Session userDTO = (UserDTO.Session)httpSession.getAttribute("user");
         User user = userRepo.findByEmail(userDTO.getEmail()).get();
         user.setRole(newRole);
         userRepo.save(user);
     }
 
+    public void setNickname(String nickname) {
+        UserDTO.Session userDTO = (UserDTO.Session)httpSession.getAttribute("user");
+        User user = userRepo.findByEmail(userDTO.getEmail()).get();
+        user.setNickname(nickname);
+        userRepo.save(user);
+        httpSession.setAttribute("user", new UserDTO.Session(user));
+    }
 }

@@ -17,7 +17,7 @@ public class CommentController {
     public ResponseEntity saveComment(@RequestBody CommentDTO.save commentdto) throws Exception {
         try{
             return ResponseEntity.ok(commentS.saveComment(commentdto));
-        }catch (IllegalArgumentException e) {
+        }catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
@@ -26,7 +26,7 @@ public class CommentController {
     public ResponseEntity modifyComment(@RequestBody CommentDTO.modify commentdto) throws Exception {
         try{
             return ResponseEntity.ok(commentS.modifyComment(commentdto));
-        }catch (IllegalArgumentException e) {
+        }catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
@@ -35,7 +35,7 @@ public class CommentController {
     public ResponseEntity deleteComment(@RequestBody CommentDTO.delete commentdto) throws Exception {
         try{
             return ResponseEntity.ok(commentS.deleteComment(commentdto));
-        }catch (IllegalArgumentException e) {
+        }catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
