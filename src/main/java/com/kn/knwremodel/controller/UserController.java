@@ -1,9 +1,7 @@
 package com.kn.knwremodel.controller;
 
-import com.kn.knwremodel.dto.UserDTO;
 import com.kn.knwremodel.service.UserService;
 
-import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.http.ResponseEntity;

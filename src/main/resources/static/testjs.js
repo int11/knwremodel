@@ -3,13 +3,25 @@ var script = document.createElement('script');
 script.src = "https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"; // Check https://jquery.com/ for the current version
 document.getElementsByTagName('head')[0].appendChild(script);
 
+window.onload = function(){
+    const URLSearch = new URLSearchParams(location.search);
+
+    if (URLSearch.get("keyword")){
+        document.getElementById('keyword').value = URLSearch.get("keyword");
+    }
+
+    if (URLSearch.get("major")){
+        document.getElementById('MajorDropdown').value = URLSearch.get("major")
+    }
+}
+
 function saveDepartment() {
     var department = document.getElementById('department').value;
 
     // jQuery AJAX를 사용하여 서버에 부서 정보 저장 요청
     $.ajax({
-        type: 'POST',
         url: '/user/saveDepartment',
+        type: 'POST',
         data: {department: department},
         success: function (response) {
             alert(response); // 서버로부터의 응답을 알림으로 표시
@@ -24,8 +36,9 @@ function setNickname() {
     var nickname = document.getElementById('inputNickname').value;
 
     $.ajax({
-        type: 'POST',
         url: '/user/setNickname',
+        type: 'POST',
+        dataType: "json",
         data: {nickname: nickname},
         success: function (data) {
             alert(data);
@@ -36,27 +49,18 @@ function setNickname() {
     });
 }
 
-window.onload = function(){
-    const URLSearch = new URLSearchParams(location.search);
-
-    if (URLSearch.get("keyword")){
-        document.getElementById('keyword').value = URLSearch.get("keyword");
-    }
-
-    if (URLSearch.get("major")){
-        document.getElementById('MajorDropdown').value = URLSearch.get("major")
-    }
-}
-
 function sendNumber() {
     $("#mail_number").css("display", "block");
     $.ajax({
         url: "/mail",
         type: "post",
-        dataType: "text",
+        dataType: "json",
         data: { "mail": $("#mail").val() },
         success: function (data) {
             alert(data);
+        },
+        error: function(data){
+            alert(data.responseText);
         }
     });
 }
@@ -66,14 +70,16 @@ function confirmNumber() {
     $.ajax({
         url: "/confirmNumber",
         type: "post",
-        dataType: "text",
+        dataType: "json",
         data: { "enteredNumber": number1 },
         success: function (data) {
             alert(data);
+        },
+        error: function(data){
+            alert(data.responseText);
         }
     });
 }
-
 
 function mysearch(){
     const URLSearch = new URLSearchParams(location.search);
@@ -180,5 +186,4 @@ function commentDelete(commentId) {
     setTimeout(function () {
         window.location.href = window.location.href;
     }, 50);
-
 }

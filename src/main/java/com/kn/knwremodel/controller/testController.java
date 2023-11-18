@@ -3,7 +3,6 @@ package com.kn.knwremodel.controller;
 import com.kn.knwremodel.dto.CommentDTO;
 import com.kn.knwremodel.dto.NoticeDTO;
 import com.kn.knwremodel.dto.UserDTO;
-import com.kn.knwremodel.dto.pageDTO;
 import com.kn.knwremodel.dto.NoticeDTO.responsebody;
 import com.kn.knwremodel.entity.*;
 import com.kn.knwremodel.repository.EventRepository;
