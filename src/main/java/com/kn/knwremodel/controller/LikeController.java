@@ -1,15 +1,12 @@
 package com.kn.knwremodel.controller;
 
 import com.kn.knwremodel.dto.LikeDTO;
-import com.kn.knwremodel.entity.Notice;
 import com.kn.knwremodel.service.LikeService;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 @RequiredArgsConstructor
 @RequestMapping("/like")
@@ -19,8 +16,10 @@ public class LikeController {
 
     @PostMapping("/click")
     public ResponseEntity clickLike(@RequestBody LikeDTO.click dto) throws Exception {
-        return ResponseEntity.ok(likeS.clickLike(dto));
+        try{
+            return ResponseEntity.ok(likeS.clickLike(dto));
+        }catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
-
-
 }

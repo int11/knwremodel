@@ -73,83 +73,101 @@ function myopen(page=1){
     location.href = location.href.split("?")[0] + '?' + URLSearch.toString();
 }
 
-function post_clickLike(noticeId) {
-    fetch("http://localhost:8080/like/click", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
+function post_clickLike(noticeId, target) {
+    $.ajax({
+        url: "/like/click",
+        type: "POST",
+        contentType: "application/json",
+        dataType: "json",
+        data: JSON.stringify({
             noticeId: noticeId
         }),
-    }).then((response) => console.log(response));
-    setTimeout(function () {
-        window.location.href = window.location.href;
-    }, 50);
+        success: function (data) {
+            var a = target.parentNode.parentNode.lastElementChild;
+            if (target.innerText == "좋아요"){
+                a.innerText = parseInt(a.innerText) + 1;
+                target.innerText = "좋아요 취소";
+            }else{
+                target.innerText = "좋아요";
+                a.innerText = parseInt(a.innerText) - 1;
+            }
+        },
+        error: function(data){
+            alert(data.responseText);
+        }
+    });
 }
 
 function commentSave(noticeId) {
-    let comment = document.getElementById("comments").value;
-    fetch("http://localhost:8080/comments/save", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
+    $.ajax({
+        url: "/comments/save",
+        type: "POST",
+        contentType: "application/json",
+        dataType: "json",
+        data: JSON.stringify({
             noticeId: noticeId,
-            comment: comment
+            comment: document.getElementById("comments").value
         }),
-    }).then((response) => console.log(response));
+        success: function (data) {
+            console.log(data)
+        },
+        error: function(data){
+            alert(data.responseText);
+        }
+    });
+
     setTimeout(function () {
         window.location.href = window.location.href;
     }, 50);
+
 }
 
 function commentModify(commentId) {
-    let comment = document.getElementById("comments").value;
-    fetch("http://localhost:8080/comments/modify", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
+    $.ajax({
+        url: "/comments/modify",
+        type: "POST",
+        contentType: "application/json",
+        dataType: "json",
+        data: JSON.stringify({
             commentId: commentId,
-            comment: comment
+            comment: document.getElementById("comments").value
         }),
-    }).then((response) => console.log(response));
+        success: function (data) {
+            console.log(data)
+        },
+        error: function(data){
+            alert(data.responseText);
+        }
+    });
     setTimeout(function () {
         window.location.href = window.location.href;
     }, 50);
 }
 
 function commentDelete(commentId) {
-    fetch("http://localhost:8080/comments/delete", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
+    $.ajax({
+        url: "/comments/delete",
+        type: "POST",
+        contentType: "application/json",
+        dataType: "json",
+        data: JSON.stringify({
             commentId: commentId
         }),
-    }).then((response) => console.log(response));
+        success: function (data) {
+            console.log(data)
+        },
+        error: function(data){
+            alert(data.responseText);
+        }
+    });
     setTimeout(function () {
         window.location.href = window.location.href;
     }, 50);
+
 }
 
 function abbreviateEmail(email) {
-    if (email.indexOf('@') > 0) {
-        var parts = email.split('@');
-        var username = parts[0];
-        var obscured = username.substring(0, 2);
-
-        for (var i = 2; i < username.length; i++) {
-            obscured += '*';
-        }
-        return obscured;
-    } else {
-        return email;
-    }
+    return email.substring(0, 2) + '*'.repeat(9)
 }
 
 document.addEventListener('DOMContentLoaded', function () {

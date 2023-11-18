@@ -14,18 +14,16 @@
 
 
 <th:block th:if="${currentuser != null}">
+    <button onClick="window.open('/myPage','_self');">Mypage</button>
+    <button onClick="window.open('/logout','_self');">로그아웃</button>
     <p th:text="${currentuser.name}"></p>
     <p th:text="${currentuser.email}"></p>
     <p th:text="${currentuser.role}"></p>
     <p th:text="${currentuser.department}"></p>
-    <a th:href="@{logout}">로그아웃</a>
 </th:block>
 <th:block th:if="${currentuser == null}">
     <a th:href="@{mainlogin}">로그인페이지</a>
 </th:block>
-
-
-
 
 <br>
 
@@ -36,7 +34,7 @@
 <button value="/top5View" onclick="window.open(value,'_self');">조회수 Top5</button>
 <button value="/haksa" onclick="window.open(value,'_self');">학사 크롤링</button>
 <button value="/scholarshipwiki" onclick="window.open(value,'_self');">학식</button>
-<button onClick="window.open('/myPage','_self');">Mypage</button>
+
 <br>
 
 <select id="MajorDropdown">
@@ -87,7 +85,7 @@
 
         <td>
             <a th:href="@{read/{id}(id=${i.dbid})}" th:text="${i.dbid}"></a>
-            <button th:text="${i.checkLike} ? '좋아요 취소' : '좋아요' " th:onclick="post_clickLike([[${i.dbid}]])"></button>
+            <button th:text="${i.checkLike} ? '좋아요 취소' : '좋아요' " th:onclick="post_clickLike([[${i.dbid}]], this)"></button>
         </td>
         <td th:text="${i.boardId}"></td>
         <td th:style="${'min-width:200px'}" th:text="${i.title}"></td>

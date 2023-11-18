@@ -15,16 +15,28 @@ public class CommentController {
     /* CREATE */
     @PostMapping("/save")
     public ResponseEntity saveComment(@RequestBody CommentDTO.save commentdto) throws Exception {
-        return ResponseEntity.ok(commentS.saveComment(commentdto));
+        try{
+            return ResponseEntity.ok(commentS.saveComment(commentdto));
+        }catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 
     @PostMapping("/modify")
     public ResponseEntity modifyComment(@RequestBody CommentDTO.modify commentdto) throws Exception {
-        return ResponseEntity.ok(commentS.modifyComment(commentdto));
+        try{
+            return ResponseEntity.ok(commentS.modifyComment(commentdto));
+        }catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 
     @PostMapping("/delete")
     public ResponseEntity deleteComment(@RequestBody CommentDTO.delete commentdto) throws Exception {
-        return ResponseEntity.ok(commentS.deleteComment(commentdto));
+        try{
+            return ResponseEntity.ok(commentS.deleteComment(commentdto));
+        }catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 }

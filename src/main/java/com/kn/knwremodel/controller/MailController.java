@@ -2,8 +2,10 @@ package com.kn.knwremodel.controller;
 
 import com.kn.knwremodel.dto.UserDTO;
 import com.kn.knwremodel.entity.Role;
-import com.kn.knwremodel.service.AuthChangeGuestUserService;
+
 import com.kn.knwremodel.service.MailService;
+import com.kn.knwremodel.service.UserService;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -14,8 +16,8 @@ import java.util.TimerTask;
 @Controller
 @RequiredArgsConstructor
 public class MailController {
-    private final MailService mailService;
-    private final AuthChangeGuestUserService authChangeGuestUserService;
+    private final MailService mailS;
+    private final UserService userS;
     private final HttpSession httpSession;
 
     private Timer expirationTimer; // 인증 번호 만료를 위한 타이머
@@ -26,7 +28,7 @@ public class MailController {
     @ResponseBody
     @PostMapping("/mail")
     public synchronized String MailSend(String mail) {
-        int number = mailService.sendMail(mail);
+        int number = mailS.sendMail(mail);
         long expirationTime = System.currentTimeMillis() + 90 * 1000; // 현재 시간 + 90초
         httpSession.setAttribute("authNumber", new AuthInfo(number, expirationTime));
 
@@ -45,7 +47,7 @@ public class MailController {
         // 만료 여부를 체크하고 만료된 경우에만 제거
         if (authInfo != null && authInfo.getNumber() == Integer.parseInt(enteredNumber)) {
             if (authInfo.isValid()) {
-                authChangeGuestUserService.updateUserRole(Role.USER);
+                userS.updateUserRole(Role.USER);
 
                 UserDTO.Session currentuserDTO = (UserDTO.Session)httpSession.getAttribute("user");
                 currentuserDTO.setRole("ROLE_USER");
@@ -61,8 +63,6 @@ public class MailController {
         } else {
             return "인증 번호가 다르거나 만료되었습니다.";
         }
-
-
     }
 
     // 타이머를 설정하여 주어진 시간(delay)이 경과하면 인증 번호를 만료시킴

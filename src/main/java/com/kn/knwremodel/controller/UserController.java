@@ -13,13 +13,13 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @Controller
 @RequiredArgsConstructor
 public class UserController {
-    private final UserService userService;
+    private final UserService userS;
 
     @PostMapping("/saveDepartment")
     @ResponseBody
     public String saveDepartment(@RequestParam String department, HttpSession session) {
         try {
-            userService.updateUserDepartment(department);
+            userS.updateUserDepartment(department);
 
             // 세션에도 부서 정보 저장
             UserDTO.Session currentUserDTO = (UserDTO.Session) session.getAttribute("user");

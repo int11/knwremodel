@@ -38,7 +38,7 @@ public class testController {
     private final NoticeController noticeC;
     private final LikeService likeS;
     private final KeywordService keywordS;
-    private final CommentService commentService;
+    private final CommentService commentS;
     private final EventRepository eventRepository;
     @GetMapping(value={"/"})
     public String test(@RequestParam(defaultValue = "1") Long page,
@@ -110,11 +110,17 @@ public class testController {
 
     @GetMapping("/myPage")
     public String showLikedNoticesAndComments(Model model) {
+        UserDTO.Session currentuserDTO = (UserDTO.Session)httpSession.getAttribute("user");
+
+        if(currentuserDTO != null) {
+            model.addAttribute("currentuser", currentuserDTO);
+        }
+
         List<Notice> likedNotices = likeS.getLikedNotices();
         model.addAttribute("likedNotices", likedNotices);
 
         UserDTO.Session currentUserDTO = (UserDTO.Session) httpSession.getAttribute("user");
-        List<Comment> userComments = commentService.getCommentsByUser(currentUserDTO.getId());
+        List<Comment> userComments = commentS.getCommentsByUser(currentUserDTO.getId());
         model.addAttribute("comments", userComments);
 
         return "myPage";
