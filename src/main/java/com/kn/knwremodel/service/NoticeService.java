@@ -26,7 +26,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-
 @Service
 @RequiredArgsConstructor
 public class NoticeService {
@@ -164,10 +163,13 @@ public class NoticeService {
         major = (major == null) ? "" : major;
         type = (type == null) ? "" : type;
         keyword = (keyword == null) ? "" : keyword;
-        return noticeRepo.findByMajorContainingAndTypeContainingAndTitleContaining(major, type, keyword);
+
+        if (major.equals("행사/안내"))
+            return noticeRepo.findByMajorContainingAndTypeContainingAndTitleContaining(major, type, keyword);
+
+        return noticeRepo.findByMajorExceptEventContainingAndTypeContainingAndTitleContaining(major, type, keyword);
     }
 
- 
 
     @Transactional(readOnly = true) // 읽기 전용 트랜잭션
     public List<Notice> findTop5ByView(Pageable pageable) {

@@ -19,7 +19,7 @@ public class Notice {
     @Column(updatable = false)
     private Long id;
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     private Long boardId;
 
     @Column(nullable = false)

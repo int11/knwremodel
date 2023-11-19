@@ -14,7 +14,10 @@ import com.kn.knwremodel.entity.Notice;
 
 @Repository
 public interface NoticeRepository extends JpaRepository<Notice, Long> {
-    List<Notice> findByMajorContainingAndTypeContainingAndTitleContaining(String major, String type, String title);
+    @Query("SELECT n FROM Notice n WHERE n.major NOT LIKE '행사/안내' AND n.major LIKE %:major AND n.type LIKE %:type AND n.title LIKE CONCAT ('%', :keyword, '%')")
+    List<Notice> findByMajorExceptEventContainingAndTypeContainingAndTitleContaining(@Param("major") String major, @Param("type") String type, @Param("keyword") String keyword);
+
+    List<Notice> findByMajorContainingAndTypeContainingAndTitleContaining(String major,String type, String title);
     boolean existsByBoardId(Long board_id);
     boolean existsByMajor(String major);
 

@@ -1,7 +1,7 @@
 package com.kn.knwremodel.service;
 
-import com.kn.knwremodel.entity.Event;
-import com.kn.knwremodel.repository.EventRepository;
+import com.kn.knwremodel.entity.Notice;
+import com.kn.knwremodel.repository.NoticeRepository;
 import lombok.RequiredArgsConstructor;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -14,18 +14,20 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
 public class EventService {
-    private final EventRepository eventRepo;
+    private final NoticeRepository noticeRepository;
     private final int maxPage = 2; //크롤링할 공지사항 페이지의 수
     private final String url = "https://web.kangnam.ac.kr/menu/e4058249224f49ab163131ce104214fb.do?paginationInfo.currentPageNo=";
 
     @Transactional
     public void update() {
-        List<Event> events = eventRepo.findAll();
+        List<Notice> eventNotice = noticeRepository.findAll();
         JSONParser parser = new JSONParser();
         try {
             for (int page = 1; page <= maxPage; page++) {
@@ -60,12 +62,17 @@ public class EventService {
                         if (!temp.substring(0, 30).contains("data:image"))
                             img += temp + ";";
 
+                    String regDate =  content.select("li dd span").next().first().text().replace("등록일 ", "");
+                    DateTimeFormatter JEFormatter = DateTimeFormatter.ofPattern("yyyy.MM.dd");
+                    LocalDate localDate = LocalDate.parse("20" + regDate, JEFormatter);
 
-                    events.add(new Event(
+                    eventNotice.add(new Notice(
+                            null,
                             content.select("a").attr("title"),
                             articleDocument.getElementsByClass("wri_area colum20").text().replace("게시판명 ", ""),
+                            "행사/안내",
                             content.select("li dd span").first().text().replace("작성자 ", ""),
-                            content.select("li dd span").next().first().text().replace("등록일 ", ""),
+                            localDate,
                             Long.parseLong(content.select("li dd span")
                                     .next().next().text().replace("조회수 ", "").replace(",", "")),
                             body,
@@ -78,6 +85,6 @@ public class EventService {
         } catch (ParseException e) {
             throw new RuntimeException(e);
         }
-        eventRepo.saveAll(events);
+        noticeRepository.saveAll(eventNotice);
     }
 }
