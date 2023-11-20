@@ -165,7 +165,7 @@ public class NoticeService {
         keyword = (keyword == null) ? "" : keyword;
 
         if (major.equals("행사/안내"))
-            return noticeRepo.findByMajorContainingAndTypeContainingAndTitleContaining(major, type, keyword);
+            return noticeRepo.findByMajorContainingAndTypeContainingAndTitleContainingOrderByBoardIdDesc(major, type, keyword);
 
         return noticeRepo.findByMajorExceptEventContainingAndTypeContainingAndTitleContaining(major, type, keyword);
     }
