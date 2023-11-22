@@ -8,11 +8,13 @@ import com.kn.knwremodel.service.LikeService;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 
 public class NoticeDTO {
     @Getter
     @AllArgsConstructor
+    @NoArgsConstructor
     public static class requestPage{
         private String major;
         private String type; 
@@ -50,6 +52,7 @@ public class NoticeDTO {
 
     @Getter
     @AllArgsConstructor
+    @NoArgsConstructor
     public static class requestbody{
         private Long dbid;
     }
