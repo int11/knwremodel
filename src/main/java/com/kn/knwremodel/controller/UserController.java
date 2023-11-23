@@ -1,7 +1,9 @@
 package com.kn.knwremodel.controller;
 
+import com.kn.knwremodel.dto.UserDTO;
 import com.kn.knwremodel.service.UserService;
 
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.http.ResponseEntity;
@@ -32,10 +34,20 @@ public class UserController {
     @PostMapping("/setNickname")
     @ResponseBody
     public ResponseEntity setNickname(@RequestParam String nickname) {
-        try{
+        try {
             userS.setNickname(nickname);
             return ResponseEntity.ok("닉네임 변경을 성공했습니다.");
-        }catch (Exception e) {
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @PostMapping("/request")
+    @ResponseBody
+    public ResponseEntity requestUser(@RequestParam HttpSession httpSession) {
+        try {
+            return ResponseEntity.ok((UserDTO.Session) httpSession.getAttribute("user"));
+        } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }

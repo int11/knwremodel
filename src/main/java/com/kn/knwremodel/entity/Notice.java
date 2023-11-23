@@ -1,6 +1,7 @@
 package com.kn.knwremodel.entity;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -46,10 +47,12 @@ public class Notice {
     @Column(columnDefinition = "TEXT", nullable = true)
     private String img;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "notice", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
     @OrderBy("id asc") // 댓글 정렬
     private List<Comment> comments = new ArrayList<>();
 
+    @JsonIgnore
     @OneToMany(mappedBy = "notice", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
     private List<Like> likes = new ArrayList<>();
 

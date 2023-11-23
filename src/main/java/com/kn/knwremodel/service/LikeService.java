@@ -64,16 +64,16 @@ public class LikeService {
         return likeRepository.existsByUserAndNotice(currentuser, notice);
     }
 
-    public List<Notice> getLikedNotices() {
-        Long currentUserId = getCurrentUserId();
+    public List<Notice> getLikedNotices(UserDTO.Session currentUserDTO) {
+        Long currentUserId = getCurrentUserId(currentUserDTO);
         if (currentUserId == null) {
             return Collections.emptyList();
         }
         return likeRepository.findLikedNoticesByUser(currentUserId);
     }
 
-    public Long getCurrentUserId() {
-        UserDTO.Session currentUserDTO = (UserDTO.Session) httpSession.getAttribute("user");
+    public Long getCurrentUserId(UserDTO.Session currentUserDTO) {
+
         if (currentUserDTO == null) {
             return null;
         }

@@ -1,6 +1,7 @@
 package com.kn.knwremodel.controller;
 
 import com.kn.knwremodel.dto.CommentDTO;
+import com.kn.knwremodel.dto.KeywordDTO;
 import com.kn.knwremodel.dto.NoticeDTO;
 import com.kn.knwremodel.dto.UserDTO;
 import com.kn.knwremodel.dto.NoticeDTO.responsebody;
@@ -54,8 +55,9 @@ public class testController {
 
         ResponseEntity result = noticeC.requestPage(new NoticeDTO.requestPage(major, type, keyword, page, perPage));
 
-        List<Keyword> keywords = keywordS.findTop5ByKeyword(keyword, request);
-        List<String> recentlyKeywords = keywordS.recentKeywords(keyword, request, response);
+        List<Keyword> keywords = keywordS.findTop5ByKeyword(new KeywordDTO.request(keyword, request));
+        List<String> recentlyKeywords = keywordS.recentKeywords(new KeywordDTO.requestRecentlyKeyword(
+                keyword, request, response));
 
 
         model.addAttribute("majorlist",  collegeS.findAllMajor());
@@ -113,7 +115,7 @@ public class testController {
             model.addAttribute("currentuser", currentuserDTO);
         }
 
-        List<Notice> likedNotices = likeS.getLikedNotices();
+        List<Notice> likedNotices = likeS.getLikedNotices(currentuserDTO);
         model.addAttribute("likedNotices", likedNotices);
 
         UserDTO.Session currentUserDTO = (UserDTO.Session) httpSession.getAttribute("user");
