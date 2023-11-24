@@ -58,7 +58,7 @@ public class UserDTO {
     public static class Session implements Serializable {
 
         private Long id;
-        private String nickname;
+        private String name;
         private String email;
         private String picture;
         private String role;  // 역할 정보 추가
@@ -66,7 +66,7 @@ public class UserDTO {
 
         public Session(User user) {
             this.id = user.getId();
-            this.nickname = user.getNickname();
+            this.name = user.getName();
             this.email = user.getEmail();
             this.picture = user.getPicture();
             this.role = user.getRoleKey(); // 변경된 부분

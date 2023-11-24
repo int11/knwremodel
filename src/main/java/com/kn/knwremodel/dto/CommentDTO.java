@@ -27,14 +27,14 @@ public class CommentDTO {
     @Getter
     public static class Comment{
         private Long id;
-        private String nickname;
+        private String email;
         private String comment;
         private String createdDate;
         private String modifiedDate;
 
         public Comment(com.kn.knwremodel.entity.Comment comment) {
             this.id = comment.getId();
-            this.nickname = comment.getUser().getNickname();
+            this.email = comment.getUser().getEmail().substring(0, 4) + "*".repeat(7);
             this.comment = comment.getComment();
             this.createdDate = comment.getCreatedDate();
             this.modifiedDate = comment.getModifiedDate();

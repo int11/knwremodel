@@ -16,7 +16,7 @@
 <th:block th:if="${currentuser != null}">
     <button onClick="window.open('/myPage','_self');">Mypage</button>
     <button onClick="window.open('/logout','_self');">로그아웃</button>
-    <p th:text="${currentuser.nickname}"></p>
+    <p th:text="${currentuser.name}"></p>
     <p th:text="${currentuser.email}"></p>
     <p th:text="${currentuser.role}"></p>
     <p th:text="${currentuser.department}"></p>

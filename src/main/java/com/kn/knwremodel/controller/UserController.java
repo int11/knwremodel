@@ -28,15 +28,4 @@ public class UserController {
             return ResponseEntity.badRequest().body("학부 저장을 실패했습니다.");
         }
     }
-
-    @PostMapping("/setNickname")
-    @ResponseBody
-    public ResponseEntity setNickname(@RequestParam String nickname) {
-        try{
-            userS.setNickname(nickname);
-            return ResponseEntity.ok("닉네임 변경을 성공했습니다.");
-        }catch (Exception e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
-    }
 }
