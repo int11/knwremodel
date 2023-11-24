@@ -13,7 +13,9 @@ window.onload = function(){
     if (URLSearch.get("major")){
         document.getElementById('MajorDropdown').value = URLSearch.get("major")
     }
-}
+
+    requestPage(URLSearch.get("major"), URLSearch.get("type"), URLSearch.get("keyword"))
+}   
 
 function saveDepartment() {
     var department = document.getElementById('department').value;
@@ -31,6 +33,85 @@ function saveDepartment() {
         }
     });
 }
+
+function requestPage(major="", type="", keyword="", page=1, perPage=20){
+    $.ajax({
+        url: '/notice/requestPage',
+        type: 'POST',
+        contentType: "application/json",
+        dataType: "json",
+        data: JSON.stringify({major:major,
+               type: type, 
+               keyword:keyword, 
+               page:page, 
+               perPage:perPage}),
+        success: function (response) {
+            let table = document.getElementById("mainTable");
+            createTable(response.data, table);
+            let ul = document.getElementById("mainPageCount");
+            ul.replaceChildren()
+
+            let li = document.createElement("li");
+            li.style = "float: left;"
+            li.innerText = "page"
+            ul.appendChild(li)
+
+            for(let i = 0; i<response.pageSize; i++){
+                let li = document.createElement("li");
+                li.style.float = "left";
+                li.style.margin = "0px 5px";
+
+                let a = document.createElement("a");
+                a.href = `javascript:myopen(${i + 1})`;
+                a.text = i+1;
+                
+                
+                li.appendChild(a);
+                ul.appendChild(li)
+            }
+        },
+        error: function (data) {
+            console.error(data.responseText); // 에러 발생 시 콘솔에 출력
+        }
+    });
+}
+
+function createTable(jsonlist, table) {
+    table.replaceChildren()
+    let tr = document.createElement("tr");
+    for(let item in jsonlist[0]){
+        let th = document.createElement("th");
+        th.innerText = item; 
+        tr.appendChild(th); 
+    }
+
+    table.append(tr) 
+    for (let index in jsonlist){
+        let tr = document.createElement("tr");
+        let item = jsonlist[index];
+        for(let key in item){
+            let td = document.createElement("td");
+
+            if (key == "checkLike"){
+                let button = document.createElement("button");
+                button.onclick = function(){post_clickLike(item["dbid"], button, button.parentNode.parentNode.getElementsByClassName("likeCount")[0]);};
+                console.log(item[key])
+                if (item[key] == false){
+                    button.innerText = "좋아요";
+                }else{
+                    button.innerText = "좋아요 취소";
+                }
+                td.appendChild(button);
+            }else{
+                td.className = key;
+                td.innerText = item[key]; 
+            }
+
+            tr.appendChild(td);
+        }
+        table.appendChild(tr); 
+    }
+ }
 
 function setNickname() {
     var nickname = document.getElementById('inputNickname').value;
@@ -89,13 +170,12 @@ function mysearch(){
     location.href = location.href.split("?")[0] + '?' + URLSearch.toString();
 }
 
-function myopen(page=1){
+function myopen(page){
     const URLSearch = new URLSearchParams(location.search);
-    URLSearch.set("page", page);
-    location.href = location.href.split("?")[0] + '?' + URLSearch.toString();
+    requestPage(URLSearch.get("major"), URLSearch.get("type"), URLSearch.get("keyword"), page)
 }
 
-function post_clickLike(noticeId, target) {
+function post_clickLike(noticeId, target, likecount) {
     $.ajax({
         url: "/like/click",
         type: "POST",
@@ -106,13 +186,13 @@ function post_clickLike(noticeId, target) {
         }),
         success: function (data) {
             console.log(data)
-            var a = target.parentNode.parentNode.lastElementChild;
+            
             if (target.innerText == "좋아요"){
-                a.innerText = parseInt(a.innerText) + 1;
+                likecount.innerText = parseInt(likecount.innerText) + 1;
                 target.innerText = "좋아요 취소";
             }else{
                 target.innerText = "좋아요";
-                a.innerText = parseInt(a.innerText) - 1;
+                likecount.innerText = parseInt(likecount.innerText) - 1;
             }
         },
         error: function(data){

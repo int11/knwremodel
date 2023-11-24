@@ -11,7 +11,8 @@
 
 
 <body>
-
+<button onClick="window.open('/','_self');">Home</button>
+<br>
 
 <th:block th:if="${currentuser != null}">
     <button onClick="window.open('/myPage','_self');">Mypage</button>
@@ -39,6 +40,7 @@
 
 <select id="MajorDropdown">
     <option value="">전체</option>
+    <option value="행사/안내">행사/안내</option>
     <option th:each="item : ${majorlist}" th:value="${item}" th:text="${item}">Option Text</option>
 </select>
 <label for="keyword">
@@ -69,40 +71,10 @@
 </table>
 <br>
 
-<table>
-    <tr>
-        <th>dbid</th>
-        <th>boardid</th>
-        <th>title</th>
-        <th>major</th>
-        <th>type</th>
-        <th>writer</th>
-        <th>regdate</th>
-        <th>view</th>
-        <th>likeCount</th>
-    </tr>
-    <tr th:each="i : ${page.data}">
+<table id="mainTable"></table>
 
-        <td>
-            <a th:href="@{read/{id}(id=${i.dbid})}" th:text="${i.dbid}"></a>
-            <button th:text="${i.checkLike} ? '좋아요 취소' : '좋아요' " th:onclick="post_clickLike([[${i.dbid}]], this)"></button>
-        </td>
-        <td th:text="${i.boardId}"></td>
-        <td th:style="${'min-width:200px'}" th:text="${i.title}"></td>
-        <td th:text="${i.major}"></td>
-        <td th:text="${i.type}"></td>
-        <td th:text="${i.writer}"></td>
-        <td th:text="${i.regdate}"></td>
-        <td th:text="${i.view}"></td>
-        <td th:text="${i.likeCount}"></td>
-    </tr>
-</table>
-
-<ul style="list-style:none;">
+<ul style="list-style:none;" id="mainPageCount">
     <li style="float: left;">page</li>
-    <li th:style="${'float: left; margin: 0px 5px;'}" th:each="i : ${#numbers.sequence(1, page.pageSize)}">
-        <a href="javascript:void(0)" th:onclick="myopen([[${i}]]);" th:text="${i}">1</a>
-    </li>
 </ul>
 
 </body>

@@ -38,11 +38,7 @@ public class testController {
     private final KeywordService keywordS;
     private final CommentService commentS;
     @GetMapping(value={"/"})
-    public String test(@RequestParam(defaultValue = "1") Long page,
-                       @RequestParam(defaultValue = "20") Long perPage,
-                       @RequestParam(required = false) String major,
-                       @RequestParam(required = false) String type,
-                       @RequestParam(required = false, defaultValue = "") String keyword,
+    public String test(String keyword,
                        HttpServletRequest request,
                        HttpServletResponse response,
                        Model model) throws IOException {
@@ -52,14 +48,11 @@ public class testController {
             model.addAttribute("currentuser", currentuserDTO);
         }
 
-        ResponseEntity result = noticeC.requestPage(new NoticeDTO.requestPage(major, type, keyword, page, perPage));
-
         List<Keyword> keywords = keywordS.findTop5ByKeyword(keyword, request);
         List<String> recentlyKeywords = keywordS.recentKeywords(keyword, request, response);
 
 
         model.addAttribute("majorlist",  collegeS.findAllMajor());
-        model.addAttribute("page", result.getBody());
         model.addAttribute("keywords", keywords);
         model.addAttribute("recentlyKeywords", recentlyKeywords);
         return "mainpage";
