@@ -60,7 +60,7 @@ public class testController {
 
     @GetMapping("/read/{noticeid}")
     public String findNotice(@PathVariable Long noticeid, Model model) {
-        ResponseEntity result = noticeC.requestbody(new NoticeDTO.requestbody(noticeid));
+        ResponseEntity result = noticeC.getbody(new NoticeDTO.requestbody(noticeid));
         NoticeDTO.responsebody notice = (responsebody) result.getBody();
         model.addAttribute("notice", notice);
 

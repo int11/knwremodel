@@ -8,9 +8,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-@RequiredArgsConstructor
-@RequestMapping("/like")
+
 @RestController
+@RequestMapping("/like")
+@RequiredArgsConstructor
 public class LikeController {
     private final LikeService likeS;
 

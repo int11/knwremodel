@@ -16,7 +16,6 @@ window.onload = function(){
 
     requestPage(URLSearch.get("major"), URLSearch.get("type"), URLSearch.get("keyword"))
 }   
-
 function saveDepartment() {
     var department = document.getElementById('department').value;
 
@@ -133,7 +132,7 @@ function setNickname() {
 function sendNumber() {
     $("#mail_number").css("display", "block");
     $.ajax({
-        url: "/mail",
+        url: "/mail/send",
         type: "post",
         dataType: "json",
         data: { "mail": $("#mail").val() },
@@ -149,7 +148,7 @@ function sendNumber() {
 function confirmNumber() {
     var number1 = $("#number").val();
     $.ajax({
-        url: "/confirmNumber",
+        url: "/mail/confirmNumber",
         type: "post",
         dataType: "json",
         data: { "enteredNumber": number1 },
