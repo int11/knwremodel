@@ -28,5 +28,4 @@ public class KeywordController {
         List<String> keywords = keywordS.recentKeywords(dto);
         return ResponseEntity.ok(keywords);
     }
-
 }

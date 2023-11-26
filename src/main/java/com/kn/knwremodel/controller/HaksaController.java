@@ -15,8 +15,8 @@ import lombok.RequiredArgsConstructor;
 public class HaksaController {
     private final HaksaService haksaS;
 
-    @PostMapping("/getAll")
-    public ResponseEntity getAll() throws Exception {
+    @PostMapping("/request")
+    public ResponseEntity request(){
         return ResponseEntity.ok(haksaS.findAll());
     }
 }

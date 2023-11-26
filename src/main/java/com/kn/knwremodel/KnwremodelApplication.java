@@ -21,6 +21,7 @@ public class KnwremodelApplication {
 	private final HaksaService haksaS;
 	private final KeywordService keywordS;
 	private final EventService eventS;
+	
 	public static void main(String[] args) {
 		SpringApplication.run(KnwremodelApplication.class, args);
 	}
@@ -35,6 +36,7 @@ public class KnwremodelApplication {
 		System.out.println("DataBase Update every 30 mininutes");
 	}
 
+	// 하루
 	@Scheduled(fixedRate = 1000 * 60 * 60 *24)
 	public void updateKeywordRanking() {
 		keywordS.resetRanking();

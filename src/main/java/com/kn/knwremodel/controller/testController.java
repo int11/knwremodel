@@ -1,16 +1,8 @@
 package com.kn.knwremodel.controller;
 
-import com.kn.knwremodel.dto.CommentDTO;
-import com.kn.knwremodel.dto.KeywordDTO;
-import com.kn.knwremodel.dto.NoticeDTO;
-import com.kn.knwremodel.dto.UserDTO;
-import com.kn.knwremodel.dto.NoticeDTO.responsebody;
-import com.kn.knwremodel.entity.*;
-import com.kn.knwremodel.service.*;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
-import lombok.RequiredArgsConstructor;
+import java.io.IOException;
+import java.util.Comparator;
+import java.util.List;
 
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -20,12 +12,27 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestParam;
 
+import com.kn.knwremodel.dto.CommentDTO;
+import com.kn.knwremodel.dto.KeywordDTO;
+import com.kn.knwremodel.dto.NoticeDTO;
+import com.kn.knwremodel.dto.NoticeDTO.responsebody;
+import com.kn.knwremodel.dto.UserDTO;
+import com.kn.knwremodel.entity.Comment;
+import com.kn.knwremodel.entity.Haksa;
+import com.kn.knwremodel.entity.Keyword;
+import com.kn.knwremodel.entity.Notice;
+import com.kn.knwremodel.service.CollegeService;
+import com.kn.knwremodel.service.CommentService;
+import com.kn.knwremodel.service.HaksaService;
+import com.kn.knwremodel.service.KeywordService;
+import com.kn.knwremodel.service.LikeService;
+import com.kn.knwremodel.service.NoticeService;
 
-import java.io.IOException;
-import java.util.Comparator;
-import java.util.List;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
+import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 @Controller
@@ -48,8 +55,6 @@ public class testController {
         if(currentuserDTO != null) {
             model.addAttribute("currentuser", currentuserDTO);
         }
-        ResponseEntity result = noticeC.requestPage(new NoticeDTO.requestPage(major, type, keyword, page, perPage));
-
         List<Keyword> keywords = keywordS.findTop5ByKeyword(new KeywordDTO.request(keyword, request));
         List<String> recentlyKeywords = keywordS.recentKeywords(new KeywordDTO.requestRecentlyKeyword(
                 keyword, request, response));
@@ -63,7 +68,7 @@ public class testController {
 
     @GetMapping("/read/{noticeid}")
     public String findNotice(@PathVariable Long noticeid, Model model) {
-        ResponseEntity result = noticeC.getbody(new NoticeDTO.requestbody(noticeid));
+        ResponseEntity result = noticeC.requestbody(new NoticeDTO.requestbody(noticeid));
         NoticeDTO.responsebody notice = (responsebody) result.getBody();
         model.addAttribute("notice", notice);
 
