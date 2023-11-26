@@ -1,6 +1,7 @@
 package com.kn.knwremodel.controller;
 
 import com.kn.knwremodel.dto.LikeDTO;
+import com.kn.knwremodel.dto.UserDTO;
 import com.kn.knwremodel.service.LikeService;
 
 import lombok.RequiredArgsConstructor;
@@ -19,6 +20,15 @@ public class LikeController {
     public ResponseEntity clickLike(@RequestBody LikeDTO.click dto) throws Exception {
         try{
             return ResponseEntity.ok(likeS.clickLike(dto));
+        }catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @PostMapping("/request")
+    public ResponseEntity requestLike(UserDTO.Session currentUserDTO) throws Exception {
+        try{
+            return ResponseEntity.ok(likeS.getLikedNotices(currentUserDTO));
         }catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }

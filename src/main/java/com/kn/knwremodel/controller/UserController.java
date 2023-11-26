@@ -43,7 +43,6 @@ public class UserController {
             }
             return ResponseEntity.ok(false);
         } catch (Exception e) {
-            e.printStackTrace();
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }  

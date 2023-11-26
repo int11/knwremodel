@@ -20,4 +20,3 @@ public class HaksaController {
         return ResponseEntity.ok(haksaS.findAll());
     }
 }
-

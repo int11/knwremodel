@@ -1,7 +1,9 @@
 package com.kn.knwremodel.service;
 
+import com.kn.knwremodel.dto.KeywordDTO;
 import com.kn.knwremodel.entity.Keyword;
 import com.kn.knwremodel.repository.KeywordRepository;
+import com.nimbusds.oauth2.sdk.http.HTTPRequest;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -9,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.net.http.HttpRequest;
 import java.util.*;
 
 @Service
@@ -17,8 +20,10 @@ public class KeywordService {
     private final KeywordRepository keywordRepo;
 
     @Transactional
-    public List<Keyword> findTop5ByKeyword(String keyword, HttpServletRequest request) { //검섹어 추가, 실검 조회
+    public List<Keyword> findTop5ByKeyword(KeywordDTO.request dto) { //검섹어 추가, 실검 조회
         List<Keyword> keywords;
+        String keyword = dto.getKeyword();
+        HttpServletRequest request = dto.getHttpServletRequest();
         Cookie[] cookies = request.getCookies();
 
         if (keyword != null) {
@@ -51,7 +56,11 @@ public class KeywordService {
     }
 
     @Transactional
-    public List<String> recentKeywords(String keyword, HttpServletRequest request, HttpServletResponse response) {
+    public List<String> recentKeywords(KeywordDTO.requestRecentlyKeyword dto) {
+        HttpServletRequest request = dto.getHttpServletRequest();
+        HttpServletResponse response = dto.getHttpServletResponse();
+        String keyword = dto.getKeyword();
+
         //최근 검색어 추가, 조회
         Cookie oldCookie = null;
         Cookie[] cookies = request.getCookies();
