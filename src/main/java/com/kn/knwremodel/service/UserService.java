@@ -86,12 +86,4 @@ public class UserService implements OAuth2UserService<OAuth2UserRequest, OAuth2U
         userRepo.save(user);
         httpSession.setAttribute("user", new UserDTO.Session(user));
     }
-
-    public void setNickname(String nickname) {
-        UserDTO.Session userDTO = (UserDTO.Session)httpSession.getAttribute("user");
-        User user = userRepo.findByEmail(userDTO.getEmail()).get();
-        user.setNickname(nickname);
-        userRepo.save(user);
-        httpSession.setAttribute("user", new UserDTO.Session(user));
-    }
 }

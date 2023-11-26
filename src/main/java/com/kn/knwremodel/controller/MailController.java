@@ -12,14 +12,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import jakarta.servlet.http.HttpSession;
-@Controller
+@RestController
+@RequestMapping("/mail")
 @RequiredArgsConstructor
 public class MailController {
     private final MailService mailS;
 
     // 인증 번호 발송
-    @ResponseBody
-    @PostMapping("/mail")
+    @PostMapping("/send")
     public synchronized ResponseEntity MailSend(String mail) {
         try{
             mailS.sendMail(mail);
@@ -30,7 +30,6 @@ public class MailController {
     }
 
     // 인증 번호 확인
-    @ResponseBody
     @PostMapping("/confirmNumber")
     public synchronized ResponseEntity ConfirmNumber(String enteredNumber) {
         try{

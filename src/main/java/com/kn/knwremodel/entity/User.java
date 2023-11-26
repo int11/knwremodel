@@ -17,10 +17,6 @@ public class User extends TimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    
-    @Column(nullable = false)
-    @Setter
-    private String nickname;
 
     @Column(nullable = false)
     private String name;
@@ -54,7 +50,6 @@ public class User extends TimeEntity {
     @Builder
     public User(Long id, String name, String email, String picture, Role role) {
         this.id = id;
-        this.nickname = name;
         this.name = name;
         this.email = email;
         this.picture = picture;

@@ -7,10 +7,9 @@ import com.kn.knwremodel.service.CommentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-@RequiredArgsConstructor
-@RequestMapping("/comments")
 @RestController
+@RequestMapping("/comments")
+@RequiredArgsConstructor
 public class CommentController {
     private final CommentService commentS;
 

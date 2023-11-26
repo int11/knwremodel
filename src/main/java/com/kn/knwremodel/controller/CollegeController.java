@@ -5,18 +5,18 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.kn.knwremodel.service.HaksaService;
+import com.kn.knwremodel.service.CollegeService;
 
 import lombok.RequiredArgsConstructor;
 
 @RestController
-@RequestMapping("/Haksa")
+@RequestMapping("/college")
 @RequiredArgsConstructor
-public class HaksaController {
-    private final HaksaService haksaS;
+public class CollegeController {
+    private final CollegeService collegeS;
 
-    @PostMapping("/getAll")
-    public ResponseEntity getAll() throws Exception {
-        return ResponseEntity.ok(haksaS.findAll());
+    @PostMapping("/getMajor")
+    public ResponseEntity getMajor() throws Exception {
+        return ResponseEntity.ok(collegeS.findAllMajor());
     }
 }
