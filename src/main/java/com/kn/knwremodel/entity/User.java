@@ -28,7 +28,12 @@ public class User extends TimeEntity {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
+    @Setter
     private Role role;
+
+    @Column
+    @Setter
+    private String department;
 
     @OneToMany(mappedBy = "user")
     private List<Comment> comments = new ArrayList<>();
@@ -56,9 +61,5 @@ public class User extends TimeEntity {
 
     public String getRoleKey(){
         return this.role.getKey();
-    }
-    //AuthChangeGuestUserService에서 사용하기 위해 만듬
-    public void setRole(Role role) {
-        this.role = role;
     }
 }

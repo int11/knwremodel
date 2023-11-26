@@ -1,3 +1,8 @@
+// jquery import 코드
+var script = document.createElement('script');
+script.src = "https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"; // Check https://jquery.com/ for the current version
+document.getElementsByTagName('head')[0].appendChild(script);
+
 window.onload = function(){
     const URLSearch = new URLSearchParams(location.search);
 
@@ -8,6 +13,152 @@ window.onload = function(){
     if (URLSearch.get("major")){
         document.getElementById('MajorDropdown').value = URLSearch.get("major")
     }
+
+    requestPage(URLSearch.get("major"), URLSearch.get("type"), URLSearch.get("keyword"))
+}   
+function saveDepartment() {
+    var department = document.getElementById('department').value;
+
+    // jQuery AJAX를 사용하여 서버에 부서 정보 저장 요청
+    $.ajax({
+        url: '/user/saveDepartment',
+        type: 'POST',
+        data: {department: department},
+        success: function (response) {
+            alert(response); // 서버로부터의 응답을 알림으로 표시
+        },
+        error: function (xhr, status, error) {
+            console.error(xhr.responseText); // 에러 발생 시 콘솔에 출력
+        }
+    });
+}
+
+function requestPage(major="", type="", keyword="", page=1, perPage=20){
+    $.ajax({
+        url: '/notice/requestPage',
+        type: 'POST',
+        contentType: "application/json",
+        dataType: "json",
+        data: JSON.stringify({major:major,
+               type: type, 
+               keyword:keyword, 
+               page:page, 
+               perPage:perPage}),
+        success: function (response) {
+            let table = document.getElementById("mainTable");
+            createTable(response.data, table);
+            let ul = document.getElementById("mainPageCount");
+            ul.replaceChildren()
+
+            let li = document.createElement("li");
+            li.style = "float: left;"
+            li.innerText = "page"
+            ul.appendChild(li)
+
+            for(let i = 0; i<response.pageSize; i++){
+                let li = document.createElement("li");
+                li.style.float = "left";
+                li.style.margin = "0px 5px";
+
+                let a = document.createElement("a");
+                a.href = `javascript:myopen(${i + 1})`;
+                a.text = i+1;
+                
+                
+                li.appendChild(a);
+                ul.appendChild(li)
+            }
+        },
+        error: function (data) {
+            console.error(data.responseText); // 에러 발생 시 콘솔에 출력
+        }
+    });
+}
+
+function createTable(jsonlist, table) {
+    table.replaceChildren()
+    let tr = document.createElement("tr");
+    for(let item in jsonlist[0]){
+        let th = document.createElement("th");
+        th.innerText = item; 
+        tr.appendChild(th); 
+    }
+
+    table.append(tr) 
+    for (let index in jsonlist){
+        let tr = document.createElement("tr");
+        let item = jsonlist[index];
+        for(let key in item){
+            let td = document.createElement("td");
+
+            if (key == "checkLike"){
+                let button = document.createElement("button");
+                button.onclick = function(){post_clickLike(item["dbid"], button, button.parentNode.parentNode.getElementsByClassName("likeCount")[0]);};
+                console.log(item[key])
+                if (item[key] == false){
+                    button.innerText = "좋아요";
+                }else{
+                    button.innerText = "좋아요 취소";
+                }
+                td.appendChild(button);
+            }else{
+                td.className = key;
+                td.innerText = item[key]; 
+            }
+
+            tr.appendChild(td);
+        }
+        table.appendChild(tr); 
+    }
+ }
+
+function setNickname() {
+    var nickname = document.getElementById('inputNickname').value;
+
+    $.ajax({
+        url: '/user/setNickname',
+        type: 'POST',
+        dataType: "json",
+        data: {nickname: nickname},
+        success: function (data) {
+            alert(data);
+        },
+        error: function (data) {
+            console.error(data.responseText);
+        }
+    });
+}
+
+function sendNumber() {
+    $("#mail_number").css("display", "block");
+    $.ajax({
+        url: "/mail/send",
+        type: "post",
+        dataType: "json",
+        data: { "mail": $("#mail").val() },
+        success: function (data) {
+            alert(data);
+        },
+        error: function(data){
+            alert(data.responseText);
+        }
+    });
+}
+
+function confirmNumber() {
+    var number1 = $("#number").val();
+    $.ajax({
+        url: "/mail/confirmNumber",
+        type: "post",
+        dataType: "json",
+        data: { "enteredNumber": number1 },
+        success: function (data) {
+            alert(data);
+        },
+        error: function(data){
+            alert(data.responseText);
+        }
+    });
 }
 
 function mysearch(){
@@ -18,96 +169,100 @@ function mysearch(){
     location.href = location.href.split("?")[0] + '?' + URLSearch.toString();
 }
 
-function myopen(page=1){
+function myopen(page){
     const URLSearch = new URLSearchParams(location.search);
-    URLSearch.set("page", page);
-    location.href = location.href.split("?")[0] + '?' + URLSearch.toString();
+    requestPage(URLSearch.get("major"), URLSearch.get("type"), URLSearch.get("keyword"), page)
 }
 
-function post_clickLike(noticeId) {
-    fetch("http://localhost:8080/like/click", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
+function post_clickLike(noticeId, target, likecount) {
+    $.ajax({
+        url: "/like/click",
+        type: "POST",
+        contentType: "application/json",
+        dataType: "json",
+        data: JSON.stringify({
             noticeId: noticeId
         }),
-    }).then((response) => console.log(response));
-    setTimeout(function () {
-        window.location.href = window.location.href;
-    }, 50);
+        success: function (data) {
+            console.log(data)
+            
+            if (target.innerText == "좋아요"){
+                likecount.innerText = parseInt(likecount.innerText) + 1;
+                target.innerText = "좋아요 취소";
+            }else{
+                target.innerText = "좋아요";
+                likecount.innerText = parseInt(likecount.innerText) - 1;
+            }
+        },
+        error: function(data){
+            alert(data.responseText);
+        }
+    });
 }
 
 function commentSave(noticeId) {
-    let comment = document.getElementById("comments").value;
-    fetch("http://localhost:8080/comments/save", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
+    $.ajax({
+        url: "/comments/save",
+        type: "POST",
+        contentType: "application/json",
+        dataType: "json",
+        data: JSON.stringify({
             noticeId: noticeId,
-            comment: comment
+            comment: document.getElementById("comments").value
         }),
-    }).then((response) => console.log(response));
+        success: function (data) {
+            console.log(data)
+        },
+        error: function(data){
+            alert(data.responseText);
+        }
+    });
+
     setTimeout(function () {
         window.location.href = window.location.href;
     }, 50);
+
 }
 
 function commentModify(commentId) {
-    let comment = document.getElementById("comments").value;
-    fetch("http://localhost:8080/comments/modify", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
+    $.ajax({
+        url: "/comments/modify",
+        type: "POST",
+        contentType: "application/json",
+        dataType: "json",
+        data: JSON.stringify({
             commentId: commentId,
-            comment: comment
+            comment: document.getElementById("comments").value
         }),
-    }).then((response) => console.log(response));
+        success: function (data) {
+            console.log(data)
+        },
+        error: function(data){
+            alert(data.responseText);
+        }
+    });
     setTimeout(function () {
         window.location.href = window.location.href;
     }, 50);
 }
 
 function commentDelete(commentId) {
-    fetch("http://localhost:8080/comments/delete", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
+    $.ajax({
+        url: "/comments/delete",
+        type: "POST",
+        contentType: "application/json",
+        dataType: "json",
+        data: JSON.stringify({
             commentId: commentId
         }),
-    }).then((response) => console.log(response));
+        success: function (data) {
+            console.log(data)
+        },
+        error: function(data){
+            alert(data.responseText);
+        }
+    });
     setTimeout(function () {
         window.location.href = window.location.href;
     }, 50);
 }
-
-function abbreviateEmail(email) {
-    if (email.indexOf('@') > 0) {
-        var parts = email.split('@');
-        var username = parts[0];
-        var obscured = username.substring(0, 2);
-
-        for (var i = 2; i < username.length; i++) {
-            obscured += '*';
-        }
-        return obscured;
-    } else {
-        return email;
-    }
-}
-
-document.addEventListener('DOMContentLoaded', function () {
-    var emailElements = document.querySelectorAll('.abbreviate-email');
-
-    emailElements.forEach(function (element) {
-        var originalEmail = element.textContent;
-        element.textContent = abbreviateEmail(originalEmail);
-    });
-});

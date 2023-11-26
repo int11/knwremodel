@@ -4,8 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>강남대</title>
-    <link rel="stylesheet" th:href="@{/style.css}">
-    <script th:src="@{/testjs.js}"></script>
+    <link rel="stylesheet" th:href="@{/static/style.css}">
+    <script th:src="@{/static/testjs.js}"></script>
 </head>
 <body>
 
@@ -25,7 +25,7 @@
     <tr th:each="i : ${notice}">
         <td >
             <p th:text="${i.dbid}"></p>
-            <button th:text="${i.checkLike} ? '좋아요 취소' : '좋아요' " th:onclick="post_clickLike([[${i.dbid}]])"></button>
+            <button th:text="${i.checkLike} ? '좋아요 취소' : '좋아요' " th:onclick="post_clickLike([[${i.dbid}]], this)"></button>
         </td>
         <td th:text="${i.boardId}"></td>
         <td th:style="${'min-width:200px'}" th:text="${i.title}"></td>
@@ -51,7 +51,7 @@
 
 <table>
     <tr th:each="i : ${comments}">
-        <td class="abbreviate-email" th:text="${i.user.email}"></td>
+        <td th:text="${i.email}"></td>
         <td th:text="${i.comment}"></td>
         <td th:text="${i.createdDate}"></td>
         <td th:text="${i.modifiedDate}"></td>

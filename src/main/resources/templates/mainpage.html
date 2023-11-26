@@ -4,36 +4,30 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>강남대</title>
-    <link rel="stylesheet" th:href="@{/style.css}">
-    <script th:src="@{/testjs.js}"></script>
+    <link rel="stylesheet" th:href="@{/static/style.css}">
+    <script th:src="@{/static/testjs.js}"></script>
     
 </head>
 
 
 <body>
-
+<button onClick="window.open('/','_self');">Home</button>
+<br>
 
 <th:block th:if="${currentuser != null}">
+    <button onClick="window.open('/myPage','_self');">Mypage</button>
+    <button onClick="window.open('/logout','_self');">로그아웃</button>
     <p th:text="${currentuser.name}"></p>
     <p th:text="${currentuser.email}"></p>
     <p th:text="${currentuser.role}"></p>
-    <a th:href="@{logout}">로그아웃</a>
+    <p th:text="${currentuser.department}"></p>
 </th:block>
 <th:block th:if="${currentuser == null}">
     <a th:href="@{mainlogin}">로그인페이지</a>
 </th:block>
 
+<br>
 
-<div id="mail_input" name="mail_input" th:if="${currentuser != null}">
-    <input type="text" name="mail" id="mail" placeholder="이메일 입력">
-    <button type="button" id="sendBtn" name="sendBtn" onclick="sendNumber()">인증번호</button>
-</div>
-<br>
-<div id="mail_number" name="mail_number" th:if="${currentuser != null}" style="display: none">
-    <input type="text" name="number" id="number" placeholder="인증번호 입력">
-    <button type="button" name="confirmBtn" id="confirmBtn" onclick="confirmNumber()">이메일 인증</button>
-</div>
-<br>
 <input type="text" id="Confirm" name="Confirm" style="display: none" value="">
 
 <br>
@@ -41,12 +35,12 @@
 <button value="/top5View" onclick="window.open(value,'_self');">조회수 Top5</button>
 <button value="/haksa" onclick="window.open(value,'_self');">학사 크롤링</button>
 <button value="/scholarshipwiki" onclick="window.open(value,'_self');">학식</button>
-<button onclick="window.open('/likePage','_self');">좋아요 모아보기</button>
 
 <br>
 
 <select id="MajorDropdown">
     <option value="">전체</option>
+    <option value="행사/안내">행사/안내</option>
     <option th:each="item : ${majorlist}" th:value="${item}" th:text="${item}">Option Text</option>
 </select>
 <label for="keyword">
@@ -77,70 +71,11 @@
 </table>
 <br>
 
-<table>
-    <tr>
-        <th>dbid</th>
-        <th>boardid</th>
-        <th>title</th>
-        <th>major</th>
-        <th>type</th>
-        <th>writer</th>
-        <th>regdate</th>
-        <th>view</th>
-        <th>likeCount</th>
-    </tr>
-    <tr th:each="i : ${page.data}">
+<table id="mainTable"></table>
 
-        <td>
-            <a th:href="@{read/{id}(id=${i.dbid})}" th:text="${i.dbid}"></a>
-            <button th:text="${i.checkLike} ? '좋아요 취소' : '좋아요' " th:onclick="post_clickLike([[${i.dbid}]])"></button>
-        </td>
-        <td th:text="${i.boardId}"></td>
-        <td th:style="${'min-width:200px'}" th:text="${i.title}"></td>
-        <td th:text="${i.major}"></td>
-        <td th:text="${i.type}"></td>
-        <td th:text="${i.writer}"></td>
-        <td th:text="${i.regdate}"></td>
-        <td th:text="${i.view}"></td>
-        <td th:text="${i.likeCount}"></td>
-    </tr>
-</table>
-
-<ul style="list-style:none;">
+<ul style="list-style:none;" id="mainPageCount">
     <li style="float: left;">page</li>
-    <li th:style="${'float: left; margin: 0px 5px;'}" th:each="i : ${#numbers.sequence(1, page.pageSize)}">
-        <a href="javascript:void(0)" th:onclick="myopen([[${i}]]);" th:text="${i}">1</a>
-    </li>
 </ul>
-
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-<script type="text/javascript">
-    function sendNumber() {
-        $("#mail_number").css("display", "block");
-        $.ajax({
-            url: "/mail",
-            type: "post",
-            dataType: "text",
-            data: { "mail": $("#mail").val() },
-            success: function (data) {
-                alert(data);
-            }
-        });
-    }
-
-    function confirmNumber() {
-        var number1 = $("#number").val();
-        $.ajax({
-            url: "/confirmNumber",
-            type: "post",
-            dataType: "text",
-            data: { "enteredNumber": number1 },
-            success: function (data) {
-                alert(data);
-            }
-        });
-    }
-</script>
 
 </body>
 </html>

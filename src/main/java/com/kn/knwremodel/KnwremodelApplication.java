@@ -1,9 +1,6 @@
 package com.kn.knwremodel;
 
-import com.kn.knwremodel.service.KeywordService;
-import com.kn.knwremodel.service.testdatainsertService;
-import com.kn.knwremodel.service.NoticeService;
-import com.kn.knwremodel.service.HaksaService;
+import com.kn.knwremodel.service.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -23,7 +20,7 @@ public class KnwremodelApplication {
 	private final testdatainsertService testdatainsertS;
 	private final HaksaService haksaS;
 	private final KeywordService keywordS;
-
+	private final EventService eventS;
 	public static void main(String[] args) {
 		SpringApplication.run(KnwremodelApplication.class, args);
 	}
@@ -34,6 +31,7 @@ public class KnwremodelApplication {
 		testdatainsertS.Gentestdata();
 		haksaS.update();
 		noticeS.update();
+		eventS.update();
 		System.out.println("DataBase Update every 30 mininutes");
 	}
 

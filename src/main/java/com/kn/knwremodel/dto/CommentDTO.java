@@ -9,6 +9,8 @@ public class CommentDTO {
     public static class save{
         private Long noticeId;
         private String comment;
+        private String noticeTitle;
+
     }
 
     @Getter
@@ -25,14 +27,14 @@ public class CommentDTO {
     @Getter
     public static class Comment{
         private Long id;
-        private User user;
+        private String email;
         private String comment;
         private String createdDate;
         private String modifiedDate;
 
         public Comment(com.kn.knwremodel.entity.Comment comment) {
             this.id = comment.getId();
-            this.user = comment.getUser();
+            this.email = comment.getUser().getEmail().substring(0, 4) + "*".repeat(7);
             this.comment = comment.getComment();
             this.createdDate = comment.getCreatedDate();
             this.modifiedDate = comment.getModifiedDate();
