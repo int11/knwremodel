@@ -82,8 +82,9 @@ public class EventService {
 
                         // 3. DB가 비어있지 않지만 행사/안내의 첫번째 게시물 제목과 첫번째 DB의 title 값이 다를 경우
                         if (!eventNotice.isEmpty())
-                            if (eventNotice.get(0).getTitle().equals(content.select("a").attr("title")))
-                                break loopout;
+                            for (Notice e : eventNotice)
+                                if (e.getTitle().equals(content.select("a").attr("title")))
+                                    break loopout;
 
                         events.add(new Notice(
                                 null, //최근 게시물 출력 순서를 조절하기 위함
