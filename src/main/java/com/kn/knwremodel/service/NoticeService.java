@@ -1,10 +1,8 @@
 package com.kn.knwremodel.service;
 
 import com.kn.knwremodel.entity.College;
-import com.kn.knwremodel.entity.Keyword;
 import com.kn.knwremodel.entity.Notice;
 import com.kn.knwremodel.repository.CollegeRepository;
-import com.kn.knwremodel.repository.KeywordRepository;
 import com.kn.knwremodel.repository.NoticeRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
@@ -16,6 +14,7 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -164,8 +163,10 @@ public class NoticeService {
         type = (type == null) ? "" : type;
         keyword = (keyword == null) ? "" : keyword;
 
-        if (major.equals("행사/안내"))
-            return noticeRepo.findByMajorContainingAndTypeContainingAndTitleContainingOrderByBoardIdDesc(major, type, keyword);
+        if (major.equals("행사/안내")) {
+            Sort sort = Sort.by(Sort.Order.desc("regdate"), Sort.Order.desc("id"));
+            return noticeRepo.findByMajorContainingAndTypeContainingAndTitleContaining(major, type, keyword, sort);
+        }
 
         return noticeRepo.findByMajorExceptEventContainingAndTypeContainingAndTitleContaining(major, type, keyword);
     }
