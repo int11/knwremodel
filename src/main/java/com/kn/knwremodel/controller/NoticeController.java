@@ -52,7 +52,7 @@ public class NoticeController {
         topNotices.sort(Comparator.comparing(Notice::getLikeCount).reversed()
                 .thenComparing(Notice::getCreateDate, Comparator.reverseOrder()));
 
-        List<NoticeDTO.responsePage> result = topNotices.stream().map(notice -> new NoticeDTO.responsePage(likeS, notice)).collect(Collectors.toList());
+        List<NoticeDTO.responsebody> result = topNotices.stream().map(notice -> new NoticeDTO.responsebody(likeS, notice)).collect(Collectors.toList());
         return ResponseEntity.ok(result);
     }
 
