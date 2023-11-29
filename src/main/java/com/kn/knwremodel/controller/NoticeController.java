@@ -47,7 +47,7 @@ public class NoticeController {
     @PostMapping("/toplike")
     public ResponseEntity getTopLikeByMajor(@RequestBody NoticeDTO.toplike dto) {
         List<Notice> topNotices = noticeS.findTopLike(dto.getMajor(), PageRequest.of(0, dto.getTopsize(), Sort.Direction.DESC, "likeCount"));
-        List<NoticeDTO.responsePage> result = topNotices.stream().map(notice -> new NoticeDTO.responsePage(likeS, notice)).collect(Collectors.toList());
+        List<NoticeDTO.responsebody> result = topNotices.stream().map(notice -> new NoticeDTO.responsebody(likeS, notice)).collect(Collectors.toList());
         return ResponseEntity.ok(result);
     }
 
