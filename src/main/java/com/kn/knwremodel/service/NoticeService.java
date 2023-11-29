@@ -172,14 +172,14 @@ public class NoticeService {
 
 
     @Transactional(readOnly = true) // 읽기 전용 트랜잭션
-    public List<Notice> findTop5ByView(Pageable pageable) {
+    public List<Notice> findTopView(Pageable pageable) {
         //한달 동안
-        List<Notice> notices = noticeRepo.findByOrderByViewDescWhereByRegDate(nowDate.minusDays(30), nowDate, pageable);
+        List<Notice> notices = noticeRepo.findByDescWhereByRegDate(nowDate.minusDays(30), pageable);
         return notices;
     }
 
-    public List<Notice> findTopLikesByMajor(String major) {
-        List<Notice> topNotices = noticeRepo.findTop3ByMajorOrderByLikeCountDesc(major);
+    public List<Notice> findTopLike(String major, Pageable pageable) {
+        List<Notice> topNotices = noticeRepo.findByMajor(major, pageable);
 
         List<Notice> result = new ArrayList<>();
 

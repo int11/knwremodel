@@ -91,4 +91,17 @@ public class NoticeDTO {
             this.comments = notice.getComments().stream().map(CommentDTO.Comment::new).collect(Collectors.toList());
         }
     }
+    @Getter
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class toplike{
+        private String major;
+        private int topsize;
+    }
+    @Getter
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class topview{
+        private int topsize;
+    }
 }

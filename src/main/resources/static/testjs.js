@@ -118,8 +118,9 @@ function setNickname() {
     $.ajax({
         url: '/user/setNickname',
         type: 'POST',
+        contentType: "application/json",
         dataType: "json",
-        data: {nickname: nickname},
+        data: JSON.stringify({nickname: nickname}),
         success: function (data) {
             alert(data);
         },
@@ -134,8 +135,9 @@ function sendNumber() {
     $.ajax({
         url: "/mail/send",
         type: "post",
+        contentType: "application/json",
         dataType: "json",
-        data: { "mail": $("#mail").val() },
+        data: JSON.stringify({ "mail": $("#mail").val() }),
         success: function (data) {
             alert(data);
         },

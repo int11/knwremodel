@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.Comparator;
 import java.util.List;
 
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
@@ -96,11 +97,8 @@ public class testController {
     }
 
     @GetMapping("/top5View")
-    public String getTop5View(Model model, @PageableDefault(size = 5, sort = "view", direction = Sort.Direction.DESC) Pageable pageable) {
-        List<Notice> topNotices = noticeS.findTop5ByView(pageable);
-
-        topNotices.sort(Comparator.comparing(Notice::getView).reversed()
-                .thenComparing(Notice::getCreateDate, Comparator.reverseOrder()));
+    public String getTop5View(Model model) {
+        List<Notice> topNotices = noticeS.findTopView(PageRequest.of(0, 5, Sort.Direction.DESC,"view"));
 
         model.addAttribute("topNotices", topNotices);
         return "top5View";
@@ -123,4 +121,4 @@ public class testController {
 
         return "myPage";
     }
-}
+} 

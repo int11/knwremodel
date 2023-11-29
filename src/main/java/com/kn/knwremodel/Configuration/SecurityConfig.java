@@ -47,6 +47,7 @@ public class SecurityConfig {
 
         return http.build();
     }
+    
     @Bean
     public HttpFirewall allowUrlEncodedSlashHttpFirewall() {
         DefaultHttpFirewall firewall = new DefaultHttpFirewall();

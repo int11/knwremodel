@@ -1,15 +1,14 @@
 package com.kn.knwremodel.controller;
 
-import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -45,25 +44,17 @@ public class NoticeController {
         return ResponseEntity.ok(new NoticeDTO.responsebody(likeS, notice));
     }
 
-    @PostMapping("/top3likes/{major}")
-    public ResponseEntity getTopLikesByMajor(@PathVariable String major) {
-        List<Notice> topNotices = noticeS.findTopLikesByMajor(major);
-
-        topNotices.sort(Comparator.comparing(Notice::getLikeCount).reversed()
-                .thenComparing(Notice::getCreateDate, Comparator.reverseOrder()));
-
+    @PostMapping("/toplike")
+    public ResponseEntity getTopLikeByMajor(@RequestBody NoticeDTO.toplike dto) {
+        List<Notice> topNotices = noticeS.findTopLike(dto.getMajor(), PageRequest.of(0, dto.getTopsize(), Sort.Direction.DESC, "likeCount"));
         List<NoticeDTO.responsePage> result = topNotices.stream().map(notice -> new NoticeDTO.responsePage(likeS, notice)).collect(Collectors.toList());
         return ResponseEntity.ok(result);
     }
 
-    @PostMapping("/top5View")
-    public String getTop5View(Model model, @PageableDefault(size = 5, sort = "view", direction = Sort.Direction.DESC) Pageable pageable) {
-        List<Notice> topNotices = noticeS.findTop5ByView(pageable);
-
-        topNotices.sort(Comparator.comparing(Notice::getView).reversed()
-                .thenComparing(Notice::getCreateDate, Comparator.reverseOrder()));
-
-        model.addAttribute("topNotices", topNotices);
-        return "top5View";
+    @PostMapping("/topView")
+    public ResponseEntity getTopView(@RequestBody NoticeDTO.topview dto) {
+        List<Notice> topNotices = noticeS.findTopView(PageRequest.of(0, dto.getTopsize(), Sort.Direction.DESC, "view"));
+        List<NoticeDTO.responsePage> result = topNotices.stream().map(notice -> new NoticeDTO.responsePage(likeS, notice)).collect(Collectors.toList());
+        return ResponseEntity.ok(result);
     }
 }

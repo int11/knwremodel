@@ -29,9 +29,9 @@ public interface NoticeRepository extends JpaRepository<Notice, Long> {
     @Query("SELECT MAX(n.boardId) FROM Notice n WHERE n.major = :major")
     int findMaxBoardIdByMajor(@Param("major") String major);
 
-    @Query("SELECT n FROM Notice n WHERE n.regdate >= :beforeDate AND n.regdate <= :nowDate")
-    List<Notice> findByOrderByViewDescWhereByRegDate(@Param("beforeDate") LocalDate beforeDate, @Param("nowDate") LocalDate nowDate, Pageable pageable);
+    @Query("SELECT n FROM Notice n WHERE n.regdate >= :beforeDate")
+    List<Notice> findByDescWhereByRegDate(@Param("beforeDate") LocalDate beforeDate, Pageable pageable);
 
-    List<Notice> findTop3ByMajorOrderByLikeCountDesc(String major);
+    List<Notice> findByMajor(String major, Pageable pageable);
     long count();
 }
