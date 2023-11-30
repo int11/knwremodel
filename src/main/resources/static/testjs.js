@@ -16,6 +16,7 @@ window.onload = function(){
 
     requestPage(URLSearch.get("major"), URLSearch.get("type"), URLSearch.get("keyword"))
 }   
+
 function saveDepartment() {
     var department = document.getElementById('department').value;
 
@@ -152,8 +153,9 @@ function confirmNumber() {
     $.ajax({
         url: "/mail/confirmNumber",
         type: "post",
+        contentType: "application/json",
         dataType: "json",
-        data: { "enteredNumber": number1 },
+        data: JSON.stringify({ "enteredNumber": number1 }),
         success: function (data) {
             alert(data);
         },

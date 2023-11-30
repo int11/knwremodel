@@ -86,4 +86,14 @@ public class UserService implements OAuth2UserService<OAuth2UserRequest, OAuth2U
         userRepo.save(user);
         httpSession.setAttribute("user", new UserDTO.Session(user));
     }
+
+    public String getDepartment() {
+        UserDTO.Session userDTO = (UserDTO.Session) httpSession.getAttribute("user");
+        if (userDTO != null) {
+            return userDTO.getDepartment();
+        } else {
+            return null;
+        }
+    }
+
 }

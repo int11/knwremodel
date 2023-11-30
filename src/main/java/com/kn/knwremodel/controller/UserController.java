@@ -1,10 +1,7 @@
 package com.kn.knwremodel.controller;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.kn.knwremodel.dto.UserDTO;
 import com.kn.knwremodel.service.CommentService;
@@ -22,6 +19,17 @@ public class UserController {
     private final HttpSession httpSession;
     private final CommentService commentS;
     private final LikeService likeS;
+
+    @GetMapping("/getDepartment")
+    public ResponseEntity getDepartment() {
+        try {
+            String department = userS.getDepartment();
+            return ResponseEntity.ok(department);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.badRequest().body("학과 정보를 가져오는데 실패했습니다.");
+        }
+    }
 
     @PostMapping("/saveDepartment")
     public ResponseEntity saveDepartment(@RequestParam String department) {
