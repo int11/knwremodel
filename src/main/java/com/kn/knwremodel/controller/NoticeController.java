@@ -57,4 +57,7 @@ public class NoticeController {
         List<NoticeDTO.responsePage> result = topNotices.stream().map(notice -> new NoticeDTO.responsePage(likeS, notice)).collect(Collectors.toList());
         return ResponseEntity.ok(result);
     }
+
+
+
 }
