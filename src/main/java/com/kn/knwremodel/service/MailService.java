@@ -36,7 +36,10 @@ public class MailService {
         return message;
     }
 
-    public void sendMail(String mail)  throws Exception{
+    public void sendMail(String mail) throws Exception{
+        if (!mail.endsWith("kangnam.ac.kr")){
+            throw new IllegalArgumentException("강남대학교 이메일로만 인증 가능합니다. 다시 시도해주세요.");
+        }
         int number = createNumber();
 
         MimeMessage message = CreateMail(mail, number);
