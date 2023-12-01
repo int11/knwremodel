@@ -12,7 +12,7 @@ public class KeywordDTO {
     @NoArgsConstructor
     public static class request{
         private String keyword;
-        private HttpServletRequest httpServletRequest;
+
 
     }
 
@@ -21,8 +21,5 @@ public class KeywordDTO {
     @NoArgsConstructor
     public static class requestRecentlyKeyword{
         private String keyword;
-        private HttpServletRequest httpServletRequest;
-        private HttpServletResponse httpServletResponse;
-
     }
 }
