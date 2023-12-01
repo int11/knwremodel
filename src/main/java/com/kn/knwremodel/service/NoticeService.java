@@ -79,6 +79,12 @@ public class NoticeService {
 
                             Elements titleElements = content.select("a");
                             
+                            //regdate
+                            String regDate = content.select("li.sliceDot6").next().text();
+                            DateTimeFormatter JEFormatter = DateTimeFormatter.ofPattern("yyyy.MM.dd");
+                            LocalDate localDate = LocalDate.parse("20" + regDate, JEFormatter);
+            
+
                             //게시물 내용, 사진 크롤링
                             JSONObject jsonObject = (JSONObject) parser.parse(titleElements.attr("data-params"));
                             String encMenuSeq = (String) jsonObject.get("encMenuSeq");
@@ -92,34 +98,28 @@ public class NoticeService {
                             Document articleDocument = Jsoup.connect(articleURL).get();
                             Elements articleContents = articleDocument.getElementsByClass("tbody").select("ul");
 
+                            Elements tbody = articleContents.select("li p:not([style*='display:none'])");
+
                             String body = "";
-                            for (Element i : articleContents.select("li p:not([style*='display:none'])")) {
+                            for (Element i : tbody) {
                                 String temp = i.text();
                                 if (temp != "") {
                                     body += temp;
                                     body += "\n";
                                 }
-
                             }
-                            // html 통째로 긁기 프론트엔드랑 회의 필요
-                            // String post = articleContents.select("li p:not([style*='display:none'])").toString();
-
 
                             String img = "";
-                            for (Element i : articleContents.select("img")) {
+                            for (Element i : tbody.select("img")) {
                                 String temp = i.attr("abs:src");
                                 // img tag inline data
                                 if (temp.substring(0, 30).contains("data:image")) {
+                                    i.remove();
                                     continue;
                                 } else {
                                     img += temp + ";";
                                 }
                             }
-
-                            String regDate = content.select("li.sliceDot6").next().text();
-                            DateTimeFormatter JEFormatter = DateTimeFormatter.ofPattern("yyyy.MM.dd");
-                            LocalDate localDate = LocalDate.parse("20" + regDate, JEFormatter);
-
 
                             notices.add(new Notice(id,
                                     titleElements.text(),
@@ -129,7 +129,8 @@ public class NoticeService {
                                     localDate,
                                     Long.parseLong(content.select("li.sliceDot6").next().next().text().replace(",", "")),
                                     body,
-                                    img));
+                                    img,
+                                    tbody.toString()));
                         }
                     }
                 }

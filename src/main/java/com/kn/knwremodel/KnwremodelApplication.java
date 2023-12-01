@@ -27,7 +27,7 @@ public class KnwremodelApplication {
 	}
 
 	@Scheduled(fixedRate = 1000 * 60 * 30, initialDelay = 0)
-	public void testSchedule() throws IOException {
+	public void testSchedule() throws Exception {
 		noticeS.setNowDate(LocalDate.now());
 		testdatainsertS.Gentestdata();
 		haksaS.update();

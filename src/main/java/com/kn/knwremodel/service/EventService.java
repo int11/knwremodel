@@ -96,16 +96,15 @@ public class EventService {
                                 Long.parseLong(content.select("li dd span")
                                         .next().next().text().replace("조회수 ", "").replace(",", "")),
                                 body,
-                                img
+                                img,
+                                "todo"
                         ));
                     }
 
 
                 }
-            } catch (IOException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
-            } catch (ParseException e) {
-                throw new RuntimeException(e);
             }
             noticeRepository.saveAll(events);
         }
