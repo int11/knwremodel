@@ -1,14 +1,15 @@
 package com.kn.knwremodel.service;
 
-import com.kn.knwremodel.entity.College;
-import com.kn.knwremodel.entity.Notice;
-import com.kn.knwremodel.repository.CollegeRepository;
-import com.kn.knwremodel.repository.NoticeRepository;
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
+import java.io.IOException;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.regex.Pattern;
+import java.util.regex.Matcher;
+
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -18,11 +19,13 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.io.IOException;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.List;
+import com.kn.knwremodel.entity.College;
+import com.kn.knwremodel.entity.Notice;
+import com.kn.knwremodel.repository.CollegeRepository;
+import com.kn.knwremodel.repository.NoticeRepository;
+
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 
 
 @Service
@@ -31,7 +34,7 @@ public class NoticeService {
     private final NoticeRepository noticeRepo;
     private final CollegeRepository CollegeRepo;
 
-    private int maxPage = 1; //크롤링할 공지사항 페이지의 수
+    private int maxPage = 4; //크롤링할 공지사항 페이지의 수
 
     @Setter
     private LocalDate nowDate;
@@ -40,7 +43,8 @@ public class NoticeService {
     public void update() {
         List<Notice> notices = noticeRepo.findAll();
         JSONParser parser = new JSONParser();
-
+        Pattern pattern = Pattern.compile("\\((\\d+)\\)");
+        
         try {
             for (College e : CollegeRepo.findAll()) {
                 if (!noticeRepo.existsByMajor(e.getMajor()) || !(noticeRepo.findMaxBoardIdByMajor(e.getMajor()) == first_Notice_id(e.getUrl()))) {
@@ -50,7 +54,17 @@ public class NoticeService {
                         Document document = Jsoup.connect(e.getUrl() + "?paginationInfo.currentPageNo=" + page).get();
                         Elements contents = document.getElementsByClass("tbody").select("ul");
 
-                        for (Element content : contents) {
+                        String lp = document.getElementsByClass("pagination create_mob_pagination").select("a").last().attr("onclick");
+
+                        Matcher matcher = pattern.matcher(lp);
+                        if (matcher.find()) {
+                            Long lastpage = Long.parseLong(matcher.group(1));
+                            if (page > lastpage){
+                                break;
+                            }
+                        }
+
+                        for (Element content : contents) {  
                             String columnNumber = content.select("li").first().text();
 
                             if (columnNumber.equals("필독") || columnNumber.equals("공지")) {
@@ -58,12 +72,13 @@ public class NoticeService {
                             }
 
                             Long id = Long.parseLong(columnNumber);
-                            Elements titleElements = content.select("a");
-
+                            
                             if (noticeRepo.existsByBoardId(id)) {
                                 break loopout;
                             }
 
+                            Elements titleElements = content.select("a");
+                            
                             //게시물 내용, 사진 크롤링
                             JSONObject jsonObject = (JSONObject) parser.parse(titleElements.attr("data-params"));
                             String encMenuSeq = (String) jsonObject.get("encMenuSeq");
@@ -119,10 +134,8 @@ public class NoticeService {
                     }
                 }
             }
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
-        } catch (ParseException e) {
-            throw new RuntimeException(e);
         }
         noticeRepo.saveAll(notices);
     }
