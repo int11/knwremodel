@@ -11,11 +11,44 @@ window.onload = function(){
     }
 
     if (URLSearch.get("major")){
-        document.getElementById('MajorDropdown').value = URLSearch.get("major")
+        document.getElementById('MajorDropdown').value = URLSearch.get("major");
     }
 
-    requestPage(URLSearch.get("major"), URLSearch.get("type"), URLSearch.get("keyword"))
+    loadNoticeTable(URLSearch.get("major"), URLSearch.get("type"), URLSearch.get("keyword"));
+    loadRankTable(URLSearch.get("major"));
 }   
+
+function loadRankTable(major){
+    $.ajax({
+        url: '/notice/toplike',
+        type: 'POST',
+        contentType: "application/json",
+        dataType: "json",
+        data: JSON.stringify({major:major, topsize: 5}),
+        success: function (response) {
+            let table = document.getElementById("viewRankTable");
+            createTable(response, table);
+        },
+        error: function (data) {
+            console.error(data.responseText); // 에러 발생 시 콘솔에 출력
+        }
+    });
+
+    $.ajax({
+        url: '/notice/topView',
+        type: 'POST',
+        contentType: "application/json",
+        dataType: "json",
+        data: JSON.stringify({topsize: 5}),
+        success: function (response) {
+            let table = document.getElementById("likeRankTable");
+            createTable(response, table);
+        },
+        error: function (data) {
+            console.error(data.responseText); // 에러 발생 시 콘솔에 출력
+        }
+    });
+}
 
 function saveDepartment() {
     var department = document.getElementById('department').value;
@@ -34,7 +67,7 @@ function saveDepartment() {
     });
 }
 
-function requestPage(major="", type="", keyword="", page=1, perPage=20){
+function loadNoticeTable(major="", type="", keyword="", page=1, perPage=20){
     $.ajax({
         url: '/notice/requestPage',
         type: 'POST',
@@ -95,7 +128,6 @@ function createTable(jsonlist, table) {
             if (key == "checkLike"){
                 let button = document.createElement("button");
                 button.onclick = function(){post_clickLike(item["dbid"], button, button.parentNode.parentNode.getElementsByClassName("likeCount")[0]);};
-                console.log(item[key])
                 if (item[key] == false){
                     button.innerText = "좋아요";
                 }else{
@@ -175,7 +207,7 @@ function mysearch(){
 
 function myopen(page){
     const URLSearch = new URLSearchParams(location.search);
-    requestPage(URLSearch.get("major"), URLSearch.get("type"), URLSearch.get("keyword"), page)
+    loadNoticeTable(URLSearch.get("major"), URLSearch.get("type"), URLSearch.get("keyword"), page)
 }
 
 function post_clickLike(noticeId, target, likecount) {

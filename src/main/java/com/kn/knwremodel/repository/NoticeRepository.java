@@ -30,6 +30,6 @@ public interface NoticeRepository extends JpaRepository<Notice, Long> {
     @Query("SELECT n FROM Notice n WHERE n.regdate >= :beforeDate")
     List<Notice> findByDescWhereByRegDate(@Param("beforeDate") LocalDate beforeDate, Pageable pageable);
 
-    List<Notice> findByMajor(String major, Pageable pageable);
+    List<Notice> findByMajorContaining(String major, Pageable pageable);
     long count();
 }

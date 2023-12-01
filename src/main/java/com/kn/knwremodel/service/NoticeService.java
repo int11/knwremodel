@@ -180,7 +180,8 @@ public class NoticeService {
     }
 
     public List<Notice> findTopLike(String major, Pageable pageable) {
-        List<Notice> topNotices = noticeRepo.findByMajor(major, pageable);
+        major = (major == null) ? "" : major;
+        List<Notice> topNotices = noticeRepo.findByMajorContaining(major, pageable);
 
         List<Notice> result = new ArrayList<>();
 

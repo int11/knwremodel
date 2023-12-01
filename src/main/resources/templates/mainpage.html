@@ -77,27 +77,9 @@
     <li style="float: left;">page</li>
 </ul>
 
-<table id="viewRankTable">
-    <script>
-        $.ajax({
-            url: '/notice/top5like',
-            type: 'POST',
-            contentType: "application/json",
-            dataType: "json",
-            data: JSON.stringify({major:major,
-                type: type, 
-                keyword:keyword, 
-                page:page, 
-                perPage:perPage}),
-            success: function (response) {
-                console.log(response)
-            },
-            error: function (data) {
-                console.error(data.responseText); // 에러 발생 시 콘솔에 출력
-            }
-        });
-    </script>
-</table>
+<br>
+<table id="viewRankTable"></table>
+<br>
 <table id="likeRankTable"></table>
 </body>
 </html>
