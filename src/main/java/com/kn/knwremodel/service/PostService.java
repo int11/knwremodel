@@ -1,19 +1,12 @@
 package com.kn.knwremodel.service;
 
-
 import com.kn.knwremodel.entity.Posts;
 import com.kn.knwremodel.repository.PostsRepository;
-import com.kn.knwremodel.dto.PostsListResponseDto;
-import com.kn.knwremodel.dto.PostsResponseDto;
-import com.kn.knwremodel.dto.PostsSaveRequestDto;
-import com.kn.knwremodel.dto.PostsUpdateRequestDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
@@ -21,35 +14,35 @@ public class PostService {
     private final PostsRepository postsRepository;
 
     @Transactional
-    public Long save(PostsSaveRequestDto requestDto) {
-        return postsRepository.save(requestDto.toEntity()).getId();
+    public Long save(String title, String content, String writer) {
+        return postsRepository.save(Posts.builder()
+                .title(title)
+                .content(content)
+                .writer(writer)
+                .build()).getId();
     }
 
     @Transactional
-    public Long update(Long id, PostsUpdateRequestDto requestDto) {
+    public Long update(Long id, String title, String content) {
         Posts posts = postsRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("해당 게시글이 없습니다. id="+ id));
+                .orElseThrow(() -> new IllegalArgumentException("해당 게시글이 없습니다. id=" + id));
 
-        posts.update(requestDto.getTitle(), requestDto.getContent());
+        posts.update(title, content);
         return id;
     }
 
-    public PostsResponseDto findById (Long id) {
-        Posts entity = postsRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("해당 게시글이 없습니다. id="+ id));
-
-        return new PostsResponseDto(entity);
+    public Posts findById(Long id) {
+        return postsRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("해당 게시글이 없습니다. id=" + id));
     }
 
     @Transactional(readOnly = true)
-    public List<PostsListResponseDto> findAllDesc() {
-        return postsRepository.findAllDesc().stream()
-                .map(PostsListResponseDto::new)
-                .collect(Collectors.toList());
+    public List<Posts> findAllDesc() {
+        return postsRepository.findAllDesc();
     }
 
     @Transactional
-    public void delete (Long id) {
+    public void delete(Long id) {
         Posts posts = postsRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("해당 게시글이 없습니다 id=" + id));
 
