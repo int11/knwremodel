@@ -54,7 +54,7 @@ public class NoticeController {
     @PostMapping("/topView")
     public ResponseEntity getTopView(@RequestBody NoticeDTO.topview dto) {
         List<Notice> topNotices = noticeS.findTopView(PageRequest.of(0, dto.getTopsize(), Sort.Direction.DESC, "view"));
-        List<NoticeDTO.responsePage> result = topNotices.stream().map(notice -> new NoticeDTO.responsePage(likeS, notice)).collect(Collectors.toList());
+        List<NoticeDTO.responsebody> result = topNotices.stream().map(notice -> new NoticeDTO.responsebody(likeS, notice)).collect(Collectors.toList());
         return ResponseEntity.ok(result);
     }
 }

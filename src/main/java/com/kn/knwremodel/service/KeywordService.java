@@ -16,12 +16,11 @@ import java.util.*;
 @RequiredArgsConstructor
 public class KeywordService {
     private final KeywordRepository keywordRepo;
+    private List<String> keywordList = new ArrayList<>(5);
 
     @Transactional
-    public List<Keyword> findTop5ByKeyword(KeywordDTO.request dto) { //검섹어 추가, 실검 조회
-        List<Keyword> keywords;
+    public void addRankingKeyword(KeywordDTO.request dto, HttpServletRequest request) { //검섹어 추가, 실검 조회
         String keyword = dto.getKeyword();
-        HttpServletRequest request = dto.getHttpServletRequest();
         Cookie[] cookies = request.getCookies();
 
         if (keyword != null) {
@@ -29,40 +28,33 @@ public class KeywordService {
             if (cookies != null)
                 for (Cookie cookie : cookies)
                     if (cookie.getName().equals("keyword")) {
-                        if (cookie.getValue().contains(keyword)) {
-                            keywords = keywordRepo.findTop5ByOrderByCountsDesc();
-                            return keywords;
-                        }
+                        if (cookie.getValue().contains(keyword))
+                            return;
                     }
-
-            if (!keyword.isEmpty()) {
-                Keyword onKeyword = keywordRepo.findByKeyword(keyword);
-                if (onKeyword == null) {
-                    Keyword word = Keyword.builder().keyword(keyword).counts(1L).build();
-                    keywordRepo.save(word);
-                } else
-                    onKeyword.updateKeywordCount(onKeyword.getCounts() + 1);
-            }
         }
-        keywords = keywordRepo.findTop5ByOrderByCountsDesc();
-        return keywords;
-    }
 
+        if (keyword != null && !keyword.isEmpty()) {
+            Keyword onKeyword = keywordRepo.findByKeyword(keyword);
+            if (onKeyword == null) {
+                Keyword word = Keyword.builder().keyword(keyword).counts(1L).build();
+                keywordRepo.save(word);
+            } else
+                onKeyword.updateKeywordCount(onKeyword.getCounts() + 1);
+        }
+    }
     @Transactional
     public void resetRanking() { // 랭킹 리셋
         keywordRepo.deleteAllInBatch();
     }
 
     @Transactional
-    public List<String> recentKeywords(KeywordDTO.requestRecentlyKeyword dto) {
-        HttpServletRequest request = dto.getHttpServletRequest();
-        HttpServletResponse response = dto.getHttpServletResponse();
+    public void addRecentKeywords(KeywordDTO.requestRecentlyKeyword dto,
+                                          HttpServletRequest request, HttpServletResponse response) {
         String keyword = dto.getKeyword();
 
         //최근 검색어 추가, 조회
         Cookie oldCookie = null;
         Cookie[] cookies = request.getCookies();
-        List<String> keywordList = new ArrayList<>(5);
 
         //키워드라는 이름의 쿠키를 가지고 있다면 oldCookie에 저장
         if (cookies != null) {
@@ -99,6 +91,13 @@ public class KeywordService {
                         }
                     }
         }
+    }
+
+    public List<Keyword> requestFindTop6ByKeyword() {
+        return keywordRepo.findTop6ByOrderByCountsDesc();
+    }
+
+    public List<String> requestRecentKeywords() {
         Long e = Math.min(keywordList.size(), 5L);
         return keywordList.subList(0, e.intValue());
     }

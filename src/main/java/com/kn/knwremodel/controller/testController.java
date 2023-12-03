@@ -46,22 +46,25 @@ public class testController {
     private final LikeService likeS;
     private final KeywordService keywordS;
     private final CommentService commentS;
-    @GetMapping(value={"/"})
+
+    @GetMapping(value = {"/"})
     public String test(String keyword,
                        HttpServletRequest request,
                        HttpServletResponse response,
                        Model model) throws IOException {
-        UserDTO.Session currentuserDTO = (UserDTO.Session)httpSession.getAttribute("user");
+        UserDTO.Session currentuserDTO = (UserDTO.Session) httpSession.getAttribute("user");
 
-        if(currentuserDTO != null) {
+        if (currentuserDTO != null) {
             model.addAttribute("currentuser", currentuserDTO);
         }
-        List<Keyword> keywords = keywordS.findTop5ByKeyword(new KeywordDTO.request(keyword, request));
-        List<String> recentlyKeywords = keywordS.recentKeywords(new KeywordDTO.requestRecentlyKeyword(
-                keyword, request, response));
+        keywordS.addRankingKeyword(new KeywordDTO.request(keyword), request);
+        keywordS.addRecentKeywords(new KeywordDTO.requestRecentlyKeyword(
+                keyword), request, response);
 
+        List<Keyword> keywords = keywordS.requestFindTop6ByKeyword();
+        List<String> recentlyKeywords =keywordS.requestRecentKeywords();
 
-        model.addAttribute("majorlist",  collegeS.findAllMajor());
+                model.addAttribute("majorlist", collegeS.findAllMajor());
         model.addAttribute("keywords", keywords);
         model.addAttribute("recentlyKeywords", recentlyKeywords);
         return "mainpage";
@@ -82,8 +85,8 @@ public class testController {
         return "noticebody";
     }
 
-    @GetMapping(value="/haksa")
-    public String test111(Model model) throws IOException{
+    @GetMapping(value = "/haksa")
+    public String test111(Model model) throws IOException {
         List<Haksa> haksas = haksaS.findAll();
         model.addAttribute("test", haksas);
 
@@ -98,7 +101,7 @@ public class testController {
 
     @GetMapping("/top5View")
     public String getTop5View(Model model) {
-        List<Notice> topNotices = noticeS.findTopView(PageRequest.of(0, 5, Sort.Direction.DESC,"view"));
+        List<Notice> topNotices = noticeS.findTopView(PageRequest.of(0, 5, Sort.Direction.DESC, "view"));
 
         model.addAttribute("topNotices", topNotices);
         return "top5View";
@@ -106,9 +109,9 @@ public class testController {
 
     @GetMapping("/myPage")
     public String showLikedNoticesAndComments(Model model) {
-        UserDTO.Session currentuserDTO = (UserDTO.Session)httpSession.getAttribute("user");
+        UserDTO.Session currentuserDTO = (UserDTO.Session) httpSession.getAttribute("user");
 
-        if(currentuserDTO != null) {
+        if (currentuserDTO != null) {
             model.addAttribute("currentuser", currentuserDTO);
         }
 
