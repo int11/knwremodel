@@ -6,12 +6,15 @@
     <title>강남대</title>
     <link rel="stylesheet" th:href="@{/style.css}">
     <script th:src="@{/testjs.js}"></script>
-    
+    <script th:src="@{/mainpage.js}"></script>
 </head>
 
 
 <body>
 <button onClick="window.open('/','_self');">Home</button>
+<button value="/top5View" onclick="window.open(value,'_self');">조회수 Top5</button>
+<button value="/haksa" onclick="window.open(value,'_self');">학사 크롤링</button>
+<button value="/scholarshipwiki" onclick="window.open(value,'_self');">학식</button>
 <br>
 
 <th:block th:if="${currentuser != null}">
@@ -29,12 +32,6 @@
 <br>
 
 <input type="text" id="Confirm" name="Confirm" style="display: none" value="">
-
-<br>
-
-<button value="/top5View" onclick="window.open(value,'_self');">조회수 Top5</button>
-<button value="/haksa" onclick="window.open(value,'_self');">학사 크롤링</button>
-<button value="/scholarshipwiki" onclick="window.open(value,'_self');">학식</button>
 
 <br>
 
