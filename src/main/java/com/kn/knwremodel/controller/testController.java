@@ -124,4 +124,10 @@ public class testController {
 
         return "myPage";
     }
+
+    @GetMapping("/scholarshipwiki")
+    public String scholarshipwiki(Model model) {
+
+        return "scholarshipwiki";
+    }
 } 

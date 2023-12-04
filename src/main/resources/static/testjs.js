@@ -3,19 +3,6 @@ var script = document.createElement('script');
 script.src = "https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"; // Check https://jquery.com/ for the current version
 document.getElementsByTagName('head')[0].appendChild(script);
 
-window.onload = function(){
-    const URLSearch = new URLSearchParams(location.search);
-
-    if (URLSearch.get("keyword")){
-        document.getElementById('keyword').value = URLSearch.get("keyword");
-    }
-
-    if (URLSearch.get("major")){
-        document.getElementById('MajorDropdown').value = URLSearch.get("major")
-    }
-
-    requestPage(URLSearch.get("major"), URLSearch.get("type"), URLSearch.get("keyword"))
-}   
 
 function saveDepartment() {
     var department = document.getElementById('department').value;
@@ -34,68 +21,25 @@ function saveDepartment() {
     });
 }
 
-function requestPage(major="", type="", keyword="", page=1, perPage=20){
-    $.ajax({
-        url: '/notice/requestPage',
-        type: 'POST',
-        contentType: "application/json",
-        dataType: "json",
-        data: JSON.stringify({major:major,
-               type: type, 
-               keyword:keyword, 
-               page:page, 
-               perPage:perPage}),
-        success: function (response) {
-            let table = document.getElementById("mainTable");
-            createTable(response.data, table);
-            let ul = document.getElementById("mainPageCount");
-            ul.replaceChildren()
 
-            let li = document.createElement("li");
-            li.style = "float: left;"
-            li.innerText = "page"
-            ul.appendChild(li)
-
-            for(let i = 0; i<response.pageSize; i++){
-                let li = document.createElement("li");
-                li.style.float = "left";
-                li.style.margin = "0px 5px";
-
-                let a = document.createElement("a");
-                a.href = `javascript:myopen(${i + 1})`;
-                a.text = i+1;
-                
-                
-                li.appendChild(a);
-                ul.appendChild(li)
-            }
-        },
-        error: function (data) {
-            console.error(data.responseText); // 에러 발생 시 콘솔에 출력
-        }
-    });
-}
 
 function createTable(jsonlist, table) {
     table.replaceChildren()
-    let tr = document.createElement("tr");
+    let tr = table.insertRow();
     for(let item in jsonlist[0]){
-        let th = document.createElement("th");
+        let th = tr.insertCell();
         th.innerText = item; 
-        tr.appendChild(th); 
     }
 
-    table.append(tr) 
+    
     for (let index in jsonlist){
-        let tr = document.createElement("tr");
+        let tr = table.insertRow();
         let item = jsonlist[index];
         for(let key in item){
-            let td = document.createElement("td");
-
+            let td = tr.insertCell();
             if (key == "checkLike"){
                 let button = document.createElement("button");
                 button.onclick = function(){post_clickLike(item["dbid"], button, button.parentNode.parentNode.getElementsByClassName("likeCount")[0]);};
-                console.log(item[key])
                 if (item[key] == false){
                     button.innerText = "좋아요";
                 }else{
@@ -106,10 +50,7 @@ function createTable(jsonlist, table) {
                 td.className = key;
                 td.innerText = item[key]; 
             }
-
-            tr.appendChild(td);
         }
-        table.appendChild(tr); 
     }
  }
 
@@ -175,7 +116,7 @@ function mysearch(){
 
 function myopen(page){
     const URLSearch = new URLSearchParams(location.search);
-    requestPage(URLSearch.get("major"), URLSearch.get("type"), URLSearch.get("keyword"), page)
+    loadNoticeTable(URLSearch.get("major"), URLSearch.get("type"), URLSearch.get("keyword"), page)
 }
 
 function post_clickLike(noticeId, target, likecount) {

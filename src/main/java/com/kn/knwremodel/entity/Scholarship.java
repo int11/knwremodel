@@ -4,15 +4,32 @@ package com.kn.knwremodel.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
-@Entity(name = "scholarships") //이거 이름 안바꿔 주면 충돌남 SQL 예약어라서..
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+
+@Entity(name = "scholarships")
 @Getter
 @NoArgsConstructor
-@Builder
 @AllArgsConstructor
 public class Scholarship {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String food;
+    @Setter
+    @Column(nullable = false)
+    private LocalDate regdate;
+
+    @ElementCollection(fetch = FetchType.EAGER)
+    @Setter
+    private List<String> columns = new ArrayList<>();
+
+    @Builder
+    public Scholarship(LocalDate regdate) {
+        this.regdate = regdate;
+        for (int i = 0; i < 12; i++){
+            this.columns.add("");
+        }
+    }
 }

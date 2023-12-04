@@ -26,11 +26,9 @@ public class EventService {
     private final int maxPage = 2; //크롤링할 공지사항 페이지의 수
     private final String url = "https://web.kangnam.ac.kr/menu/e4058249224f49ab163131ce104214fb.do?paginationInfo.currentPageNo=";
 
-    private LocalDate localDate;
-
     @Transactional
     public void update() throws IOException {
-        List<Notice> eventNotice = noticeRepository.findByMajorAndRegdate("행사/안내", localDate);
+        List<Notice> eventNotice = noticeRepository.findByMajorAndRegdate("행사/안내", LocalDate.now());
         List<Notice> events = new ArrayList<>();
         JSONParser parser = new JSONParser();
         Boolean update = true;
@@ -96,16 +94,15 @@ public class EventService {
                                 Long.parseLong(content.select("li dd span")
                                         .next().next().text().replace("조회수 ", "").replace(",", "")),
                                 body,
-                                img
+                                img,
+                                "todo"
                         ));
                     }
 
 
                 }
-            } catch (IOException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
-            } catch (ParseException e) {
-                throw new RuntimeException(e);
             }
             noticeRepository.saveAll(events);
         }
@@ -126,9 +123,5 @@ public class EventService {
         } else {
             return boardTitle;
         }
-    }
-
-    public void setNowDate(LocalDate now) {
-        this.localDate = now;
     }
 }

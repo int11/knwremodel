@@ -72,6 +72,7 @@ public class NoticeDTO {
 
         private String body;
         private String img;
+        private String html;
         private List<CommentDTO.Comment> comments;
 
         public responsebody(LikeService likeS, Notice notice) {
@@ -88,6 +89,7 @@ public class NoticeDTO {
 
             this.body = notice.getBody();
             this.img = notice.getImg();
+            this.html = notice.getHtml();
             this.comments = notice.getComments().stream().map(CommentDTO.Comment::new).collect(Collectors.toList());
         }
     }

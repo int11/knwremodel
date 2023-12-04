@@ -1,14 +1,15 @@
 package com.kn.knwremodel.service;
 
-import com.kn.knwremodel.entity.College;
-import com.kn.knwremodel.entity.Notice;
-import com.kn.knwremodel.repository.CollegeRepository;
-import com.kn.knwremodel.repository.NoticeRepository;
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
+import java.io.IOException;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.regex.Pattern;
+import java.util.regex.Matcher;
+
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -18,11 +19,13 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.io.IOException;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.List;
+import com.kn.knwremodel.entity.College;
+import com.kn.knwremodel.entity.Notice;
+import com.kn.knwremodel.repository.CollegeRepository;
+import com.kn.knwremodel.repository.NoticeRepository;
+
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 
 
 @Service
@@ -33,14 +36,12 @@ public class NoticeService {
 
     private int maxPage = 1; //크롤링할 공지사항 페이지의 수
 
-    @Setter
-    private LocalDate nowDate;
-
     @Transactional
     public void update() {
         List<Notice> notices = noticeRepo.findAll();
         JSONParser parser = new JSONParser();
-
+        Pattern pattern = Pattern.compile("\\((\\d+)\\)");
+        
         try {
             for (College e : CollegeRepo.findAll()) {
                 if (!noticeRepo.existsByMajor(e.getMajor()) || !(noticeRepo.findMaxBoardIdByMajor(e.getMajor()) == first_Notice_id(e.getUrl()))) {
@@ -50,7 +51,17 @@ public class NoticeService {
                         Document document = Jsoup.connect(e.getUrl() + "?paginationInfo.currentPageNo=" + page).get();
                         Elements contents = document.getElementsByClass("tbody").select("ul");
 
-                        for (Element content : contents) {
+                        String lp = document.getElementsByClass("pagination create_mob_pagination").select("a").last().attr("onclick");
+
+                        Matcher matcher = pattern.matcher(lp);
+                        if (matcher.find()) {
+                            Long lastpage = Long.parseLong(matcher.group(1));
+                            if (page > lastpage){
+                                break;
+                            }
+                        }
+
+                        for (Element content : contents) {  
                             String columnNumber = content.select("li").first().text();
 
                             if (columnNumber.equals("필독") || columnNumber.equals("공지")) {
@@ -58,11 +69,18 @@ public class NoticeService {
                             }
 
                             Long id = Long.parseLong(columnNumber);
-                            Elements titleElements = content.select("a");
-
+                            
                             if (noticeRepo.existsByBoardId(id)) {
                                 break loopout;
                             }
+
+                            Elements titleElements = content.select("a");
+                            
+                            //regdate
+                            String regDate = content.select("li.sliceDot6").next().text();
+                            DateTimeFormatter JEFormatter = DateTimeFormatter.ofPattern("yyyy.MM.dd");
+                            LocalDate localDate = LocalDate.parse("20" + regDate, JEFormatter);
+            
 
                             //게시물 내용, 사진 크롤링
                             JSONObject jsonObject = (JSONObject) parser.parse(titleElements.attr("data-params"));
@@ -77,34 +95,28 @@ public class NoticeService {
                             Document articleDocument = Jsoup.connect(articleURL).get();
                             Elements articleContents = articleDocument.getElementsByClass("tbody").select("ul");
 
+                            Elements tbody = articleContents.select("li p:not([style*='display:none'])");
+
                             String body = "";
-                            for (Element i : articleContents.select("li p:not([style*='display:none'])")) {
+                            for (Element i : tbody) {
                                 String temp = i.text();
                                 if (temp != "") {
                                     body += temp;
                                     body += "\n";
                                 }
-
                             }
-                            // html 통째로 긁기 프론트엔드랑 회의 필요
-                            // String post = articleContents.select("li p:not([style*='display:none'])").toString();
-
 
                             String img = "";
-                            for (Element i : articleContents.select("img")) {
+                            for (Element i : tbody.select("img")) {
                                 String temp = i.attr("abs:src");
                                 // img tag inline data
                                 if (temp.substring(0, 30).contains("data:image")) {
+                                    i.remove();
                                     continue;
                                 } else {
                                     img += temp + ";";
                                 }
                             }
-
-                            String regDate = content.select("li.sliceDot6").next().text();
-                            DateTimeFormatter JEFormatter = DateTimeFormatter.ofPattern("yyyy.MM.dd");
-                            LocalDate localDate = LocalDate.parse("20" + regDate, JEFormatter);
-
 
                             notices.add(new Notice(id,
                                     titleElements.text(),
@@ -114,15 +126,14 @@ public class NoticeService {
                                     localDate,
                                     Long.parseLong(content.select("li.sliceDot6").next().next().text().replace(",", "")),
                                     body,
-                                    img));
+                                    img,
+                                    tbody.toString()));
                         }
                     }
                 }
             }
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
-        } catch (ParseException e) {
-            throw new RuntimeException(e);
         }
         noticeRepo.saveAll(notices);
     }
@@ -175,12 +186,13 @@ public class NoticeService {
     @Transactional(readOnly = true) // 읽기 전용 트랜잭션
     public List<Notice> findTopView(Pageable pageable) {
         //한달 동안
-        List<Notice> notices = noticeRepo.findByDescWhereByRegDate(nowDate.minusDays(30), pageable);
+        List<Notice> notices = noticeRepo.findByDescWhereByRegDate(LocalDate.now().minusDays(30), pageable);
         return notices;
     }
 
     public List<Notice> findTopLike(String major, Pageable pageable) {
-        List<Notice> topNotices = noticeRepo.findByMajor(major, pageable);
+        major = (major == null) ? "" : major;
+        List<Notice> topNotices = noticeRepo.findByMajorContaining(major, pageable);
 
         List<Notice> result = new ArrayList<>();
 
