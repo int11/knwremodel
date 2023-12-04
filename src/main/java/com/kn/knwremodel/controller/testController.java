@@ -62,7 +62,7 @@ public class testController {
                 keyword), request, response);
 
         List<Keyword> keywords = keywordS.requestFindTop6ByKeyword();
-        List<String> recentlyKeywords =keywordS.requestRecentKeywords();
+        List<String> recentlyKeywords =keywordS.requestRecentKeywords(request);
 
                 model.addAttribute("majorlist", collegeS.findAllMajor());
         model.addAttribute("keywords", keywords);

@@ -36,8 +36,8 @@ public class KeywordController {
         return ResponseEntity.ok(keywords);
     }
     @PostMapping("/request/recentRecord")
-    public ResponseEntity requestKeyword() {
-        List<String> keywords = keywordS.requestRecentKeywords();
+    public ResponseEntity requestKeyword(HttpServletRequest httpServletRequest) {
+        List<String> keywords = keywordS.requestRecentKeywords(httpServletRequest);
         return ResponseEntity.ok(keywords);
     }
 
