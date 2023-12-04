@@ -42,6 +42,7 @@ public class KeywordService {
                 onKeyword.updateKeywordCount(onKeyword.getCounts() + 1);
         }
     }
+
     @Transactional
     public void resetRanking() { // 랭킹 리셋
         keywordRepo.deleteAllInBatch();
@@ -49,7 +50,7 @@ public class KeywordService {
 
     @Transactional
     public void addRecentKeywords(KeywordDTO.requestRecentlyKeyword dto,
-                                          HttpServletRequest request, HttpServletResponse response) {
+                                  HttpServletRequest request, HttpServletResponse response) {
         String keyword = dto.getKeyword();
 
         //최근 검색어 추가, 조회
@@ -65,16 +66,16 @@ public class KeywordService {
             }
         }
 
-        // 가지고 있는 쿠키에 키워드가 포함되어 있지 않다면 쿠키값에 키워드를 추가 "_"로 각 키워드 구분
+        // 키값에 키워드를 추가 "_"로 각 키워드 구분
         // 쿠키 값은 1일 동안 유지
         if (keyword != null) {
             if (oldCookie != null) {
-                if (!oldCookie.getValue().contains(keyword)) {
-                    oldCookie.setValue(oldCookie.getValue() + "_" + keyword);
-                    oldCookie.setPath("/");
-                    oldCookie.setMaxAge(60 * 60 * 24);
-                    response.addCookie(oldCookie);
-                }
+
+                oldCookie.setValue(oldCookie.getValue() + "_" + keyword);
+                oldCookie.setPath("/");
+                oldCookie.setMaxAge(60 * 60 * 24);
+                response.addCookie(oldCookie);
+
             } else { // 키워드 쿠키를 가지고 있지 않다면 키워드라는 새로운 쿠키값 생성
                 Cookie newCookie = new Cookie("keyword", keyword);
                 newCookie.setPath("/");
