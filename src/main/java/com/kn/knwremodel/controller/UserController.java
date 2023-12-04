@@ -80,4 +80,18 @@ public class UserController {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
+
+    @GetMapping("/getEmail")
+    public ResponseEntity getUserEmail() {
+        try {
+            UserDTO.Session currentUserDTO = (UserDTO.Session) httpSession.getAttribute("user");
+            if (currentUserDTO != null) {
+                String userEmail = currentUserDTO.getEmail();
+                return ResponseEntity.ok(userEmail);
+            }
+            return ResponseEntity.ok(false);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
 }
