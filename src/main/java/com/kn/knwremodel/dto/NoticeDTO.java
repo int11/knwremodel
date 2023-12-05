@@ -35,6 +35,7 @@ public class NoticeDTO {
         private Long view;
         private Long likeCount;
         private boolean checkLike;
+        private String img;
 
         public responsePage(LikeService likeS, Notice notice) {
             this.dbid = notice.getId();
@@ -47,6 +48,8 @@ public class NoticeDTO {
             this.view = notice.getView();
             this.likeCount = notice.getLikeCount();
             this.checkLike = likeS.checkedLike(this.dbid);
+            this.img = notice.getImg();
+
         }
     }
 
