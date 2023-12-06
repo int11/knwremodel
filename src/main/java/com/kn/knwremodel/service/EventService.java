@@ -58,6 +58,8 @@ public class EventService {
                         Document articleDocument = Jsoup.connect(articleURL).get();
                         Elements articleContents = articleDocument.getElementsByClass("tbody").select("ul");
 
+                        Elements tbody = articleContents.select("li p:not([style*='display:none'])");
+
                         String body = "";
                         for (Element i : articleContents.select("li p:not([style*='display:none'])")) {
                             String temp = i.text();
@@ -69,10 +71,12 @@ public class EventService {
                         }
 
                         String img = "";
-                        String temp = articleDocument.select("img").attr("abs:src");
-                        if (!temp.equals(""))   // img tag inline data
-                            if (!temp.substring(0, 30).contains("data:image"))
-                                img += temp + ";";
+                        for (Element i : tbody.select("img")) {
+                            String temp = i.attr("abs:src");
+                            if (!temp.equals(""))   // img tag inline data
+                                if (!temp.substring(0, 30).contains("data:image"))
+                                    img += temp + ";";
+                        }
 
                         String regDate = content.select("li dd span").next().first().text().replace("등록일 ", "");
                         DateTimeFormatter JEFormatter = DateTimeFormatter.ofPattern("yyyy.MM.dd");
@@ -95,11 +99,8 @@ public class EventService {
                                         .next().next().text().replace("조회수 ", "").replace(",", "")),
                                 body,
                                 img,
-                                "todo"
-                        ));
+                                tbody.toString()));
                     }
-
-
                 }
             } catch (Exception e) {
                 e.printStackTrace();
