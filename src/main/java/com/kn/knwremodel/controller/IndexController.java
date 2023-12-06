@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RequiredArgsConstructor
 @RequestMapping("/dev")
-@RestController // @RestController 어노테이션 추가
+@Controller
 public class IndexController {
     private final HttpSession httpSession;
     private final PostService postService;
@@ -19,7 +19,7 @@ public class IndexController {
     @GetMapping("/notice")
     public String index(Model model) {
         model.addAttribute("posts", postService.findAllDesc());
-        return "index";
+        return "index.html";
     }
 
     @GetMapping("/savenotice")
