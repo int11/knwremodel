@@ -10,7 +10,7 @@
 
 <div class="col-md-12">
     <div class="col-md-4">
-        <form action="/submit" method="post" th:action="@{/submit}">
+        <form th:action="@{/notice}" method="post">
             <div class="form-group">
                 <label for="title">제목</label>
                 <input type="text" class="form-control" id="title" name="title" placeholder="제목을 입력하세요">
@@ -24,7 +24,7 @@
                 <label for="content"> 내용 </label>
                 <textarea class="form-control" id="content" name="content" placeholder="내용을 입력하세요"></textarea>
             </div>
-            <a href="/" role="button" class="btn btn-secondary">취소</a>
+            <a href="/notice" role="button" class="btn btn-secondary">취소</a>
             <button type="submit" class="btn btn-primary" id="btn-save">등록</button>
         </form>
     </div>
