@@ -21,7 +21,7 @@ public class Posts extends TimeEntity {
     @Column(columnDefinition = "TEXT", nullable = false)
     private String content;
 
-    @Column(nullable = false)
+    @Column
     private String writer;
 
     @Builder
@@ -34,5 +34,9 @@ public class Posts extends TimeEntity {
     public void update(String title, String content) {
         this.title = title;
         this.content = content;
+    }
+
+    public void setWriter(String writer) {
+        this.writer = writer;
     }
 }

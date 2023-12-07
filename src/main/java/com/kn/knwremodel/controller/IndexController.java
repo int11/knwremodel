@@ -47,7 +47,16 @@ public class IndexController {
 
     @PostMapping("/api/v1/posts")
     public Long save(@RequestBody Posts requestDto) {
-        return postService.save(requestDto.getTitle(), requestDto.getContent(), requestDto.getWriter());
+        // 세션에서 이메일 가져오기
+        UserDTO.Session currentUserDTO = (UserDTO.Session) httpSession.getAttribute("user");
+        if (currentUserDTO != null) {
+            // 세션에서 가져온 이메일을 작성자로 설정
+            requestDto.setWriter(currentUserDTO.getEmail());
+            return postService.save(requestDto.getTitle(), requestDto.getContent(), requestDto.getWriter());
+        } else {
+            // 세션이 없을 경우 예외 처리 또는 다른 방법을 선택하세요.
+            throw new IllegalStateException("세션에 사용자 정보가 없습니다.");
+        }
     }
 
     @PutMapping("/api/v1/posts/{id}")
