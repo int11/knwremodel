@@ -6,6 +6,7 @@ import com.kn.knwremodel.repository.PostsRepository;
 import com.kn.knwremodel.service.PostService;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -26,13 +27,16 @@ public class IndexController {
     }
 
     @GetMapping("/posts/save")
-    public String postsSave(Model model) {
-        UserDTO.Session currentuserDTO = (UserDTO.Session) httpSession.getAttribute("user");
-        if (currentuserDTO != null) {
-            model.addAttribute("currentuser", currentuserDTO);
+    public ResponseEntity<UserDTO.Session> getCurrentUser(HttpSession httpSession) {
+        UserDTO.Session currentUserDTO = (UserDTO.Session) httpSession.getAttribute("user");
+
+        if (currentUserDTO != null) {
+            return ResponseEntity.ok(currentUserDTO);
+        } else {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
-        return "posts-save";
     }
+
 
     @GetMapping("/posts/update/{id}")
     public String postsUpdate(@PathVariable Long id, Model model) {
