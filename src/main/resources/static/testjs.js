@@ -31,23 +31,29 @@ function createTable(jsonlist, table) {
         th.innerText = item; 
     }
 
-    
     for (let index in jsonlist){
         let tr = table.insertRow();
         let item = jsonlist[index];
         for(let key in item){
             let td = tr.insertCell();
+            td.className = key;
             if (key == "checkLike"){
                 let button = document.createElement("button");
+                td.appendChild(button);
                 button.onclick = function(){post_clickLike(item["dbid"], button, button.parentNode.parentNode.getElementsByClassName("likeCount")[0]);};
                 if (item[key] == false){
                     button.innerText = "좋아요";
                 }else{
                     button.innerText = "좋아요 취소";
                 }
-                td.appendChild(button);
-            }else{
-                td.className = key;
+
+            }else if(key == "dbid"){
+                let a = document.createElement("a");
+                td.appendChild(a);
+                a.href = "/read/" + item[key]
+                a.innerText = item[key]; 
+            }
+            else{
                 td.innerText = item[key]; 
             }
         }
