@@ -1,21 +1,25 @@
 package com.kn.knwremodel.controller;
 
-import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import com.kn.knwremodel.dto.NoticeDTO;
-import com.kn.knwremodel.dto.UserDTO;
 import com.kn.knwremodel.dto.pageDTO;
 import com.kn.knwremodel.entity.Notice;
-import com.kn.knwremodel.service.CommentService;
 import com.kn.knwremodel.service.LikeService;
 import com.kn.knwremodel.service.NoticeService;
 
-import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -26,28 +30,31 @@ public class NoticeController {
     private final LikeService likeS;
     
     
-    @PostMapping("/getPage")
-    public ResponseEntity getPage(@RequestBody NoticeDTO.requestPage dto) {
+    @PostMapping("/requestPage")
+    public ResponseEntity requestPage(@RequestBody NoticeDTO.requestPage dto) {
         List<Notice> notices = noticeS.search(dto.getMajor(), dto.getType(), dto.getKeyword());
         List<NoticeDTO.responsePage> result = notices.stream().map(notice -> new NoticeDTO.responsePage(likeS, notice)).collect(Collectors.toList());
         pageDTO<NoticeDTO.responsePage> pagedto = new pageDTO<>(result, dto.getPage(), dto.getPerPage());
         return ResponseEntity.ok(pagedto);
     }
 
-    @PostMapping("/getbody")
-    public ResponseEntity getbody(@RequestBody NoticeDTO.requestbody dto) {
+    @PostMapping("/requestbody")
+    public ResponseEntity requestbody(@RequestBody NoticeDTO.requestbody dto) {
         Notice notice = noticeS.findById(dto.getDbid());
         return ResponseEntity.ok(new NoticeDTO.responsebody(likeS, notice));
     }
 
-    @GetMapping("/top3likes/{major}")
-    public ResponseEntity getTopLikesByMajor(@PathVariable String major) {
-        List<Notice> topNotices = noticeS.findTopLikesByMajor(major);
+    @PostMapping("/toplike")
+    public ResponseEntity getTopLikeByMajor(@RequestBody NoticeDTO.toplike dto) {
+        List<Notice> topNotices = noticeS.findTopLike(dto.getMajor(), PageRequest.of(0, dto.getTopsize(), Sort.Direction.DESC, "likeCount"));
+        List<NoticeDTO.responsebody> result = topNotices.stream().map(notice -> new NoticeDTO.responsebody(likeS, notice)).collect(Collectors.toList());
+        return ResponseEntity.ok(result);
+    }
 
-        topNotices.sort(Comparator.comparing(Notice::getLikeCount).reversed()
-                .thenComparing(Notice::getCreateDate, Comparator.reverseOrder()));
-
-        List<NoticeDTO.responsePage> result = topNotices.stream().map(notice -> new NoticeDTO.responsePage(likeS, notice)).collect(Collectors.toList());
+    @PostMapping("/topView")
+    public ResponseEntity getTopView(@RequestBody NoticeDTO.topview dto) {
+        List<Notice> topNotices = noticeS.findTopView(PageRequest.of(0, dto.getTopsize(), Sort.Direction.DESC, "view"));
+        List<NoticeDTO.responsebody> result = topNotices.stream().map(notice -> new NoticeDTO.responsebody(likeS, notice)).collect(Collectors.toList());
         return ResponseEntity.ok(result);
     }
 }

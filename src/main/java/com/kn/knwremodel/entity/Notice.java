@@ -47,6 +47,9 @@ public class Notice {
     @Column(columnDefinition = "TEXT", nullable = true)
     private String img;
 
+    @Column(columnDefinition = "TEXT", nullable = false)
+    private String html;
+    
     @JsonIgnore
     @OneToMany(mappedBy = "notice", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
     @OrderBy("id asc") // 댓글 정렬
@@ -61,7 +64,7 @@ public class Notice {
 
     @Builder
     public Notice(Long boardId, String title, String type, String major, String writer,
-                  LocalDate regdate, Long view, String body, String img) {
+                  LocalDate regdate, Long view, String body, String img, String html) {
         this.boardId = boardId;
         this.title = title;
         this.type = type;
@@ -71,6 +74,7 @@ public class Notice {
         this.view = view;
         this.body = body;
         this.img = img;
+        this.html = html;
         this.comments = getComments();
         this.likeCount = 0L;
     }

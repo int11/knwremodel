@@ -1,5 +1,6 @@
 package com.kn.knwremodel.controller;
 
+import com.kn.knwremodel.dto.MailDTO;
 import com.kn.knwremodel.dto.UserDTO;
 import com.kn.knwremodel.entity.Role;
 
@@ -20,9 +21,9 @@ public class MailController {
 
     // 인증 번호 발송
     @PostMapping("/send")
-    public synchronized ResponseEntity MailSend(String mail) {
+    public synchronized ResponseEntity MailSend(@RequestBody MailDTO.send dto) {
         try{
-            mailS.sendMail(mail);
+            mailS.sendMail(dto.getMail());
             return ResponseEntity.ok("인증번호 발송. 1분 30초 안에 입력하시오.");
         }catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
@@ -31,9 +32,9 @@ public class MailController {
 
     // 인증 번호 확인
     @PostMapping("/confirmNumber")
-    public synchronized ResponseEntity ConfirmNumber(String enteredNumber) {
+    public synchronized ResponseEntity ConfirmNumber(@RequestBody MailDTO.confirmNumber dto) {
         try{
-            mailS.confirmNumber(enteredNumber);
+            mailS.confirmNumber(dto.getEnteredNumber());
             return ResponseEntity.ok("이메일 인증이 성공했습니다.");
         }catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());

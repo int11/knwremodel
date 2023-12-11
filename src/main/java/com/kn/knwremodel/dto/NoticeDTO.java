@@ -35,6 +35,7 @@ public class NoticeDTO {
         private Long view;
         private Long likeCount;
         private boolean checkLike;
+        private String img;
 
         public responsePage(LikeService likeS, Notice notice) {
             this.dbid = notice.getId();
@@ -47,6 +48,8 @@ public class NoticeDTO {
             this.view = notice.getView();
             this.likeCount = notice.getLikeCount();
             this.checkLike = likeS.checkedLike(this.dbid);
+            this.img = notice.getImg();
+
         }
     }
 
@@ -72,6 +75,7 @@ public class NoticeDTO {
 
         private String body;
         private String img;
+        private String html;
         private List<CommentDTO.Comment> comments;
 
         public responsebody(LikeService likeS, Notice notice) {
@@ -88,7 +92,21 @@ public class NoticeDTO {
 
             this.body = notice.getBody();
             this.img = notice.getImg();
+            this.html = notice.getHtml();
             this.comments = notice.getComments().stream().map(CommentDTO.Comment::new).collect(Collectors.toList());
         }
+    }
+    @Getter
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class toplike{
+        private String major;
+        private int topsize;
+    }
+    @Getter
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class topview{
+        private int topsize;
     }
 }

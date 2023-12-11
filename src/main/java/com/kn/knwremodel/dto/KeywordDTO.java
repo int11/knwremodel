@@ -4,25 +4,22 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 public class KeywordDTO {
     @Getter
     @AllArgsConstructor
+    @NoArgsConstructor
     public static class request{
         private String keyword;
-        private HttpServletRequest httpServletRequest;
+
 
     }
 
     @Getter
     @AllArgsConstructor
+    @NoArgsConstructor
     public static class requestRecentlyKeyword{
         private String keyword;
-        private HttpServletRequest httpServletRequest;
-        private HttpServletResponse httpServletResponse;
-
     }
-
-
-
 }

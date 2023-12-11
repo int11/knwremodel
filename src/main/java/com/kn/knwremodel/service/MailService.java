@@ -4,10 +4,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
-import com.kn.knwremodel.dto.UserDTO;
 import com.kn.knwremodel.entity.Role;
 
-import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import jakarta.servlet.http.HttpSession;
 
@@ -38,7 +36,10 @@ public class MailService {
         return message;
     }
 
-    public void sendMail(String mail)  throws Exception{
+    public void sendMail(String mail) throws Exception{
+        if (!mail.endsWith("kangnam.ac.kr")){
+            throw new IllegalArgumentException("강남대학교 이메일로만 인증 가능합니다. 다시 시도해주세요.");
+        }
         int number = createNumber();
 
         MimeMessage message = CreateMail(mail, number);
