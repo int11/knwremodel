@@ -42,7 +42,7 @@ public class SecurityConfig {
                         .userInfoEndpoint(userInfoEndpoint -> userInfoEndpoint           // 로그인 성공 후 사용자 정보를 가져온다.
                                 .userService(OAuthService)                               // 사용자 정보를 처리할 서비스 지정.
                         )
-                        .defaultSuccessUrl("/", true)        // 로그인 성공 시 이동할 URL
+                        .defaultSuccessUrl("http://localhost:3000/main", true)        // 로그인 성공 시 이동할 URL
                 );
 
         return http.build();
