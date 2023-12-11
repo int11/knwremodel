@@ -1,0 +1,39 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>게시판</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+</head>
+<body>
+<h1>게시글 등록</h1>
+
+<div class="col-md-12">
+    <div class="col-md-4">
+        <form th:action="@{/notice}" method="post">
+            <div class="form-group">
+                <label for="title">제목</label>
+                <input type="text" class="form-control" id="title" name="title" placeholder="제목을 입력하세요">
+            </div>
+            <div class="form-group" th:if="${currentuser != null}">
+                <label for="writer"> 작성자 </label>
+                <input type="text" class="form-control" id="writer" th:value="${currentuser != null ? currentuser.email : ''}" readonly>
+            </div>
+
+            <div class="form-group">
+                <label for="content"> 내용 </label>
+                <textarea class="form-control" id="content" name="content" placeholder="내용을 입력하세요"></textarea>
+            </div>
+            <a href="/notice" role="button" class="btn btn-secondary">취소</a>
+            <button type="submit" class="btn btn-primary" id="btn-save">등록</button>
+        </form>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
+<!-- index.js 추가 -->
+<script src="/index.js"></script>
+</body>
+</html>
