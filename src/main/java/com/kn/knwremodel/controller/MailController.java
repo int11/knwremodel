@@ -1,18 +1,15 @@
 package com.kn.knwremodel.controller;
 
-import com.kn.knwremodel.dto.MailDTO;
-import com.kn.knwremodel.dto.UserDTO;
-import com.kn.knwremodel.entity.Role;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
+import com.kn.knwremodel.dto.MailDTO;
 import com.kn.knwremodel.service.MailService;
-import com.kn.knwremodel.service.UserService;
 
 import lombok.RequiredArgsConstructor;
-
-import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
-import jakarta.servlet.http.HttpSession;
 @RestController
 @RequestMapping("/mail")
 @RequiredArgsConstructor

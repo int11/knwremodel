@@ -9,6 +9,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import com.kn.knwremodel.service.HaksaService;
 import com.kn.knwremodel.service.KeywordService;
 import com.kn.knwremodel.service.NoticeService;
+import com.kn.knwremodel.service.ScholarshipService;
 import com.kn.knwremodel.service.testdatainsertService;
 
 import lombok.RequiredArgsConstructor;
@@ -22,6 +23,7 @@ public class KnwremodelApplication {
 	private final testdatainsertService testdatainsertS;
 	private final HaksaService haksaS;
 	private final KeywordService keywordS;
+	private final ScholarshipService scholarshipS;
 	
 	public static void main(String[] args) {
 		SpringApplication.run(KnwremodelApplication.class, args);
@@ -31,6 +33,7 @@ public class KnwremodelApplication {
 	public void testSchedule() throws Exception {
 		testdatainsertS.Gentestdata();
 
+		scholarshipS.update();
 		haksaS.update();
 		noticeS.updateAll();
 		
