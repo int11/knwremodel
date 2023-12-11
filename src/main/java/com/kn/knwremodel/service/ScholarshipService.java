@@ -2,7 +2,6 @@ package com.kn.knwremodel.service;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
-import java.util.Collections;
 import java.util.List;
 
 import org.springframework.data.domain.PageRequest;
@@ -32,7 +31,6 @@ public class ScholarshipService {
             }
             
         }
-        List<Scholarship> a = this.findAll();
     }
 
     public List<Scholarship> findAll() {

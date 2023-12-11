@@ -1,7 +1,6 @@
 package com.kn.knwremodel.dto;
 
-import com.kn.knwremodel.entity.User;
-import lombok.*;
+import lombok.Getter;
 
 
 public class CommentDTO {
