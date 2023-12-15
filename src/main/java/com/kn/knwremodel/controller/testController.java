@@ -12,18 +12,15 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
 import com.kn.knwremodel.dto.CommentDTO;
-import com.kn.knwremodel.dto.KeywordDTO;
 import com.kn.knwremodel.dto.NoticeDTO;
 import com.kn.knwremodel.dto.NoticeDTO.responsebody;
 import com.kn.knwremodel.dto.UserDTO;
 import com.kn.knwremodel.entity.Comment;
 import com.kn.knwremodel.entity.Haksa;
-import com.kn.knwremodel.entity.Keyword;
 import com.kn.knwremodel.entity.Notice;
 import com.kn.knwremodel.service.CollegeService;
 import com.kn.knwremodel.service.CommentService;
 import com.kn.knwremodel.service.HaksaService;
-import com.kn.knwremodel.service.KeywordService;
 import com.kn.knwremodel.service.LikeService;
 import com.kn.knwremodel.service.NoticeService;
 
@@ -41,7 +38,6 @@ public class testController {
     private final HttpSession httpSession;
     private final NoticeController noticeC;
     private final LikeService likeS;
-    private final KeywordService keywordS;
     private final CommentService commentS;
 
     @GetMapping(value = {"/"})
@@ -54,16 +50,8 @@ public class testController {
         if (currentuserDTO != null) {
             model.addAttribute("currentuser", currentuserDTO);
         }
-        keywordS.addRankingKeyword(new KeywordDTO.request(keyword), request);
-        keywordS.addRecentKeywords(new KeywordDTO.requestRecentlyKeyword(
-                keyword), request, response);
 
-        List<Keyword> keywords = keywordS.requestFindTop6ByKeyword();
-        List<String> recentlyKeywords =keywordS.requestRecentKeywords(request);
-
-                model.addAttribute("majorlist", collegeS.findAllMajor());
-        model.addAttribute("keywords", keywords);
-        model.addAttribute("recentlyKeywords", recentlyKeywords);
+        model.addAttribute("majorlist", collegeS.findAllMajor());
         return "mainpage";
     }
 
@@ -88,12 +76,6 @@ public class testController {
         model.addAttribute("test", haksas);
 
         return "haksa";
-    }
-
-    @GetMapping("/mainlogin")
-    public String mainlogin(Model model) {
-
-        return "mainlogin";
     }
 
     @GetMapping("/top5View")
