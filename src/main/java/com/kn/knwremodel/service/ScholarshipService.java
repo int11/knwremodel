@@ -29,7 +29,6 @@ public class ScholarshipService {
             for(int i = 0; i < 5; i++){
                 scholarshipRepo.save(new Scholarship(thisMonday.plusDays(i)));
             }
-            
         }
     }
 
