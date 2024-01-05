@@ -1,0 +1,75 @@
+package com.kn.knwremodel.User;
+
+import java.io.Serializable;
+import java.util.Map;
+
+import com.kn.knwremodel.entity.Role;
+
+import lombok.Builder;
+import lombok.Getter;
+import lombok.Setter;
+
+
+public class UserDTO {
+    @Getter
+    public static class Common{
+        private String oAuthServiceId;
+        private String nameAttributeKey;
+        private Map<String, Object> attributes;
+        private String name;
+        private String email;
+        private String picture;
+
+        @Builder
+        public Common(String oAuthServiceId, String nameAttributeKey, Map<String, Object> attributes){
+            if (oAuthServiceId.equals("google")){
+                ofGoogle(oAuthServiceId, nameAttributeKey, attributes);
+            }else if(oAuthServiceId.equals("naver")){
+                ofNaver(oAuthServiceId, nameAttributeKey, attributes);
+            }
+        }
+
+        private void ofGoogle(String oAuthServiceId, String nameAttributeKey, Map<String, Object> attributes){
+            this.oAuthServiceId = oAuthServiceId;
+            this.nameAttributeKey = nameAttributeKey;
+            this.attributes = attributes;
+            this.name = (String) attributes.get("name");
+            this.email = (String) attributes.get("email");
+            this.picture = (String) attributes.get("picture");
+        }
+
+        private static void ofNaver(String oAuthServiceId, String nameAttributeKey, Map<String, Object> attributes){
+            // TODO naver logic
+        }
+
+        public User toEntity(){
+            return User.builder()
+                    .name(name)
+                    .email(email)
+                    .picture(picture)
+                    .role(Role.GUEST)
+                    .build();
+        }
+    }
+
+    @Getter
+    @Setter
+    public static class Session implements Serializable {
+
+        private Long id;
+        private String name;
+        private String email;
+        private String picture;
+        private String role;  // 역할 정보 추가
+        private String department; //부서 정보 추가
+
+        public Session(User user) {
+            this.id = user.getId();
+            this.name = user.getName();
+            this.email = user.getEmail();
+            this.picture = user.getPicture();
+            this.role = user.getRoleKey(); // 변경된 부분
+            this.department = user.getDepartment();
+        }
+    }
+}

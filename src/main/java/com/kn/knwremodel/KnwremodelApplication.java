@@ -6,10 +6,10 @@ import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 
-import com.kn.knwremodel.service.HaksaService;
-import com.kn.knwremodel.service.NoticeService;
-import com.kn.knwremodel.service.ScholarshipService;
-import com.kn.knwremodel.service.testdatainsertService;
+import com.kn.knwremodel.Haksa.HaksaService;
+import com.kn.knwremodel.Notice.NoticeService;
+import com.kn.knwremodel.Scholarship.ScholarshipService;
+import com.kn.knwremodel.test.testdatainsertService;
 
 import lombok.RequiredArgsConstructor;
 
