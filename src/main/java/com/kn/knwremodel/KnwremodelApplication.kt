@@ -1,40 +1,40 @@
-package com.kn.knwremodel;
+package com.kn.knwremodel
 
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
-import org.springframework.scheduling.annotation.EnableScheduling;
-import org.springframework.scheduling.annotation.Scheduled;
-
-import com.kn.knwremodel.Haksa.HaksaService;
-import com.kn.knwremodel.Notice.NoticeService;
-import com.kn.knwremodel.Scholarship.ScholarshipService;
-import com.kn.knwremodel.test.testdatainsertService;
-
-import lombok.RequiredArgsConstructor;
+import com.kn.knwremodel.Haksa.HaksaService
+import com.kn.knwremodel.Notice.NoticeService
+import com.kn.knwremodel.Scholarship.ScholarshipService
+import com.kn.knwremodel.test.testdatainsertService
+import org.springframework.boot.SpringApplication
+import org.springframework.boot.autoconfigure.SpringBootApplication
+import org.springframework.data.jpa.repository.config.EnableJpaAuditing
+import org.springframework.scheduling.annotation.EnableScheduling
+import org.springframework.scheduling.annotation.Scheduled
 
 @SpringBootApplication
 @EnableScheduling
 @EnableJpaAuditing
-@RequiredArgsConstructor
-public class KnwremodelApplication {
-	private final NoticeService noticeS;
-	private final testdatainsertService testdatainsertS;
-	private final HaksaService haksaS;
-	private final ScholarshipService scholarshipS;
-	
-	public static void main(String[] args) {
-		SpringApplication.run(KnwremodelApplication.class, args);
-	}
+class KnwremodelApplication(
+    private val noticeS: NoticeService,
+    private val testdatainsertS: testdatainsertService,
+    private val haksaS: HaksaService,
+    private val scholarshipS: ScholarshipService
+) {
+    @Scheduled(fixedRate = 1000 * 60 * 30, initialDelay = 0)
+    @Throws(Exception::class)
+    fun testSchedule() {
+        testdatainsertS.Gentestdata()
 
-	@Scheduled(fixedRate = 1000 * 60 * 30, initialDelay = 0)
-	public void testSchedule() throws Exception {
-		testdatainsertS.Gentestdata();
+        scholarshipS.update()
+        haksaS.update()
+        noticeS.updateAll()
 
-		scholarshipS.update();
-		haksaS.update();
-		noticeS.updateAll();
-		
-		System.out.println("DataBase Update every 30 mininutes");
-	}
+        println("DataBase Update every 30 mininutes")
+    }
+
+    companion object {
+        @JvmStatic
+        fun main(args: Array<String>) {
+            SpringApplication.run(KnwremodelApplication::class.java, *args)
+        }
+    }
 }
