@@ -13,6 +13,7 @@ import injea.knwremodel.Like.LikeService;
 import injea.knwremodel.Notice.Notice;
 import injea.knwremodel.Notice.NoticeController;
 import injea.knwremodel.Notice.NoticeDTO;
+import injea.knwremodel.Notice.NoticeService;
 import injea.knwremodel.User.UserDTO;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
