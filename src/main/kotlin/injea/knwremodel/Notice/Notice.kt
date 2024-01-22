@@ -10,37 +10,61 @@ import java.time.LocalDate
 @Entity
 @Table(name = "notices")
 class Notice(
+    boardId: Long?,
+    title: String,
+    major: String,
+    type: String,
+    writer: String,
+    createDate: LocalDate,
+    view: Long,
+    body: String,
+    img: String?,
+    html: String,
+
+    likeCount: Long = 0
+){
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(updatable = false)
-    val id: Long,
+    private val id: Long? = null
 
-    val boardId: Long? = null,
-    val title: String,
-    val major: String,
-    val type: String,
-    val writer: String,
-    val createDate: LocalDate,
-    val view: Long,
+    var boardId = boardId
+        protected set
+    var title = title
+        protected set
+    var major = major
+        protected set
+    var type = type
+        protected set
+    var writer = writer
+        protected set
+    var createDate = createDate
+        protected set
+    var view = view
+        protected set
 
     @Column(columnDefinition = "TEXT")
-    val body: String?,
+    var body = body
+        protected set
 
     @Column(columnDefinition = "TEXT")
-    val img: String?,
+    var img = img
+        protected set
 
     @Column(columnDefinition = "TEXT", nullable = false)
-    val html: String?,
+    var html = html
+        protected set
 
     @JsonIgnore
     @OneToMany(mappedBy = "notice", fetch = FetchType.EAGER, cascade = [CascadeType.REMOVE])
     @OrderBy("id asc") // 댓글 정렬
-    val comments: List<Comment> = mutableListOf(),
+    val comments: MutableList<Comment> = mutableListOf()
 
     @JsonIgnore
     @OneToMany(mappedBy = "notice", fetch = FetchType.EAGER, cascade = [CascadeType.REMOVE])
-    val likes: List<Like> = mutableListOf(),
+    val likes: MutableList<Like> = mutableListOf()
 
     @Column(nullable = false)
-    var likeCount: Long=0
-)
+    var likeCount = likeCount
+        protected  set
+}
