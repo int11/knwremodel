@@ -120,11 +120,6 @@ function mysearch(){
     location.href = location.href.split("?")[0] + '?' + URLSearch.toString();
 }
 
-function myopen(page){
-    const URLSearch = new URLSearchParams(location.search);
-    loadNoticeTable(URLSearch.get("major"), URLSearch.get("type"), URLSearch.get("keyword"), page)
-}
-
 function post_clickLike(noticeId, target, likecount) {
     $.ajax({
         url: "/like/click",

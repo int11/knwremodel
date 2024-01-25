@@ -6,82 +6,68 @@ import org.json.simple.parser.JSONParser
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import org.jsoup.select.Elements
+import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
-import org.springframework.data.domain.Sort
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
-import java.io.IOException
 import java.time.LocalDate
+import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.util.regex.Pattern
 
 @Service
 class NoticeService(private val noticeRepo: NoticeRepository, private val CollegeRepo: CollegeRepository) {
-    private val maxPage = 1 //크롤링할 공지사항 페이지의 수
-    private val pattern: Pattern = Pattern.compile("\\((\\d+)\\)")
+    private val pattern = Pattern.compile("\\((\\d+)\\)")
+    private val dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy.MM.dd HH:mm")
     private val parser = JSONParser()
 
     fun updateAll() {
-        try {
-            update_Event()
-            update_Notice()
-        } catch (e: Exception) {
-            e.printStackTrace()
-        }
+//        updateEvent()
+        updateNotice(3)
+
     }
 
     @Transactional
-    @Throws(Exception::class)
-    fun update_Notice() {
-        val notices = noticeRepo.findAll()
+    fun updateNotice(maxPage: Int) {
+        val notices: MutableList<Notice> = mutableListOf()
 
         for (e in CollegeRepo.findAll()) {
-            if (!noticeRepo.existsByMajor(e.major) || noticeRepo.findMaxBoardIdByMajor(e.major)
-                    .toLong() != first_Notice_id(e.url)
-            ) {
-                loopout@ for (page in 1..maxPage) {
-                    val document = Jsoup.connect(e.url + "?paginationInfo.currentPageNo=" + page).get()
-                    val contents = document.getElementsByClass("tbody").select("ul")
+            val LastPage = getLastpage(e.url, maxPage)
 
-                    for (content in contents) {
-                        val columnNumber = content.select("li").first()!!.text()
+            for (page in LastPage downTo 1) {
+                val document = Jsoup.connect("${e.url}?paginationInfo.currentPageNo=${page}").get()
+                val contents = document.getElementsByClass("tbody").select("ul")
 
-                        if (columnNumber == "필독" || columnNumber == "공지") {
-                            continue
-                        }
-
-                        val boardId = columnNumber.toLong()
-
-                        if (noticeRepo.existsByBoardId(boardId)) {
-                            break@loopout
-                        }
-
-                        val titleElements = content.select("a")
-
-                        //regdate
-                        val regDate = content.select("li.sliceDot6").next().text()
-                        val localDate = StringToLocaldate(regDate)
-                        //게시물 타입, 내용, 사진 크롤링
-                        val body_li = crawlingbody(e.url, titleElements)
-
-
-                        notices.add(
-                            Notice(
-                                boardId,
-                                titleElements.text(),
-                                body_li[0],
-                                e.major,
-                                content.select("li.sliceDot6").text(),
-                                localDate,
-                                content.select("li.sliceDot6").next().next().text().replace(",", "").toLong(),
-                                body_li[1], body_li[2], body_li[3]
-                            )
-                        )
+                for (content in contents.reversed()) {
+                    val columnNumber = content.select("li").first()!!.text()
+                    if (columnNumber == "필독" || columnNumber == "공지"){
+                        continue
                     }
 
-                    if (isLastpage(document, page)) {
-                        break
+                    val boardId = columnNumber.toLong()
+
+                    if (noticeRepo.existsByMajorAndBoardId(e.major, boardId)) {
+                        continue
                     }
+
+                    val titleElements = content.select("a")
+
+                    val (regdate, type, body, img, html) = crawlingbody(e.url, titleElements)
+
+
+                    notices.add(Notice(
+                                    boardId,
+                                    titleElements.attr("title"),
+                                    e.major,
+                                    type as String,
+                                    content.select("li.sliceDot6").text(),
+                                    regdate as LocalDateTime,
+                                    content.select("li.sliceDot6").next().next().text().replace(",", "").toLong(),
+                                    body as String,
+                                    img as String,
+                                    html as String
+                                )
+                    )
                 }
             }
             noticeRepo.saveAll(notices)
@@ -90,119 +76,58 @@ class NoticeService(private val noticeRepo: NoticeRepository, private val Colleg
 
 
     @Transactional
-    @Throws(Exception::class)
-    fun update_Event() {
+    fun updateEvent(maxPage: Int) {
         val url = "https://web.kangnam.ac.kr/menu/e4058249224f49ab163131ce104214fb.do"
-        val eventNotice = noticeRepo.findByMajorAndRegdate("행사/안내", LocalDate.now())
-        val events: MutableList<Notice> = ArrayList()
-        var update = true
+        val notices: MutableList<Notice> = mutableListOf()
 
-        if (!eventNotice.isEmpty()) for (e in eventNotice) if (e.title == first_Notice_title(url)) {
-            update = false
-            break
-        }
+        val LastPage = getLastpage(url, maxPage)
 
-        // 1. DB가 비어있거나
-        // 2.행사/안내의 첫번째 게시물 제목이 eventNotice 안에 존재하지 않을 경우
-        if (eventNotice.isEmpty() || update) {
-            loopout@ for (page in 1..maxPage) {
-                val document = Jsoup.connect("$url?paginationInfo.currentPageNo=$page").get()
-                val contents = document.getElementsByClass("tbody").select("ul")
-                for (content in contents) {
-                    val titleElements = content.select("a")
-                    // 3. DB가 비어있지 않지만 행사/안내의 첫번째 게시물 제목과 첫번째 DB의 title 값이 다를 경우
-                    if (!eventNotice.isEmpty()) for (e in eventNotice) if (e.title == titleElements.attr("title")) break@loopout
+        for (page in LastPage downTo 1) {
+            val document = Jsoup.connect("${url}?paginationInfo.currentPageNo=${page}").get()
+            val contents = document.getElementsByClass("tbody").select("ul")
 
-                    //regdate
-                    val regDate = content.select("li dd span").next().first()!!.text().replace("등록일 ", "")
-                    val localDate = StringToLocaldate(regDate)
-                    //게시물 타입, 내용, 사진 크롤링
-                    val body_li = crawlingbody(url, titleElements)
+            for (content in contents) {
+                val titleElements = content.select("a")
 
-                    events.add(
-                        Notice(
-                            null,  //최근 게시물 출력 순서를 조절하기 위함
-                            titleElements.text(),
-                            body_li[0],
-                            "행사/안내",
-                            content.select("li dd span").first()!!.text().replace("작성자 ", ""),
-                            localDate,
-                            content.select("li dd span")
-                                .next().next().text().replace("조회수 ", "").replace(",", "").toLong(),
-                            body_li[1], body_li[2], body_li[3]
-                        )
+                if (noticeRepo.existsByTitle(titleElements.attr("title")))
+                    continue
+
+                //게시물 타입, 내용, 사진 크롤링
+                val (regdate, type, body, img, html) = crawlingbody(url, titleElements)
+
+                notices.add(
+                    Notice(
+                        null,
+                        titleElements.attr("title"),
+                        "행사/안내",
+                        type as String,
+                        content.select("li dd span").first()!!.text().replace("작성자 ", ""),
+                        regdate as LocalDateTime,
+                        content.select("li dd span")
+                            .next().next().text().replace("조회수 ", "").replace(",", "").toLong(),
+                        body as String,
+                        img as String,
+                        html as String
                     )
-                }
-
-                if (isLastpage(document, page)) {
-                    break
-                }
+                )
             }
-            noticeRepo.saveAll(events)
         }
+        noticeRepo.saveAll(notices)
     }
 
-    private fun isLastpage(document: Document, currentpage: Int): Boolean {
+    private fun getLastpage(url: String, maxPage: Int): Int {
+        val document = Jsoup.connect("${url}?paginationInfo.currentPageNo=${maxPage}").get()
+
         val lp = document.getElementsByClass("pagination create_mob_pagination").select("a").last()!!.attr("onclick")
 
         val matcher = pattern.matcher(lp)
         if (matcher.find()) {
-            val lastpage = matcher.group(1).toLong()
-            if (currentpage >= lastpage) {
-                return true
-            }
+            return matcher.group(1).toInt()
         }
-        return false
+        return 0
     }
 
-    private fun StringToLocaldate(regDate: String): LocalDate {
-        val JEFormatter = DateTimeFormatter.ofPattern("yyyy.MM.dd")
-        return LocalDate.parse("20$regDate", JEFormatter)
-    }
-
-    @Throws(IOException::class)
-    private fun first_Notice_title(url: String): String {
-        val document = Jsoup.connect("$url?paginationInfo.currentPageNo=1").get()
-        val contents = document.getElementsByClass("tbody").select("ul")
-        var boardTitle: String? = null
-
-        for (content in contents) {
-            boardTitle = content.select("a").attr("title")
-            break
-        }
-
-        if (boardTitle == null) {
-            throw IOException()
-        } else {
-            return boardTitle
-        }
-    }
-
-    @Throws(IOException::class)
-    private fun first_Notice_id(url: String): Long {
-        val document = Jsoup.connect("$url?paginationInfo.currentPageNo=1").get()
-        val contents = document.getElementsByClass("tbody").select("ul")
-        var boardId: Long? = null
-
-        for (content in contents) {
-            val columnNumber = content.select("li").first()!!.text()
-            if (columnNumber == "필독" || columnNumber == "공지") {
-                continue
-            }
-
-            boardId = content.select("li").first()!!.text().toLong()
-            break
-        }
-
-        if (boardId == null) {
-            throw IOException()
-        } else {
-            return boardId
-        }
-    }
-
-    @Throws(Exception::class)
-    private fun crawlingbody(url: String, titleElements: Elements): Array<String> {
+    private fun crawlingbody(url: String, titleElements: Elements): Array<Any> {
         val jsonObject = parser.parse(titleElements.attr("data-params")) as JSONObject
         val encMenuSeq = jsonObject["encMenuSeq"] as String
         val encMenuBoardSeq = jsonObject["encMenuBoardSeq"] as String
@@ -213,17 +138,17 @@ class NoticeService(private val noticeRepo: NoticeRepository, private val Colleg
 
         val articleDocument = Jsoup.connect(articleURL).get()
 
+        val dateString = articleDocument.getElementsByClass("tblw_date").select("span")[0].text().substring(5)
+        val regdate = LocalDateTime.parse(dateString, dateTimeFormatter)
+
         val type = articleDocument.getElementsByClass("wri_area colum20").text().replace("게시판명 ", "")
 
         val html = articleDocument.getElementsByClass("tbody").select("ul").select("li p:not([style*='display:none'])")
 
         var body = ""
         for (i in html) {
-            val temp = i.text()
-            if (temp !== "") {
-                body += temp
-                body += "\n"
-            }
+            body += i.text()
+            body += "\n"
         }
 
         var img = ""
@@ -238,7 +163,7 @@ class NoticeService(private val noticeRepo: NoticeRepository, private val Colleg
             }
         }
 
-        return arrayOf(type, body, img, html.toString())
+        return arrayOf(regdate, type, body, img, html.toString())
     }
 
     fun findById(id: Long): Notice {
@@ -254,7 +179,7 @@ class NoticeService(private val noticeRepo: NoticeRepository, private val Colleg
     }
 
     @Transactional
-    fun search(major: String?, type: String?, keyword: String?): List<Notice> {
+    fun search(major: String?, type: String?, keyword: String?, pageable: Pageable): Page<Notice> {
         var major = major
         var type = type
         var keyword = keyword
@@ -263,11 +188,9 @@ class NoticeService(private val noticeRepo: NoticeRepository, private val Colleg
         keyword = if ((keyword == null)) "" else keyword
 
         if (major == "행사/안내") {
-            val sort = Sort.by(Sort.Order.desc("regdate"), Sort.Order.desc("id"))
-            return noticeRepo.findByMajorContainingAndTypeContainingAndTitleContaining(major, type, keyword, sort)
+            return noticeRepo.findByMajorContainingAndTypeContainingAndTitleContaining(major, type, keyword, pageable)
         }
-
-        return noticeRepo.findByMajorExceptEventContainingAndTypeContainingAndTitleContaining(major, type, keyword)
+        return noticeRepo.findByMajorExceptEventContainingAndTypeContainingAndTitleContaining(major, type, keyword, pageable)
     }
 
 

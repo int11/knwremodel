@@ -3,7 +3,7 @@ package injea.knwremodel.Notice;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import injea.knwremodel.dto.pageDTO;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
@@ -26,10 +26,10 @@ public class NoticeController {
     
     @PostMapping("/requestPage")
     public ResponseEntity requestPage(@RequestBody NoticeDTO.requestPage dto) {
-        List<Notice> notices = noticeS.search(dto.getMajor(), dto.getType(), dto.getKeyword());
-        List<NoticeDTO.responsePage> result = notices.stream().map(notice -> new NoticeDTO.responsePage(likeS, notice)).collect(Collectors.toList());
-        pageDTO<NoticeDTO.responsePage> pagedto = new pageDTO<>(result, dto.getPage(), dto.getPerPage());
-        return ResponseEntity.ok(pagedto);
+        PageRequest paging = PageRequest.of(dto.getPage().intValue(), dto.getPerPage().intValue(),Sort.Direction.DESC, "id");
+        Page<Notice> notices = noticeS.search(dto.getMajor(), dto.getType(), dto.getKeyword(), paging);
+        Page<NoticeDTO.responsePage>result = notices.map(notice -> new NoticeDTO.responsePage(likeS, notice));
+        return ResponseEntity.ok(result);
     }
 
     @PostMapping("/requestbody")
@@ -40,14 +40,14 @@ public class NoticeController {
 
     @PostMapping("/toplike")
     public ResponseEntity getTopLikeByMajor(@RequestBody NoticeDTO.toplike dto) {
-        List<Notice> topNotices = noticeS.findTopLike(dto.getMajor(), PageRequest.of(0, dto.getTopsize(), Sort.Direction.DESC, "likeCount"));
+        List<Notice> topNotices = noticeS.findTopLike(dto.getMajor(), PageRequest.of(0, dto.getSize(), Sort.Direction.DESC, "likeCount"));
         List<NoticeDTO.responsebody> result = topNotices.stream().map(notice -> new NoticeDTO.responsebody(likeS, notice)).collect(Collectors.toList());
         return ResponseEntity.ok(result);
     }
 
     @PostMapping("/topView")
     public ResponseEntity getTopView(@RequestBody NoticeDTO.topview dto) {
-        List<Notice> topNotices = noticeS.findTopView(PageRequest.of(0, dto.getTopsize(), Sort.Direction.DESC, "view"));
+        List<Notice> topNotices = noticeS.findTopView(PageRequest.of(0, dto.getSize(), Sort.Direction.DESC, "view"));
         List<NoticeDTO.responsebody> result = topNotices.stream().map(notice -> new NoticeDTO.responsebody(likeS, notice)).collect(Collectors.toList());
         return ResponseEntity.ok(result);
     }

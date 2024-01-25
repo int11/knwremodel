@@ -12,7 +12,7 @@ window.onload = function(){
     loadRankTable(URLSearch.get("major"));
 }
 
-function loadNoticeTable(major="", type="", keyword="", page=1, perPage=20){
+function loadNoticeTable(major="", type="", keyword="", page=0, perPage=20){
     $.ajax({
         url: '/notice/requestPage',
         type: 'POST',
@@ -25,7 +25,7 @@ function loadNoticeTable(major="", type="", keyword="", page=1, perPage=20){
             perPage:perPage}),
         success: function (response) {
             let table = document.getElementById("mainTable");
-            createTable(response.data, table);
+            createTable(response.content, table);
             let ul = document.getElementById("mainPageCount");
             ul.replaceChildren()
 
@@ -34,13 +34,13 @@ function loadNoticeTable(major="", type="", keyword="", page=1, perPage=20){
             li.innerText = "page"
             ul.appendChild(li)
 
-            for(let i = 0; i<response.pageSize; i++){
+            for(let i = 0; i<response.totalPages; i++){
                 let li = document.createElement("li");
                 li.style.float = "left";
                 li.style.margin = "0px 5px";
 
                 let a = document.createElement("a");
-                a.href = `javascript:myopen(${i + 1})`;
+                a.href = `javascript:myopen(${i})`;
                 a.text = i+1;
                 
                 
@@ -53,14 +53,17 @@ function loadNoticeTable(major="", type="", keyword="", page=1, perPage=20){
         }
     });
 }
-
+function myopen(page){
+    const URLSearch = new URLSearchParams(location.search);
+    loadNoticeTable(URLSearch.get("major"), URLSearch.get("type"), URLSearch.get("keyword"), page)
+}
 function loadRankTable(major){
     $.ajax({
         url: '/notice/toplike',
         type: 'POST',
         contentType: "application/json",
         dataType: "json",
-        data: JSON.stringify({major:major, topsize: 5}),
+        data: JSON.stringify({major:major, size: 5}),
         success: function (response) {
             let table = document.getElementById("viewRankTable");
             createTable(response, table);
@@ -75,7 +78,7 @@ function loadRankTable(major){
         type: 'POST',
         contentType: "application/json",
         dataType: "json",
-        data: JSON.stringify({topsize: 5}),
+        data: JSON.stringify({size: 5}),
         success: function (response) {
             let table = document.getElementById("likeRankTable");
             createTable(response, table);

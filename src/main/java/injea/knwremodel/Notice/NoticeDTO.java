@@ -1,6 +1,7 @@
 package injea.knwremodel.Notice;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -32,7 +33,7 @@ public class NoticeDTO {
         private String major;
         private String type;
         private String writer;
-        private LocalDate regdate;
+        private LocalDateTime regdate;
         private Long view;
         private Long likeCount;
         private boolean checkLike;
@@ -69,7 +70,7 @@ public class NoticeDTO {
         private String major;
         private String type;
         private String writer;
-        private LocalDate regdate;
+        private LocalDateTime regdate;
         private Long view;
         private Long likeCount;
         private boolean checkLike;
@@ -102,12 +103,12 @@ public class NoticeDTO {
     @NoArgsConstructor
     public static class toplike{
         private String major;
-        private int topsize;
+        private int size;
     }
     @Getter
     @AllArgsConstructor
     @NoArgsConstructor
     public static class topview{
-        private int topsize;
+        private int size;
     }
 }

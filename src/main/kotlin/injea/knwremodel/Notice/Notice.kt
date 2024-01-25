@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore
 import injea.knwremodel.Comment.Comment
 import injea.knwremodel.Like.Like
 import jakarta.persistence.*
-import java.time.LocalDate
+import java.time.LocalDateTime
 
 
 @Entity
@@ -15,7 +15,7 @@ class Notice(
     major: String,
     type: String,
     writer: String,
-    createDate: LocalDate,
+    regdate: LocalDateTime,
     view: Long,
     body: String,
     img: String?,
@@ -26,7 +26,7 @@ class Notice(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(updatable = false)
-    private val id: Long? = null
+    val id: Long? = null
 
     var boardId = boardId
         protected set
@@ -38,7 +38,7 @@ class Notice(
         protected set
     var writer = writer
         protected set
-    var createDate = createDate
+    var regdate = regdate
         protected set
     var view = view
         protected set
@@ -66,5 +66,4 @@ class Notice(
 
     @Column(nullable = false)
     var likeCount = likeCount
-        protected  set
 }
