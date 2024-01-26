@@ -1,99 +1,94 @@
-package injea.knwremodel.User;
+package injea.knwremodel.User
 
-import injea.knwremodel.Comment.CommentService;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
-
-import injea.knwremodel.Like.LikeService;
-
-import jakarta.servlet.http.HttpSession;
-import lombok.RequiredArgsConstructor;
+import injea.knwremodel.Comment.CommentService
+import injea.knwremodel.Like.LikeService
+import jakarta.servlet.http.HttpSession
+import org.springframework.http.ResponseEntity
+import org.springframework.web.bind.annotation.*
 
 @RestController
 @RequestMapping("/user")
-@RequiredArgsConstructor
-public class UserController {
-    private final UserService userS;
-    private final HttpSession httpSession;
-    private final CommentService commentS;
-    private final LikeService likeS;
-
-    @GetMapping("/getDepartment")
-    public ResponseEntity getDepartment() {
-        try {
-            String department = userS.getDepartment();
-            return ResponseEntity.ok(department);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return ResponseEntity.badRequest().body("학과 정보를 가져오는데 실패했습니다.");
+class UserController(
+    private val userS: UserService,
+    private val httpSession: HttpSession,
+    private val commentS: CommentService,
+    private val likeS: LikeService
+) {
+    @get:GetMapping("/getDepartment")
+    val department: ResponseEntity<*>
+        get() {
+            try {
+                val department = userS.department
+                return ResponseEntity.ok(department)
+            } catch (e: Exception) {
+                e.printStackTrace()
+                return ResponseEntity.badRequest().body("학과 정보를 가져오는데 실패했습니다.")
+            }
         }
-    }
 
     @PostMapping("/saveDepartment")
-    public ResponseEntity saveDepartment(@RequestParam String department) {
+    fun saveDepartment(@RequestParam department: String?): ResponseEntity<*> {
         try {
-            userS.setDepartment(department);
-            return ResponseEntity.ok("학부 저장을 성공했습니다.");
-        } catch (Exception e) {
-            e.printStackTrace();
-            return ResponseEntity.badRequest().body("학부 저장을 실패했습니다.");
+            userS.department = department
+            return ResponseEntity.ok("학부 저장을 성공했습니다.")
+        } catch (e: Exception) {
+            e.printStackTrace()
+            return ResponseEntity.badRequest().body("학부 저장을 실패했습니다.")
         }
     }
 
     @PostMapping("/request")
-    public ResponseEntity request() {
+    fun request(): ResponseEntity<*> {
         try {
-            UserDTO.Session currentuserDTO = (UserDTO.Session)httpSession.getAttribute("user");
-            if(currentuserDTO != null) {
-                return ResponseEntity.ok(currentuserDTO);
+            val currentuserDTO = httpSession.getAttribute("user") as UserDTO.Session
+            if (currentuserDTO != null) {
+                return ResponseEntity.ok(currentuserDTO)
             }
-            return ResponseEntity.ok(false);
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
+            return ResponseEntity.ok(false)
+        } catch (e: Exception) {
+            return ResponseEntity.badRequest().body(e.message)
         }
-    }  
+    }
 
     @PostMapping("/likes")
-    public ResponseEntity likes() throws Exception {
+    @Throws(Exception::class)
+    fun likes(): ResponseEntity<*> {
         try {
-            UserDTO.Session currentuserDTO = (UserDTO.Session)httpSession.getAttribute("user");
-            if(currentuserDTO != null) {
-                return ResponseEntity.ok(likeS.getLikedNotices(currentuserDTO));
+            val currentuserDTO = httpSession.getAttribute("user") as UserDTO.Session
+            if (currentuserDTO != null) {
+                return ResponseEntity.ok(likeS.getLikedNotices(currentuserDTO))
             }
-            return ResponseEntity.ok(false);
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
+            return ResponseEntity.ok(false)
+        } catch (e: Exception) {
+            return ResponseEntity.badRequest().body(e.message)
         }
     }
 
     @PostMapping("/comments")
-    public ResponseEntity comments() {
+    fun comments(): ResponseEntity<*> {
         try {
-            UserDTO.Session currentuserDTO = (UserDTO.Session)httpSession.getAttribute("user");
-            if(currentuserDTO != null) {
-                return ResponseEntity.ok(commentS.getCommentsByUser(currentuserDTO.getId()));
+            val currentuserDTO = httpSession.getAttribute("user") as UserDTO.Session
+            if (currentuserDTO != null) {
+                return ResponseEntity.ok(commentS.getCommentsByUser(currentuserDTO.id))
             }
-            return ResponseEntity.ok(false);
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
+            return ResponseEntity.ok(false)
+        } catch (e: Exception) {
+            return ResponseEntity.badRequest().body(e.message)
         }
     }
 
-    @GetMapping("/getEmail")
-    public ResponseEntity getUserEmail() {
-        try {
-            UserDTO.Session currentUserDTO = (UserDTO.Session) httpSession.getAttribute("user");
-            if (currentUserDTO != null) {
-                String userEmail = currentUserDTO.getEmail();
-                return ResponseEntity.ok(userEmail);
+    @get:GetMapping("/getEmail")
+    val userEmail: ResponseEntity<*>
+        get() {
+            try {
+                val currentUserDTO = httpSession.getAttribute("user") as UserDTO.Session
+                if (currentUserDTO != null) {
+                    val userEmail = currentUserDTO.email
+                    return ResponseEntity.ok(userEmail)
+                }
+                return ResponseEntity.ok(false)
+            } catch (e: Exception) {
+                return ResponseEntity.badRequest().body(e.message)
             }
-            return ResponseEntity.ok(false);
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
         }
-    }
 }

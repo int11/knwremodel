@@ -1,67 +1,61 @@
-package injea.knwremodel.Haksa;
+package injea.knwremodel.Haksa
 
-import lombok.RequiredArgsConstructor;
+import org.jsoup.Jsoup
+import org.jsoup.nodes.Document
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.stereotype.Service
+import java.io.IOException
+import java.time.Year
+import kotlin.math.min
 
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.select.Elements;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import java.io.IOException;
-import java.time.Year;
-import java.util.List;
-
-@RequiredArgsConstructor
 @Service
-public class HaksaService {
+class HaksaService {
     @Autowired
-    private HaksaRepository haksaRepo;
-    @Autowired
-    private HaksayearRepository haksayearRepo;
+    private val haksaRepo: HaksaRepository? = null
 
-    public void update() {
+    @Autowired
+    private val haksayearRepo: HaksayearRepository? = null
+
+    fun update() {
         // 학사 데이터가 아예 존재하지않을때 or 크롤링한 학사 일정 년도수가 현재 년도수랑 다를떄
-        if (haksaRepo.findAll().size() == 0 || haksayearRepo.findAll().get(0).getYear().equals(Year.now()) == false){
-            haksaRepo.deleteAll();
-            haksayearRepo.save(new Haksayear(1L, Year.now()));
-            Document docu = null;
-            final String url = "https://web.kangnam.ac.kr/menu/02be162adc07170ec7ee034097d627e9.do";
+        if (haksaRepo!!.findAll().size == 0 || haksayearRepo!!.findAll()[0].year == Year.now() == false) {
+            haksaRepo.deleteAll()
+            haksayearRepo!!.save(Haksayear(1L, Year.now()))
+            var docu: Document? = null
+            val url = "https://web.kangnam.ac.kr/menu/02be162adc07170ec7ee034097d627e9.do"
             try {
-                docu = Jsoup.connect(url).get();
-
-            } catch (IOException e) {
-                e.printStackTrace();
+                docu = Jsoup.connect(url).get()
+            } catch (e: IOException) {
+                e.printStackTrace()
             }
 
             if (docu != null) {
+                val dateElements1 = docu.select("div.tbl.typeA.calendal_list").select("tbody")
+                val dateElements = dateElements1.select("th.text-center")
+                val scheduleElements = dateElements1.select(".text-center.last")
 
-                Elements dateElements1 = docu.select("div.tbl.typeA.calendal_list").select("tbody");
-                Elements dateElements = dateElements1.select("th.text-center");
-                Elements scheduleElements = dateElements1.select(".text-center.last");
+                val size = min(dateElements.size.toDouble(), scheduleElements.size.toDouble()).toInt()
 
-                int size = Math.min(dateElements.size(), scheduleElements.size());
+                for (i in 0 until size) {
+                    val date = dateElements[i].text()
+                    val schedule = scheduleElements[i].text()
+                    val dateParts = date.split("~".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
+                    val date_start = dateParts[0].trim { it <= ' ' }
+                    val date_end = if ((dateParts.size == 2)) dateParts[1].trim { it <= ' ' } else null
 
-                for (int i = 0; i < size; i++) {
-                    String date = dateElements.get(i).text();
-                    String schedule = scheduleElements.get(i).text();
-                    String[] dateParts = date.split("~");
-                    String date_start = dateParts[0].trim();
-                    String date_end = (dateParts.length == 2) ? dateParts[1].trim() : null;
+                    val event = Haksa()
 
-                    Haksa event = new Haksa();
+                    event.schedule = schedule
+                    event.setDateStart(date_start)
+                    event.setDateEnd(date_end)
 
-                    event.setSchedule(schedule);
-                    event.setDateStart(date_start);
-                    event.setDateEnd(date_end);
-
-                    haksaRepo.save(event);
+                    haksaRepo.save(event)
                 }
             }
-        }  
+        }
     }
 
-    public List<Haksa> findAll() {
-        return haksaRepo.findAll();
+    fun findAll(): List<Haksa?> {
+        return haksaRepo!!.findAll()
     }
 }

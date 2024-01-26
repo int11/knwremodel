@@ -1,80 +1,68 @@
-package injea.knwremodel.Like;
+package injea.knwremodel.Like
 
-import injea.knwremodel.notice.Notice;
-import injea.knwremodel.notice.NoticeRepository;
-import injea.knwremodel.User.User;
-import injea.knwremodel.User.UserDTO;
-import injea.knwremodel.User.UserRepository;
-
-import jakarta.servlet.http.HttpSession;
-import jakarta.transaction.Transactional;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
-
-import java.util.Collections;
-import java.util.List;
-
+import injea.knwremodel.Like.LikeDTO.click
+import injea.knwremodel.User.UserDTO
+import injea.knwremodel.User.UserRepository
+import injea.knwremodel.notice.Notice
+import injea.knwremodel.notice.NoticeRepository
+import jakarta.servlet.http.HttpSession
+import jakarta.transaction.Transactional
+import org.springframework.stereotype.Service
 
 @Service
-@RequiredArgsConstructor
-public class LikeService {
-    private final LikeRepository likeRepository;
-    private final NoticeRepository noticeRepository;
-    private final UserRepository userRepository;
-    private final HttpSession httpSession;
-
+class LikeService(
+    private val likeRepository: LikeRepository,
+    private val noticeRepository: NoticeRepository,
+    private val userRepository: UserRepository,
+    private val httpSession: HttpSession
+) {
     @Transactional
-    public Long clickLike(LikeDTO.click likedto) throws Exception {
-        UserDTO.Session currentuserDTO = (UserDTO.Session)httpSession.getAttribute("user");
-        Notice notice = noticeRepository.findById(likedto.getNoticeId()).get();
-        if (currentuserDTO == null){
-            throw new IllegalArgumentException("좋아요 추가 실패: 로그인이 필요합니다.");
-        }
-        User currentuser = userRepository.findById(currentuserDTO.getId()).get();
+    @Throws(Exception::class)
+    fun clickLike(likedto: click): Long? {
+        val currentuserDTO = httpSession.getAttribute("user") as UserDTO.Session
+        val notice = noticeRepository.findById(likedto.noticeId).get()
+        requireNotNull(currentuserDTO) { "좋아요 추가 실패: 로그인이 필요합니다." }
+        val currentuser = userRepository.findById(currentuserDTO.id).get()
 
 
         //사용자가 해당 게시물에 좋아요를 눌렀던 기록이 있다면
         if (likeRepository.existsByUserAndNotice(currentuser, notice)) {
-            Like like = likeRepository.findByUserAndNotice(currentuser, notice);
-            likeRepository.delete(like);
-            notice.setLikeCount(notice.getLikeCount() - 1);
-            return like.getId();
-        }
-        else{
-            Like like = Like.builder()
-                            .user(currentuser)
-                            .notice(notice)
-                            .build();
-            likeRepository.save(like);
-            notice.setLikeCount(notice.getLikeCount() + 1);
-            return like.getId();
+            val like = likeRepository.findByUserAndNotice(currentuser, notice)
+            likeRepository.delete(like)
+            notice.likeCount = notice.likeCount - 1
+            return like.id
+        } else {
+            val like: Like = Like.Companion.builder()
+                .user(currentuser)
+                .notice(notice)
+                .build()
+            likeRepository.save(like)
+            notice.likeCount = notice.likeCount + 1
+            return like.id
         }
     }
 
     @Transactional
-    public boolean checkedLike(Long noticeid) {
-        UserDTO.Session currentuserDTO = (UserDTO.Session)httpSession.getAttribute("user");
-        Notice notice = noticeRepository.findById(noticeid).get();
-        if (currentuserDTO == null){
-            return false;
+    fun checkedLike(noticeid: Long): Boolean {
+        val currentuserDTO = httpSession.getAttribute("user") as UserDTO.Session
+        val notice = noticeRepository.findById(noticeid).get()
+        if (currentuserDTO == null) {
+            return false
         }
-        User currentuser = userRepository.findById(currentuserDTO.getId()).orElse(null);
-        return likeRepository.existsByUserAndNotice(currentuser, notice);
+        val currentuser = userRepository.findById(currentuserDTO.id).orElse(null)!!
+        return likeRepository.existsByUserAndNotice(currentuser, notice)
     }
 
-    public List<Notice> getLikedNotices(UserDTO.Session currentUserDTO) {
-        Long currentUserId = getCurrentUserId(currentUserDTO);
-        if (currentUserId == null) {
-            return Collections.emptyList();
-        }
-        return likeRepository.findLikedNoticesByUser(currentUserId);
+    fun getLikedNotices(currentUserDTO: UserDTO.Session?): List<Notice?>? {
+        val currentUserId = getCurrentUserId(currentUserDTO)
+            ?: return emptyList<Notice>()
+        return likeRepository.findLikedNoticesByUser(currentUserId)
     }
 
-    public Long getCurrentUserId(UserDTO.Session currentUserDTO) {
-
+    fun getCurrentUserId(currentUserDTO: UserDTO.Session?): Long? {
         if (currentUserDTO == null) {
-            return null;
+            return null
         }
-        return currentUserDTO.getId();
+        return currentUserDTO.id
     }
 }

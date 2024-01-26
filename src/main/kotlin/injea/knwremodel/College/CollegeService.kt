@@ -1,16 +1,13 @@
-package injea.knwremodel.College;
+package injea.knwremodel.College
 
-import java.util.List;
-import org.springframework.stereotype.Service;
-
-import lombok.RequiredArgsConstructor;
-
+import lombok.RequiredArgsConstructor
+import org.springframework.stereotype.Service
 
 @Service
 @RequiredArgsConstructor
-public class CollegeService {
-    private final CollegeRepository CollegeRepo;
-    public List<String> findAllMajor() {
-        return CollegeRepo.findAllMajor();
+class CollegeService {
+    private val CollegeRepo: CollegeRepository? = null
+    fun findAllMajor(): List<String?>? {
+        return CollegeRepo!!.findAllMajor()
     }
 }

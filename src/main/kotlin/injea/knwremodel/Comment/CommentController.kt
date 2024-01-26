@@ -1,43 +1,44 @@
-package injea.knwremodel.Comment;
+package injea.knwremodel.Comment
 
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import injea.knwremodel.Comment.CommentDTO.delete
+import injea.knwremodel.Comment.CommentDTO.modify
+import org.springframework.http.ResponseEntity
+import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.RequestBody
+import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RestController
 
-import lombok.RequiredArgsConstructor;
 @RestController
 @RequestMapping("/comments")
-@RequiredArgsConstructor
-public class CommentController {
-    private final CommentService commentS;
-
+class CommentController(private val commentS: CommentService) {
     /* CREATE */
     @PostMapping("/save")
-    public ResponseEntity saveComment(@RequestBody CommentDTO.save commentdto) throws Exception {
-        try{
-            return ResponseEntity.ok(commentS.saveComment(commentdto));
-        }catch (Exception e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
+    @Throws(Exception::class)
+    fun saveComment(@RequestBody commentdto: CommentDTO.save): ResponseEntity<*> {
+        return try {
+            ResponseEntity.ok(commentS.saveComment(commentdto))
+        } catch (e: Exception) {
+            ResponseEntity.badRequest().body(e.message)
         }
     }
 
     @PostMapping("/modify")
-    public ResponseEntity modifyComment(@RequestBody CommentDTO.modify commentdto) throws Exception {
-        try{
-            return ResponseEntity.ok(commentS.modifyComment(commentdto));
-        }catch (Exception e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
+    @Throws(Exception::class)
+    fun modifyComment(@RequestBody commentdto: modify): ResponseEntity<*> {
+        return try {
+            ResponseEntity.ok(commentS.modifyComment(commentdto))
+        } catch (e: Exception) {
+            ResponseEntity.badRequest().body(e.message)
         }
     }
 
     @PostMapping("/delete")
-    public ResponseEntity deleteComment(@RequestBody CommentDTO.delete commentdto) throws Exception {
-        try{
-            return ResponseEntity.ok(commentS.deleteComment(commentdto));
-        }catch (Exception e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
+    @Throws(Exception::class)
+    fun deleteComment(@RequestBody commentdto: delete): ResponseEntity<*> {
+        return try {
+            ResponseEntity.ok(commentS.deleteComment(commentdto))
+        } catch (e: Exception) {
+            ResponseEntity.badRequest().body(e.message)
         }
     }
 }

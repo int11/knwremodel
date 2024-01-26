@@ -1,49 +1,41 @@
-package injea.knwremodel.Comment;
-
-import lombok.Getter;
+package injea.knwremodel.Comment
 
 
-public class CommentDTO {
-    @Getter
-    public static class save {
-        private Long noticeId;
-        private String comment;
+class CommentDTO {
+    class save {
+        val noticeId: Long? = null
+        val comment: String? = null
     }
 
-    @Getter
-    public static class modify {
-        private Long commentId;
-        private String comment;
+    class modify {
+        val commentId: Long? = null
+        val comment: String? = null
     }
 
-    @Getter
-    public static class delete {
-        private Long commentId;
+    class delete {
+        val commentId: Long? = null
     }
 
-    @Getter
-    public static class Comment {
-        private Long id;
-        private String email;
-        private String comment;
-        private String createdDate;
-        private String modifiedDate;
+    class Comment(comment: injea.knwremodel.Comment.Comment) {
+        val id: Long? = comment.id
+        var email: String? = null
+        val comment: String?
+        val createdDate: String
+        val modifiedDate: String
 
-        public Comment(injea.knwremodel.Comment.Comment comment) {
-            this.id = comment.getId();
-
-            String userEmail = comment.getUser().getEmail();
-            int atIndex = userEmail.indexOf('@');
+        init {
+            val userEmail = comment.user.email
+            val atIndex = userEmail!!.indexOf('@')
 
             if (atIndex != -1) {
-                String username = userEmail.substring(0, atIndex);
-                String maskedUsername = username.substring(0, 2) + "*".repeat(username.length() - 2);
-                this.email = maskedUsername;
+                val username = userEmail.substring(0, atIndex)
+                val maskedUsername = username.substring(0, 2) + "*".repeat(username.length - 2)
+                this.email = maskedUsername
             }
 
-            this.comment = comment.getComment();
-            this.createdDate = comment.getCreatedDate();
-            this.modifiedDate = comment.getModifiedDate();
+            this.comment = comment.comment
+            this.createdDate = comment.createdDate
+            this.modifiedDate = comment.modifiedDate
         }
     }
 }

@@ -1,13 +1,11 @@
-package injea.knwremodel.User;
+package injea.knwremodel.User
 
+import org.springframework.data.jpa.repository.JpaRepository
+import org.springframework.stereotype.Repository
+import java.util.*
 
-import java.util.Optional;
-
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
 
 @Repository
-public interface UserRepository extends JpaRepository<User, Long>  {
-    Optional<User> findByEmail(String email);
-
+interface UserRepository : JpaRepository<User?, Long?> {
+    fun findByEmail(email: String?): Optional<User?>
 }

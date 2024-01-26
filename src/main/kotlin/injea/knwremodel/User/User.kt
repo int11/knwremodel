@@ -1,73 +1,114 @@
-package injea.knwremodel.User;
+package injea.knwremodel.User
+
+import com.fasterxml.jackson.annotation.JsonIgnore
+import injea.knwremodel.Comment.Comment
+import injea.knwremodel.Like.Like
+import injea.knwremodel.entity.Role
+import injea.knwremodel.entity.TimeEntity
+import jakarta.persistence.*
 
 
-
-import java.util.ArrayList;
-import java.util.List;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import injea.knwremodel.Comment.Comment;
-import injea.knwremodel.Like.Like;
-import injea.knwremodel.entity.Role;
-import injea.knwremodel.entity.TimeEntity;
-
-import jakarta.persistence.*;
-import lombok.*;
-
-@Getter
-@NoArgsConstructor
 @Entity
-public class User extends TimeEntity {
-
+class User : TimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    var id: Long? = null
+        private set
 
     @Column(nullable = false)
-    private String name;
+    var name: String? = null
+        private set
 
     @Column(nullable = false)
-    private String email;
+    var email: String? = null
+        private set
 
     @Column
-    private String picture;
+    var picture: String? = null
+        private set
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    @Setter
-    private Role role;
+    var role: Role? = null
 
     @Column
-    @Setter
-    private String department;
+    var department: String? = null
 
     @JsonIgnore
     @OneToMany(mappedBy = "user")
-    private List<Comment> comments = new ArrayList<>();
+    val comments: List<Comment> = ArrayList()
 
     @JsonIgnore
     @OneToMany(mappedBy = "user")
-    private List<Like> likes = new ArrayList<>();
-    
+    val likes: List<Like> = ArrayList()
+
     @Column
-    private String authKey; // 추가: 인증 키 필드
+    var authKey: String? = null // 추가: 인증 키 필드
+        private set
 
-    @Builder
-    public User(Long id, String name, String email, String picture, Role role) {
-        this.id = id;
-        this.name = name;
-        this.email = email;
-        this.picture = picture;
-        this.role = role;
+    constructor(id: Long?, name: String?, email: String?, picture: String?, role: Role?) {
+        this.id = id
+        this.name = name
+        this.email = email
+        this.picture = picture
+        this.role = role
     }
 
-    public User update(String name, String picture) {
-        this.name = name;
-        this.picture = picture;
-        return this;
+    constructor()
+
+    fun update(name: String?, picture: String?): User {
+        this.name = name
+        this.picture = picture
+        return this
     }
 
-    public String getRoleKey(){
-        return this.role.getKey();
+    val roleKey: String
+        get() = role!!.key
+
+    class UserBuilder internal constructor() {
+        private var id: Long? = null
+        private var name: String? = null
+        private var email: String? = null
+        private var picture: String? = null
+        private var role: Role? = null
+
+        fun id(id: Long?): UserBuilder {
+            this.id = id
+            return this
+        }
+
+        fun name(name: String?): UserBuilder {
+            this.name = name
+            return this
+        }
+
+        fun email(email: String?): UserBuilder {
+            this.email = email
+            return this
+        }
+
+        fun picture(picture: String?): UserBuilder {
+            this.picture = picture
+            return this
+        }
+
+        fun role(role: Role?): UserBuilder {
+            this.role = role
+            return this
+        }
+
+        fun build(): User {
+            return User(this.id, this.name, this.email, this.picture, this.role)
+        }
+
+        override fun toString(): String {
+            return "User.UserBuilder(id=" + this.id + ", name=" + this.name + ", email=" + this.email + ", picture=" + this.picture + ", role=" + this.role + ")"
+        }
+    }
+
+    companion object {
+        fun builder(): UserBuilder {
+            return UserBuilder()
+        }
     }
 }

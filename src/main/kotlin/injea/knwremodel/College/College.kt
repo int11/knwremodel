@@ -1,94 +1,80 @@
-package injea.knwremodel.College;
+package injea.knwremodel.College
 
+import jakarta.persistence.*
 
-import jakarta.persistence.*;
 
 @Entity
 @Table(name = "colleges")
-public class College {
+class College {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(updatable = false)
-    private Long id;
+    var id: Long? = null
+        private set
 
     @Column(nullable = false)
-    private String college;
+    var college: String? = null
+        private set
 
     @Column(nullable = false)
-    private String major;
+    var major: String? = null
+        private set
 
     @Column(nullable = false)
-    private String url;
+    var url: String? = null
+        private set
 
-    public College(Long id, String college, String major, String url) {
-        this.id = id;
-        this.college = college;
-        this.major = major;
-        this.url = url;
+    constructor(id: Long?, college: String?, major: String?, url: String?) {
+        this.id = id
+        this.college = college
+        this.major = major
+        this.url = url
     }
 
-    protected College() {
+    protected constructor()
+
+    override fun toString(): String {
+        return "College(id=" + this.id + ", college=" + this.college + ", major=" + this.major + ", url=" + this.url + ")"
     }
 
-    public static CollegeBuilder builder() {
-        return new CollegeBuilder();
-    }
+    class CollegeBuilder internal constructor() {
+        private var id: Long? = null
+        private var college: String? = null
+        private var major: String? = null
+        private var url: String? = null
 
-    public Long getId() {
-        return this.id;
-    }
-
-    public String getCollege() {
-        return this.college;
-    }
-
-    public String getMajor() {
-        return this.major;
-    }
-
-    public String getUrl() {
-        return this.url;
-    }
-
-    public String toString() {
-        return "College(id=" + this.getId() + ", college=" + this.getCollege() + ", major=" + this.getMajor() + ", url=" + this.getUrl() + ")";
-    }
-
-    public static class CollegeBuilder {
-        private Long id;
-        private String college;
-        private String major;
-        private String url;
-
-        CollegeBuilder() {
+        fun id(id: Long?): CollegeBuilder {
+            this.id = id
+            return this
         }
 
-        public CollegeBuilder id(Long id) {
-            this.id = id;
-            return this;
+        fun college(college: String?): CollegeBuilder {
+            this.college = college
+            return this
         }
 
-        public CollegeBuilder college(String college) {
-            this.college = college;
-            return this;
+        fun major(major: String?): CollegeBuilder {
+            this.major = major
+            return this
         }
 
-        public CollegeBuilder major(String major) {
-            this.major = major;
-            return this;
+        fun url(url: String?): CollegeBuilder {
+            this.url = url
+            return this
         }
 
-        public CollegeBuilder url(String url) {
-            this.url = url;
-            return this;
+        fun build(): College {
+            return College(this.id, this.college, this.major, this.url)
         }
 
-        public College build() {
-            return new College(this.id, this.college, this.major, this.url);
+        override fun toString(): String {
+            return "College.CollegeBuilder(id=" + this.id + ", college=" + this.college + ", major=" + this.major + ", url=" + this.url + ")"
         }
+    }
 
-        public String toString() {
-            return "College.CollegeBuilder(id=" + this.id + ", college=" + this.college + ", major=" + this.major + ", url=" + this.url + ")";
+    companion object {
+        fun builder(): CollegeBuilder {
+            return CollegeBuilder()
         }
     }
 }

@@ -1,22 +1,26 @@
-package injea.knwremodel.Mail;
+package injea.knwremodel.Mail
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+class MailDTO {
+    class send {
+        var mail: String? = null
+            private set
 
-public class MailDTO {
-    @Getter
-    @AllArgsConstructor
-    @NoArgsConstructor
-    public static class send{
-        private String mail;
+        constructor(mail: String?) {
+            this.mail = mail
+        }
+
+        constructor()
     }
 
-    @Getter
-    @AllArgsConstructor
-    @NoArgsConstructor
-    public static class confirmNumber{
-        private String enteredNumber;
+    class confirmNumber {
+        var enteredNumber: String? = null
+            private set
+
+        constructor(enteredNumber: String?) {
+            this.enteredNumber = enteredNumber
+        }
+
+        constructor()
     }
 }
 

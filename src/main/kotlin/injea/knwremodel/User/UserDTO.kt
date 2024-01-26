@@ -1,75 +1,97 @@
-package injea.knwremodel.User;
+package injea.knwremodel.User
 
-import java.io.Serializable;
-import java.util.Map;
+import injea.knwremodel.entity.Role
+import java.io.Serializable
 
-import injea.knwremodel.entity.Role;
+class UserDTO {
+    class Common(oAuthServiceId: String?, nameAttributeKey: String?, attributes: Map<String, Any>?) {
+        var oAuthServiceId: String? = null
+            private set
+        var nameAttributeKey: String? = null
+            private set
+        var attributes: Map<String, Any>? = null
+            private set
+        var name: String? = null
+            private set
+        var email: String? = null
+            private set
+        var picture: String? = null
+            private set
 
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
-
-
-public class UserDTO {
-    @Getter
-    public static class Common{
-        private String oAuthServiceId;
-        private String nameAttributeKey;
-        private Map<String, Object> attributes;
-        private String name;
-        private String email;
-        private String picture;
-
-        @Builder
-        public Common(String oAuthServiceId, String nameAttributeKey, Map<String, Object> attributes){
-            if (oAuthServiceId.equals("google")){
-                ofGoogle(oAuthServiceId, nameAttributeKey, attributes);
-            }else if(oAuthServiceId.equals("naver")){
-                ofNaver(oAuthServiceId, nameAttributeKey, attributes);
+        init {
+            if (oAuthServiceId == "google") {
+                ofGoogle(oAuthServiceId, nameAttributeKey, attributes)
+            } else if (oAuthServiceId == "naver") {
+                ofNaver(oAuthServiceId, nameAttributeKey, attributes)
             }
         }
 
-        private void ofGoogle(String oAuthServiceId, String nameAttributeKey, Map<String, Object> attributes){
-            this.oAuthServiceId = oAuthServiceId;
-            this.nameAttributeKey = nameAttributeKey;
-            this.attributes = attributes;
-            this.name = (String) attributes.get("name");
-            this.email = (String) attributes.get("email");
-            this.picture = (String) attributes.get("picture");
+        private fun ofGoogle(oAuthServiceId: String, nameAttributeKey: String?, attributes: Map<String, Any>?) {
+            this.oAuthServiceId = oAuthServiceId
+            this.nameAttributeKey = nameAttributeKey
+            this.attributes = attributes
+            this.name = attributes!!["name"] as String?
+            this.email = attributes["email"] as String?
+            this.picture = attributes["picture"] as String?
         }
 
-        private static void ofNaver(String oAuthServiceId, String nameAttributeKey, Map<String, Object> attributes){
-            // TODO naver logic
+        fun toEntity(): User {
+            return User.Companion.builder()
+                .name(name)
+                .email(email)
+                .picture(picture)
+                .role(Role.GUEST)
+                .build()
         }
 
-        public User toEntity(){
-            return User.builder()
-                    .name(name)
-                    .email(email)
-                    .picture(picture)
-                    .role(Role.GUEST)
-                    .build();
+        class CommonBuilder internal constructor() {
+            private var oAuthServiceId: String? = null
+            private var nameAttributeKey: String? = null
+            private var attributes: Map<String, Any>? = null
+            fun oAuthServiceId(oAuthServiceId: String?): CommonBuilder {
+                this.oAuthServiceId = oAuthServiceId
+                return this
+            }
+
+            fun nameAttributeKey(nameAttributeKey: String?): CommonBuilder {
+                this.nameAttributeKey = nameAttributeKey
+                return this
+            }
+
+            fun attributes(attributes: Map<String, Any>?): CommonBuilder {
+                this.attributes = attributes
+                return this
+            }
+
+            fun build(): Common {
+                return Common(this.oAuthServiceId, this.nameAttributeKey, this.attributes)
+            }
+
+            override fun toString(): String {
+                return "UserDTO.Common.CommonBuilder(oAuthServiceId=" + this.oAuthServiceId + ", nameAttributeKey=" + this.nameAttributeKey + ", attributes=" + this.attributes + ")"
+            }
+        }
+
+        companion object {
+            fun builder(): CommonBuilder {
+                return CommonBuilder()
+            }
+
+            private fun ofNaver(oAuthServiceId: String, nameAttributeKey: String?, attributes: Map<String, Any>?) {
+                // TODO naver logic
+            }
         }
     }
 
-    @Getter
-    @Setter
-    public static class Session implements Serializable {
+    class Session(user: User) : Serializable {
+        @JvmField
+        var id: Long? = user.id
+        var name: String? = user.name
+        var email: String? = user.email
+        var picture: String? = user.picture
+        var role: String? = user.roleKey // 역할 정보 추가
 
-        private Long id;
-        private String name;
-        private String email;
-        private String picture;
-        private String role;  // 역할 정보 추가
-        private String department; //부서 정보 추가
-
-        public Session(User user) {
-            this.id = user.getId();
-            this.name = user.getName();
-            this.email = user.getEmail();
-            this.picture = user.getPicture();
-            this.role = user.getRoleKey(); // 변경된 부분
-            this.department = user.getDepartment();
-        }
+        // 변경된 부분
+        var department: String? = user.department //부서 정보 추가
     }
 }

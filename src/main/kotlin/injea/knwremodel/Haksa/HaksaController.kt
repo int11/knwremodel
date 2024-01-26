@@ -1,20 +1,15 @@
-package injea.knwremodel.Haksa;
+package injea.knwremodel.Haksa
 
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
-import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity
+import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RestController
 
 @RestController
 @RequestMapping("/Haksa")
-@RequiredArgsConstructor
-public class HaksaController {
-    private final HaksaService haksaS;
-
+class HaksaController(private val haksaS: HaksaService) {
     @PostMapping("/request")
-    public ResponseEntity request(){
-        return ResponseEntity.ok(haksaS.findAll());
+    fun request(): ResponseEntity<*> {
+        return ResponseEntity.ok(haksaS.findAll())
     }
 }

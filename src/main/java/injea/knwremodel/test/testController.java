@@ -83,7 +83,7 @@ public class testController {
         model.addAttribute("likedNotices", likedNotices);
 
         UserDTO.Session currentUserDTO = (UserDTO.Session) httpSession.getAttribute("user");
-        List<Comment> userComments = commentS.getCommentsByUser(currentUserDTO.getId());
+        List<Comment> userComments = commentS.getCommentsByUser(currentUserDTO.id);
         model.addAttribute("comments", userComments);
 
         return "myPage";
