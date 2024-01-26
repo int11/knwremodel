@@ -1,4 +1,4 @@
-package injea.knwremodel.Comment
+package injea.knwremodel.comment
 
 import injea.knwremodel.User.User
 import injea.knwremodel.entity.TimeEntity

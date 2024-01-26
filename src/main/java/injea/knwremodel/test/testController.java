@@ -3,9 +3,9 @@ package injea.knwremodel.test;
 import java.io.IOException;
 import java.util.List;
 
-import injea.knwremodel.College.CollegeService;
-import injea.knwremodel.Comment.Comment;
-import injea.knwremodel.Comment.CommentService;
+import injea.knwremodel.college.CollegeService;
+import injea.knwremodel.comment.Comment;
+import injea.knwremodel.comment.CommentService;
 import injea.knwremodel.Haksa.Haksa;
 import injea.knwremodel.Haksa.HaksaService;
 import injea.knwremodel.Like.LikeService;

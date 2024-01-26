@@ -4,11 +4,11 @@ package injea.knwremodel.test;
 import java.util.ArrayList;
 import java.util.List;
 
-import injea.knwremodel.College.College;
+import injea.knwremodel.college.College;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import injea.knwremodel.College.CollegeRepository;
+import injea.knwremodel.college.CollegeRepository;
 
 import lombok.RequiredArgsConstructor;
 

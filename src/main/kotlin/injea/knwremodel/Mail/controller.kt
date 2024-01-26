@@ -1,7 +1,5 @@
 package injea.knwremodel.Mail
 
-import injea.knwremodel.Mail.MailDTO.confirmNumber
-import injea.knwremodel.Mail.MailDTO.send
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
@@ -12,8 +10,8 @@ import org.springframework.web.bind.annotation.RestController
 @RequestMapping("/mail")
 class MailController(private val mailS: MailService) {
     // 인증 번호 발송
+    class send(var mail: String)
     @PostMapping("/send")
-    @Synchronized
     fun MailSend(@RequestBody dto: send): ResponseEntity<*> {
         try {
             mailS.sendMail(dto.mail)
@@ -24,8 +22,8 @@ class MailController(private val mailS: MailService) {
     }
 
     // 인증 번호 확인
+    class confirmNumber(var enteredNumber: String)
     @PostMapping("/confirmNumber")
-    @Synchronized
     fun ConfirmNumber(@RequestBody dto: confirmNumber): ResponseEntity<*> {
         try {
             mailS.confirmNumber(dto.enteredNumber)

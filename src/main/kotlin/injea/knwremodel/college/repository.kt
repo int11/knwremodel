@@ -1,4 +1,4 @@
-package injea.knwremodel.College
+package injea.knwremodel.college
 
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Query

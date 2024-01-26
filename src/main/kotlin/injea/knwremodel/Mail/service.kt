@@ -12,7 +12,6 @@ class MailService(
     private val javaMailSender: JavaMailSender,
     private val httpSession: HttpSession
 ) {
-    @Throws(Exception::class)
     fun CreateMail(mail: String?, number: Int): MimeMessage {
         val message = javaMailSender.createMimeMessage()
 
@@ -28,7 +27,6 @@ class MailService(
         return message
     }
 
-    @Throws(Exception::class)
     fun sendMail(mail: String?) {
         require(mail!!.endsWith("kangnam.ac.kr")) { "강남대학교 이메일로만 인증 가능합니다. 다시 시도해주세요." }
         val number = createNumber()

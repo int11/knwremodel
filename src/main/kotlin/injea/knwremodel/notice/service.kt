@@ -1,6 +1,6 @@
 package injea.knwremodel.notice
 
-import injea.knwremodel.College.CollegeRepository
+import injea.knwremodel.college.CollegeRepository
 import org.json.simple.JSONObject
 import org.json.simple.parser.JSONParser
 import org.jsoup.Jsoup

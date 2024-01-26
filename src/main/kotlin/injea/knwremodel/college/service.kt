@@ -1,4 +1,4 @@
-package injea.knwremodel.College
+package injea.knwremodel.college
 
 import lombok.RequiredArgsConstructor
 import org.springframework.stereotype.Service

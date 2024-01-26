@@ -1,7 +1,7 @@
 package injea.knwremodel.User
 
 import com.fasterxml.jackson.annotation.JsonIgnore
-import injea.knwremodel.Comment.Comment
+import injea.knwremodel.comment.Comment
 import injea.knwremodel.Like.Like
 import injea.knwremodel.entity.Role
 import injea.knwremodel.entity.TimeEntity

@@ -1,4 +1,4 @@
-package injea.knwremodel.Comment
+package injea.knwremodel.comment
 
 
 class CommentDTO {
@@ -16,7 +16,7 @@ class CommentDTO {
         val commentId: Long? = null
     }
 
-    class Comment(comment: injea.knwremodel.Comment.Comment) {
+    class Comment(comment: injea.knwremodel.comment.Comment) {
         val id: Long? = comment.id
         var email: String? = null
         val comment: String?

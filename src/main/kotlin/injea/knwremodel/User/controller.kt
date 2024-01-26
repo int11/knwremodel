@@ -1,6 +1,6 @@
 package injea.knwremodel.User
 
-import injea.knwremodel.Comment.CommentService
+import injea.knwremodel.comment.CommentService
 import injea.knwremodel.Like.LikeService
 import jakarta.servlet.http.HttpSession
 import org.springframework.http.ResponseEntity

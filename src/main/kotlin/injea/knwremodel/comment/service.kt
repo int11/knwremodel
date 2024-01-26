@@ -1,7 +1,7 @@
-package injea.knwremodel.Comment
+package injea.knwremodel.comment
 
-import injea.knwremodel.Comment.CommentDTO.delete
-import injea.knwremodel.Comment.CommentDTO.modify
+import injea.knwremodel.comment.CommentDTO.delete
+import injea.knwremodel.comment.CommentDTO.modify
 import injea.knwremodel.User.UserDTO
 import injea.knwremodel.User.UserRepository
 import injea.knwremodel.notice.NoticeRepository
