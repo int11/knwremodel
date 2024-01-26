@@ -1,6 +1,6 @@
 package injea.knwremodel.Comment;
 
-import injea.knwremodel.Notice.Notice;
+import injea.knwremodel.notice.Notice;
 import injea.knwremodel.User.User;
 import injea.knwremodel.entity.TimeEntity;
 import jakarta.persistence.*;

@@ -1,7 +1,7 @@
 package injea.knwremodel.Like;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import injea.knwremodel.Notice.Notice;
+import injea.knwremodel.notice.Notice;
 import injea.knwremodel.User.User;
 
 import jakarta.persistence.*;

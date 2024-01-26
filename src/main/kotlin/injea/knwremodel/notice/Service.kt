@@ -1,4 +1,4 @@
-package injea.knwremodel.Notice
+package injea.knwremodel.notice
 
 import injea.knwremodel.College.CollegeRepository
 import org.json.simple.JSONObject
@@ -6,14 +6,14 @@ import org.json.simple.parser.JSONParser
 import org.jsoup.Jsoup
 import org.jsoup.select.Elements
 import org.springframework.data.domain.Page
+import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Pageable
+import org.springframework.data.domain.Sort
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
-import java.util.*
 import java.util.regex.Pattern
-import kotlin.collections.ArrayList
 
 @Service
 class NoticeService(private val noticeRepo: NoticeRepository, private val CollegeRepo: CollegeRepository) {
@@ -21,9 +21,9 @@ class NoticeService(private val noticeRepo: NoticeRepository, private val Colleg
     private val dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy.MM.dd HH:mm")
     private val parser = JSONParser()
 
-    fun updateAll() {
-        updateEvent(2)
-        updateNotice(2)
+    fun updateAll(maxPage: Int) {
+        updateEvent(maxPage)
+        updateNotice(maxPage)
     }
 
     @Transactional
@@ -192,13 +192,15 @@ class NoticeService(private val noticeRepo: NoticeRepository, private val Colleg
 
 
     @Transactional(readOnly = true)
-    fun findTopView(pageable: Pageable): List<Notice>? {
+    fun findTopView(size: Int): List<Notice>? {
+        val pageable = PageRequest.of(0, size, Sort.Direction.DESC, "view")
         //한달 동안
         val notices = noticeRepo.findByRegdateGreaterThanEqual(LocalDateTime.now().minusDays(30), pageable)
         return notices
     }
     @Transactional(readOnly = true)
-    fun findTopLike(major: String?, pageable: Pageable): List<Notice>? {
+    fun findTopLike(major: String?, size: Int): List<Notice>? {
+        val pageable = PageRequest.of(0, size, Sort.Direction.DESC, "likeCount")
         val major: String = major ?: ""
 
         return noticeRepo.findByMajorContaining(major, pageable)

@@ -1,6 +1,6 @@
 package injea.knwremodel.Like;
 
-import injea.knwremodel.Notice.Notice;
+import injea.knwremodel.notice.Notice;
 import injea.knwremodel.User.User;
 
 import org.springframework.data.jpa.repository.JpaRepository;

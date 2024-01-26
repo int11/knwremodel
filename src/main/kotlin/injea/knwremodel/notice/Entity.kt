@@ -1,4 +1,4 @@
-package injea.knwremodel.Notice
+package injea.knwremodel.notice
 
 import com.fasterxml.jackson.annotation.JsonIgnore
 import injea.knwremodel.Comment.Comment
@@ -8,7 +8,7 @@ import java.time.LocalDateTime
 
 
 @Entity
-@Table(name = "notices")
+@Table(name= "notices")
 class Notice(
     boardId: Long?,
     title: String,

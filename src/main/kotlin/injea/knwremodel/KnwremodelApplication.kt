@@ -1,8 +1,8 @@
 package injea.knwremodel
 
 import injea.knwremodel.Haksa.HaksaService
-import injea.knwremodel.Notice.NoticeService
-import injea.knwremodel.Scholarship.ScholarshipService
+import injea.knwremodel.notice.NoticeService
+import injea.knwremodel.scholarship.ScholarshipService
 import injea.knwremodel.test.testdatainsertService
 import org.springframework.boot.SpringApplication
 import org.springframework.boot.autoconfigure.SpringBootApplication
@@ -19,6 +19,7 @@ class KnwremodelApplication(
     private val haksaS: HaksaService,
     private val scholarshipS: ScholarshipService
 ) {
+    var frist = true
     @Scheduled(fixedRate = 1000 * 60 * 30, initialDelay = 0)
     @Throws(Exception::class)
     fun testSchedule() {
@@ -26,15 +27,17 @@ class KnwremodelApplication(
 
         scholarshipS.update()
         haksaS.update()
-        noticeS.updateAll()
+        if (frist){
+            frist = false
+            noticeS.updateAll(2)
+        }
+        else noticeS.updateAll(1)
 
         println("DataBase Update every 30 mininutes")
     }
 
-    companion object {
-        @JvmStatic
-        fun main(args: Array<String>) {
-            SpringApplication.run(KnwremodelApplication::class.java, *args)
-        }
-    }
+}
+
+fun main(args: Array<String>) {
+    SpringApplication.run(KnwremodelApplication::class.java, *args)
 }

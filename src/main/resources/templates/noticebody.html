@@ -24,8 +24,8 @@
     </tr>
     <tr th:each="i : ${notice}">
         <td >
-            <p th:text="${i.dbid}"></p>
-            <button th:text="${i.checkLike} ? '좋아요 취소' : '좋아요' " th:onclick="post_clickLike([[${i.dbid}]], this)"></button>
+            <p th:text="${i.id}"></p>
+            <button th:text="${i.checkLike} ? '좋아요 취소' : '좋아요' " th:onclick="post_clickLike([[${i.id}]], this)"></button>
         </td>
         <td th:text="${i.boardId}"></td>
         <td th:style="${'min-width:200px'}" th:text="${i.title}"></td>
@@ -63,7 +63,7 @@
 <br>
 <label for="comments">
     <textarea placeholder="댓글을 입력하세요" id="comments" cols="20" rows="5"></textarea>
-    <button th:onclick="commentSave([[${notice.dbid}]])">댓글 작성</button>
+    <button th:onclick="commentSave([[${notice.id}]])">댓글 작성</button>
 </label>
 
 </body>

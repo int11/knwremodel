@@ -1,7 +1,7 @@
 package injea.knwremodel.Like;
 
-import injea.knwremodel.Notice.Notice;
-import injea.knwremodel.Notice.NoticeRepository;
+import injea.knwremodel.notice.Notice;
+import injea.knwremodel.notice.NoticeRepository;
 import injea.knwremodel.User.User;
 import injea.knwremodel.User.UserDTO;
 import injea.knwremodel.User.UserRepository;
