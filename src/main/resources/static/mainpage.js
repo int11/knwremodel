@@ -34,7 +34,7 @@ function loadNoticeTable(major="", type="", keyword="", page=0, perPage=20){
             li.innerText = "page"
             ul.appendChild(li)
 
-            for(let i = 0; i<response.totalPages; i++){
+            for(let i = 0; i<=response.totalPages; i++){
                 let li = document.createElement("li");
                 li.style.float = "left";
                 li.style.margin = "0px 5px";

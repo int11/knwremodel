@@ -4,16 +4,16 @@ import injea.knwremodel.College.CollegeRepository
 import org.json.simple.JSONObject
 import org.json.simple.parser.JSONParser
 import org.jsoup.Jsoup
-import org.jsoup.nodes.Document
 import org.jsoup.select.Elements
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
-import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
+import java.util.*
 import java.util.regex.Pattern
+import kotlin.collections.ArrayList
 
 @Service
 class NoticeService(private val noticeRepo: NoticeRepository, private val CollegeRepo: CollegeRepository) {
@@ -22,9 +22,8 @@ class NoticeService(private val noticeRepo: NoticeRepository, private val Colleg
     private val parser = JSONParser()
 
     fun updateAll() {
-//        updateEvent()
-        updateNotice(3)
-
+        updateEvent(2)
+        updateNotice(2)
     }
 
     @Transactional
@@ -33,7 +32,6 @@ class NoticeService(private val noticeRepo: NoticeRepository, private val Colleg
 
         for (e in CollegeRepo.findAll()) {
             val LastPage = getLastpage(e.url, maxPage)
-
             for (page in LastPage downTo 1) {
                 val document = Jsoup.connect("${e.url}?paginationInfo.currentPageNo=${page}").get()
                 val contents = document.getElementsByClass("tbody").select("ul")
@@ -121,10 +119,15 @@ class NoticeService(private val noticeRepo: NoticeRepository, private val Colleg
         val lp = document.getElementsByClass("pagination create_mob_pagination").select("a").last()!!.attr("onclick")
 
         val matcher = pattern.matcher(lp)
+
         if (matcher.find()) {
-            return matcher.group(1).toInt()
+            val lastPage = matcher.group(1).toInt()
+            if (maxPage >= lastPage)
+                return lastPage
+            else
+                return maxPage
         }
-        return 0
+        throw NumberFormatException("Can't find pattern")
     }
 
     private fun crawlingbody(url: String, titleElements: Elements): Array<Any> {
@@ -167,56 +170,38 @@ class NoticeService(private val noticeRepo: NoticeRepository, private val Colleg
     }
 
     fun findById(id: Long): Notice {
-        return noticeRepo.findById(id).orElseThrow {
-            IllegalArgumentException(
-                "not found: $id"
-            )
-        }
+        val result: Notice = noticeRepo.findById(id).orElse(null)?:throw IllegalArgumentException("Not find data")
+        return result
     }
 
-    fun findAll(): List<Notice> {
+    fun findAll(): MutableList<Notice?> {
         return noticeRepo.findAll()
     }
 
-    @Transactional
-    fun search(major: String?, type: String?, keyword: String?, pageable: Pageable): Page<Notice> {
-        var major = major
-        var type = type
-        var keyword = keyword
-        major = if ((major == null)) "" else major
-        type = if ((type == null)) "" else type
-        keyword = if ((keyword == null)) "" else keyword
+    @Transactional(readOnly = true)
+    fun search(major: String?, type: String?, keyword: String?, pageable: Pageable): Page<Notice>? {
+        val major: String = major ?: ""
+        val type: String = type ?: ""
+        val keyword: String = keyword ?: ""
 
         if (major == "행사/안내") {
-            return noticeRepo.findByMajorContainingAndTypeContainingAndTitleContaining(major, type, keyword, pageable)
+            return noticeRepo.searchWithout(major, type, keyword, pageable)
         }
-        return noticeRepo.findByMajorExceptEventContainingAndTypeContainingAndTitleContaining(major, type, keyword, pageable)
+        return noticeRepo.search(major, type, keyword, pageable)
     }
 
 
-    @Transactional(readOnly = true) // 읽기 전용 트랜잭션
-    fun findTopView(pageable: Pageable?): List<Notice> {
+    @Transactional(readOnly = true)
+    fun findTopView(pageable: Pageable): List<Notice>? {
         //한달 동안
-        val notices = noticeRepo.findByDescWhereByRegDate(LocalDate.now().minusDays(30), pageable)
+        val notices = noticeRepo.findByRegdateGreaterThanEqual(LocalDateTime.now().minusDays(30), pageable)
         return notices
     }
+    @Transactional(readOnly = true)
+    fun findTopLike(major: String?, pageable: Pageable): List<Notice>? {
+        val major: String = major ?: ""
 
-    fun findTopLike(major: String?, pageable: Pageable?): List<Notice> {
-        var major = major
-        major = if ((major == null)) "" else major
-        val topNotices = noticeRepo.findByMajorContaining(major, pageable)
-
-        val result: MutableList<Notice> = ArrayList()
-
-        if (topNotices != null && !topNotices.isEmpty()) {
-            for (notice in topNotices) {
-                if (notice.likeCount > 0) {
-                    result.add(notice)
-                }
-            }
-        }
-
-        return result
+        return noticeRepo.findByMajorContaining(major, pageable)
     }
 
     fun count(): Long {

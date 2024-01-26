@@ -62,7 +62,7 @@ public class testController {
         NoticeDTO.responsebody notice = (NoticeDTO.responsebody) result.getBody();
         model.addAttribute("notice", notice);
 
-        List<CommentDTO.Comment> comments = notice.getComments();
+        List<CommentDTO.Comment> comments = notice.comments;
 
         if (comments != null && !comments.isEmpty()) {
             model.addAttribute("comments", comments);

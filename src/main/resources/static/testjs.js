@@ -37,7 +37,7 @@ function createTable(jsonlist, table) {
         for(let key in item){
             let td = tr.insertCell();
             td.className = key;
-            if (key == "checkLike"){
+            if (key == "isCheckLike"){
                 let button = document.createElement("button");
                 td.appendChild(button);
                 button.onclick = function(){post_clickLike(item["dbid"], button, button.parentNode.parentNode.getElementsByClassName("likeCount")[0]);};
@@ -47,7 +47,7 @@ function createTable(jsonlist, table) {
                     button.innerText = "좋아요 취소";
                 }
 
-            }else if(key == "dbid"){
+            }else if(key == "id"){
                 let a = document.createElement("a");
                 td.appendChild(a);
                 a.href = "/read/" + item[key]

@@ -1,114 +1,58 @@
-package injea.knwremodel.Notice;
+package injea.knwremodel.Notice
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.List;
-import java.util.stream.Collectors;
+import injea.knwremodel.Comment.Comment
+import injea.knwremodel.Comment.CommentDTO
+import injea.knwremodel.Like.LikeService
+import java.time.LocalDateTime
+import java.util.stream.Collectors
 
-import injea.knwremodel.Comment.CommentDTO;
-import injea.knwremodel.Like.LikeService;
+class NoticeDTO {
+    class requestPage(
+        var major: String?,
+        var type: String?,
+        var keyword: String?,
+        var page: Long,
+        var perPage: Long)
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
 
-
-public class NoticeDTO {
-    @Getter
-    @AllArgsConstructor
-    @NoArgsConstructor
-    public static class requestPage{
-        private String major;
-        private String type; 
-        private String keyword;
-        private Long page;
-        private Long perPage;
+    class responsePage(likeS: LikeService, notice: Notice) {
+        var id: Long = notice.id!!
+        var boardId: Long? = notice.boardId
+        var title: String = notice.title
+        var major: String = notice.major
+        var type: String = notice.type
+        var writer: String = notice.writer
+        var regdate: LocalDateTime = notice.regdate
+        var view: Long = notice.view
+        var likeCount: Long = notice.likeCount
+        var isCheckLike: Boolean = likeS.checkedLike(this.id)
+        var img: String? = notice.img
     }
 
-    @Getter
-    public static class responsePage{
-        private Long dbid;
-        private Long boardId;
-        private String title;
-        private String major;
-        private String type;
-        private String writer;
-        private LocalDateTime regdate;
-        private Long view;
-        private Long likeCount;
-        private boolean checkLike;
-        private String img;
+    class requestbody(var id: Long)
 
-        public responsePage(LikeService likeS, Notice notice) {
-            this.dbid = notice.getId();
-            this.boardId = notice.getBoardId();
-            this.title = notice.getTitle();
-            this.major = notice.getMajor();
-            this.type = notice.getType();
-            this.writer = notice.getWriter();
-            this.regdate = notice.getRegdate();
-            this.view = notice.getView();
-            this.likeCount = notice.getLikeCount();
-            this.checkLike = likeS.checkedLike(this.dbid);
-            this.img = notice.getImg();
+    class responsebody(likeS: LikeService, notice: Notice) {
+        val id: Long = notice.id!!
+        val boardId: Long? = notice.boardId
+        val title: String = notice.title
+        val major: String = notice.major
+        val type: String = notice.type
+        val writer: String = notice.writer
+        val regdate: LocalDateTime = notice.regdate
+        val view: Long = notice.view
+        val likeCount: Long = notice.likeCount
+        val isCheckLike: Boolean = likeS.checkedLike(this.id)
 
-        }
+        val body: String = notice.body
+        val img: String? = notice.img
+        val html: String = notice.html
+        @JvmField
+        val comments: List<CommentDTO.Comment> =
+            notice.comments.stream().map { comment: Comment? -> CommentDTO.Comment(comment) }
+                .collect(Collectors.toList())
     }
 
-    @Getter
-    @AllArgsConstructor
-    @NoArgsConstructor
-    public static class requestbody{
-        private Long dbid;
-    }
+    class toplike(var major: String?, var size: Int)
 
-    @Getter
-    public static class responsebody{
-        private Long dbid;
-        private Long boardId;
-        private String title;
-        private String major;
-        private String type;
-        private String writer;
-        private LocalDateTime regdate;
-        private Long view;
-        private Long likeCount;
-        private boolean checkLike;
-
-        private String body;
-        private String img;
-        private String html;
-        private List<CommentDTO.Comment> comments;
-
-        public responsebody(LikeService likeS, Notice notice) {
-            this.dbid = notice.getId();
-            this.boardId = notice.getBoardId();
-            this.title = notice.getTitle();
-            this.major = notice.getMajor();
-            this.type = notice.getType();
-            this.writer = notice.getWriter();
-            this.regdate = notice.getRegdate();
-            this.view = notice.getView();
-            this.likeCount = notice.getLikeCount();
-            this.checkLike = likeS.checkedLike(this.dbid);
-
-            this.body = notice.getBody();
-            this.img = notice.getImg();
-            this.html = notice.getHtml();
-            this.comments = notice.getComments().stream().map(CommentDTO.Comment::new).collect(Collectors.toList());
-        }
-    }
-    @Getter
-    @AllArgsConstructor
-    @NoArgsConstructor
-    public static class toplike{
-        private String major;
-        private int size;
-    }
-    @Getter
-    @AllArgsConstructor
-    @NoArgsConstructor
-    public static class topview{
-        private int size;
-    }
+    class topview(var size: Int)
 }
