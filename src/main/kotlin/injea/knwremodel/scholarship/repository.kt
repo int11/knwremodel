@@ -7,5 +7,4 @@ import java.time.LocalDate
 @Repository
 interface ScholarshipRepository : JpaRepository<Scholarship?, Long?> {
     fun existsByRegdate(localDate: LocalDate?): Boolean
-    fun findTop5ByOrderByIdDesc(): List<Scholarship?>?
 }

@@ -11,7 +11,7 @@ import org.springframework.security.web.firewall.DefaultHttpFirewall;
 import org.springframework.security.web.firewall.HttpFirewall;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
-import injea.knwremodel.User.UserService;
+import injea.knwremodel.user.UserService;
 
 import lombok.RequiredArgsConstructor;
 

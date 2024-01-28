@@ -1,6 +1,6 @@
 package injea.knwremodel.notice
 
-import injea.knwremodel.Like.LikeService
+import injea.knwremodel.like.LikeService
 import injea.knwremodel.notice.NoticeDTO.*
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Sort
@@ -10,9 +10,11 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 
+/*TODO array size 0 예외처리*/
 @RestController
 @RequestMapping("/notice")
 class NoticeController(private val noticeS: NoticeService, private val likeS: LikeService) {
+
     class requestPage(
         var major: String?,
         var type: String?,

@@ -2,7 +2,7 @@ package injea.knwremodel.notice
 
 import com.fasterxml.jackson.annotation.JsonIgnore
 import injea.knwremodel.comment.Comment
-import injea.knwremodel.Like.Like
+import injea.knwremodel.like.Like
 import jakarta.persistence.*
 import java.time.LocalDateTime
 
@@ -57,7 +57,6 @@ class Notice(
 
     @JsonIgnore
     @OneToMany(mappedBy = "notice", fetch = FetchType.EAGER, cascade = [CascadeType.REMOVE])
-    @OrderBy("id asc") // 댓글 정렬
     val comments: MutableList<Comment> = mutableListOf()
 
     @JsonIgnore

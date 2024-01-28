@@ -2,7 +2,7 @@ package injea.knwremodel.notice
 
 import injea.knwremodel.comment.Comment
 import injea.knwremodel.comment.CommentDTO
-import injea.knwremodel.Like.LikeService
+import injea.knwremodel.like.LikeService
 import java.time.LocalDateTime
 
 class NoticeDTO {

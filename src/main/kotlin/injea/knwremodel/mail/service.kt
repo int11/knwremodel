@@ -1,6 +1,6 @@
-package injea.knwremodel.Mail
+package injea.knwremodel.mail
 
-import injea.knwremodel.User.UserService
+import injea.knwremodel.user.UserService
 import jakarta.mail.internet.MimeMessage
 import jakarta.servlet.http.HttpSession
 import org.springframework.mail.javamail.JavaMailSender
@@ -12,7 +12,7 @@ class MailService(
     private val javaMailSender: JavaMailSender,
     private val httpSession: HttpSession
 ) {
-    fun CreateMail(mail: String?, number: Int): MimeMessage {
+    fun CreateMail(mail: String, number: Int): MimeMessage {
         val message = javaMailSender.createMimeMessage()
 
         message.setFrom(senderEmail)
@@ -27,8 +27,8 @@ class MailService(
         return message
     }
 
-    fun sendMail(mail: String?) {
-        require(mail!!.endsWith("kangnam.ac.kr")) { "강남대학교 이메일로만 인증 가능합니다. 다시 시도해주세요." }
+    fun sendMail(mail: String) {
+        require(mail.endsWith("kangnam.ac.kr")) { "강남대학교 이메일로만 인증 가능합니다. 다시 시도해주세요." }
         val number = createNumber()
 
         val message = CreateMail(mail, number)
@@ -39,7 +39,7 @@ class MailService(
         javaMailSender.send(message)
     }
 
-    fun confirmNumber(enteredNumber: String?) {
+    fun confirmNumber(enteredNumber: String) {
         val timer = httpSession.getAttribute("timer") as Long
         val number = httpSession.getAttribute("number") as Int
 
@@ -47,8 +47,8 @@ class MailService(
             httpSession.removeAttribute("timer")
             httpSession.removeAttribute("number")
             throw IllegalArgumentException("인증 번호가 만료되었습니다. 다시 시도해주세요")
-        } else require(number == enteredNumber!!.toInt()) { "인증 번호가 다릅니다. 다시 시도해주세요." }
-            userS.setRole(injea.knwremodel.entity.Role.USER)
+        } else require(number == enteredNumber.toInt()) { "인증 번호가 다릅니다. 다시 시도해주세요." }
+            userS.setCurrentUserRole(injea.knwremodel.entity.Role.USER)
             httpSession.removeAttribute("timer")
             httpSession.removeAttribute("number")
     }

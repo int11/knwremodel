@@ -1,6 +1,5 @@
-package injea.knwremodel.Like
+package injea.knwremodel.like
 
-import injea.knwremodel.Like.LikeDTO.click
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
@@ -10,11 +9,11 @@ import org.springframework.web.bind.annotation.RestController
 @RestController
 @RequestMapping("/like")
 class LikeController(private val likeS: LikeService) {
+    class click(val id: Long)
     @PostMapping("/click")
-    @Throws(Exception::class)
     fun clickLike(@RequestBody dto: click): ResponseEntity<*> {
         return try {
-            ResponseEntity.ok(likeS.clickLike(dto))
+            ResponseEntity.ok(likeS.clickLike(dto.id))
         } catch (e: Exception) {
             ResponseEntity.badRequest().body(e.message)
         }

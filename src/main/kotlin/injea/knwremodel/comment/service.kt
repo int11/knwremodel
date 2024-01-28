@@ -2,8 +2,8 @@ package injea.knwremodel.comment
 
 import injea.knwremodel.comment.CommentDTO.delete
 import injea.knwremodel.comment.CommentDTO.modify
-import injea.knwremodel.User.UserDTO
-import injea.knwremodel.User.UserRepository
+import injea.knwremodel.user.UserDTO
+import injea.knwremodel.user.UserRepository
 import injea.knwremodel.notice.NoticeRepository
 import jakarta.servlet.http.HttpSession
 import org.springframework.stereotype.Service

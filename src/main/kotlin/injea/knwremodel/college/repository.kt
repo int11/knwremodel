@@ -7,5 +7,5 @@ import org.springframework.stereotype.Repository
 @Repository
 interface CollegeRepository : JpaRepository<College?, Long?> {
     @Query("SELECT e.major FROM College e")
-    fun findAllMajor(): List<String?>?
+    fun findAllMajor(): List<String>
 }

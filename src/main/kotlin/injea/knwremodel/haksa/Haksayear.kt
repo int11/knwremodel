@@ -1,4 +1,4 @@
-package injea.knwremodel.Haksa
+package injea.knwremodel.haksa
 
 import jakarta.persistence.*
 import java.time.Year

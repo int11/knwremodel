@@ -8,6 +8,6 @@ import org.springframework.stereotype.Repository
 @Repository
 interface CommentRepository : JpaRepository<Comment?, Long?> {
     @Query("SELECT c FROM Comment c WHERE c.user.id = :userId")
-    fun findCommentsByUserId(@Param("userId") userId: Long?): List<Comment?>?
+    fun findCommentsByUserId(@Param("userId") userId: Long): List<Comment>
 }
 

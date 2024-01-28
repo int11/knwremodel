@@ -5,9 +5,8 @@ import org.springframework.stereotype.Service
 
 @Service
 @RequiredArgsConstructor
-class CollegeService {
-    private val CollegeRepo: CollegeRepository? = null
-    fun findAllMajor(): List<String?>? {
-        return CollegeRepo!!.findAllMajor()
+class CollegeService(private val CollegeRepo: CollegeRepository) {
+    fun findAllMajor(): List<String> {
+        return CollegeRepo.findAllMajor()
     }
 }

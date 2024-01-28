@@ -169,17 +169,17 @@ class NoticeService(private val noticeRepo: NoticeRepository, private val Colleg
         return arrayOf(regdate, type, body, img, html.toString())
     }
 
-    fun findById(id: Long): Notice {
-        val result: Notice = noticeRepo.findById(id).orElse(null)?:throw IllegalArgumentException("Not find data")
-        return result
+    fun findById(id: Long): Notice? {
+        //noticeRepo.findById(id) 는 Optimal<Notice> 타입 반환 .orElse(null) 함수를 통해 kotlin "Notice?" 타입으로 변경
+        return noticeRepo.findById(id).orElse(null)
     }
 
-    fun findAll(): MutableList<Notice?> {
-        return noticeRepo.findAll()
+    fun findAll(): MutableList<Notice>? {
+        return noticeRepo.findAll().filterNotNull().toMutableList()
     }
 
     @Transactional(readOnly = true)
-    fun search(major: String?, type: String?, keyword: String?, pageable: Pageable): Page<Notice>? {
+    fun search(major: String?, type: String?, keyword: String?, pageable: Pageable): Page<Notice> {
         val major: String = major ?: ""
         val type: String = type ?: ""
         val keyword: String = keyword ?: ""
@@ -192,14 +192,14 @@ class NoticeService(private val noticeRepo: NoticeRepository, private val Colleg
 
 
     @Transactional(readOnly = true)
-    fun findTopView(size: Int): List<Notice>? {
+    fun findTopView(size: Int): List<Notice> {
         val pageable = PageRequest.of(0, size, Sort.Direction.DESC, "view")
         //한달 동안
         val notices = noticeRepo.findByRegdateGreaterThanEqual(LocalDateTime.now().minusDays(30), pageable)
         return notices
     }
     @Transactional(readOnly = true)
-    fun findTopLike(major: String?, size: Int): List<Notice>? {
+    fun findTopLike(major: String?, size: Int): List<Notice> {
         val pageable = PageRequest.of(0, size, Sort.Direction.DESC, "likeCount")
         val major: String = major ?: ""
 

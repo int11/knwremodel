@@ -1,4 +1,4 @@
-package injea.knwremodel.Haksa
+package injea.knwremodel.haksa
 
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.PostMapping
