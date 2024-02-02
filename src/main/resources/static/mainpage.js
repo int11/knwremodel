@@ -53,10 +53,12 @@ function loadNoticeTable(major="", type="", keyword="", page=0, perPage=20){
         }
     });
 }
+
 function myopen(page){
     const URLSearch = new URLSearchParams(location.search);
     loadNoticeTable(URLSearch.get("major"), URLSearch.get("type"), URLSearch.get("keyword"), page)
 }
+
 function loadRankTable(major){
     $.ajax({
         url: '/notice/toplike',

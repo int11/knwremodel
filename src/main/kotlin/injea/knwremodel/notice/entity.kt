@@ -18,7 +18,7 @@ class Notice(
     regdate: LocalDateTime,
     view: Long,
     body: String,
-    img: String?,
+    img: String,
     html: String,
 
     likeCount: Long = 0

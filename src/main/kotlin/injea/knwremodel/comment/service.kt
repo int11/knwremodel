@@ -1,10 +1,7 @@
 package injea.knwremodel.comment
 
-import injea.knwremodel.comment.CommentDTO.delete
-import injea.knwremodel.comment.CommentDTO.modify
-import injea.knwremodel.user.UserDTO
-import injea.knwremodel.user.UserRepository
-import injea.knwremodel.notice.NoticeRepository
+import injea.knwremodel.notice.NoticeService
+import injea.knwremodel.user.UserService
 import jakarta.servlet.http.HttpSession
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -12,63 +9,46 @@ import org.springframework.transaction.annotation.Transactional
 @Service
 class CommentService(
     private val commentRepo: CommentRepository,
-    private val userRepo: UserRepository,
-    private val noticeRepo: NoticeRepository,
+    private val userS: UserService,
+    private val noticeS: NoticeService,
     private val httpSession: HttpSession
 ) {
     @Transactional
-    fun saveComment(dto: CommentDTO.save): Long? {
-        val currentuserDTO = httpSession.getAttribute("user") as UserDTO.Session
+    fun saveComment(noticeId: Long, text: String){
+        val currentuser = userS.getCurrentUser()
+        if (currentuser.role.key != "ROLE_USER")
+            throw IllegalArgumentException("댓글 쓰기 실패: 권한이 없습니다.")
 
-        // 사용자가 "USER" 역할을 가지고 있는지 확인
-        requireNotNull(currentuserDTO) { "댓글 쓰기 실패: 로그인 정보가 존재하지 않습니다." }
-        require(currentuserDTO.role == "ROLE_USER") { "댓글 쓰기 실패: 권한이 없습니다." }
+        val notice = noticeS.findById(noticeId)
 
-        val notice = noticeRepo.findById(dto.noticeId)
-            .orElseThrow { IllegalArgumentException("댓글 쓰기 실패: 해당 게시글이 존재하지 않습니다." + dto.noticeId) }!!
-
-        val loginUser = userRepo.findById(currentuserDTO.id).get()
-
-        val comment: Comment = Comment.Companion.builder()
-            .comment(dto.comment)
-            .user(loginUser)
-            .notice(notice)
-            .build()
+        val comment = Comment(currentuser, notice, text)
 
         commentRepo.save(comment)
-        return comment.id
     }
 
     @Transactional
     @Throws(Exception::class)
-    fun modifyComment(dto: modify): Long? {
-        val currentuserDTO = httpSession.getAttribute("user") as UserDTO.Session
+    fun modifyComment(commentId: Long, text: String){
+        val currentuser = userS.getCurrentUser()
+        val comment = findById(commentId)
+        require(text.isNotEmpty()) { "댓글 수정 실패: 빈 내용의 댓글은 작성할 수 없습니다." }
+        if (comment.user.id == currentuser.id)
+            throw IllegalArgumentException("댓글 수정 실패: 해당 댓글을 작성한 사용자가 아닙니다.")
 
-        val comment = commentRepo.findById(dto.commentId)
-            .orElseThrow { IllegalArgumentException("댓글 수정 실패: 해당 댓글이 존재하지 않습니다.") }!!
-
-        requireNotNull(currentuserDTO) { "댓글 수정 실패: 로그인 정보가 존재하지 않습니다." }
-        require(!dto.comment.trim { it <= ' ' }.isEmpty()) { "댓글 수정 실패: 빈 내용의 댓글은 작성할 수 없습니다." }
-
-        comment.comment = dto.comment
-        return comment.id
     }
 
     @Transactional
-    fun deleteComment(dto: delete): Long? {
-        val currentuserDTO = httpSession.getAttribute("user") as UserDTO.Session
-
-        val comment = commentRepo.findById(dto.commentId)
-            .orElseThrow { IllegalArgumentException("댓글 삭제 실패: 해당 댓글이 존재하지 않습니다.") }!!
-
-        requireNotNull(currentuserDTO) { "댓글 삭제 실패: 로그인 정보가 존재하지 않습니다." }
-        require(!(comment.user.id != currentuserDTO.id && currentuserDTO.role != "ROLE_ADMIN")) { "댓글 삭제 실패: 해당 댓글을 작성한 사용자가 아닙니다." }
-
-        commentRepo.deleteById(dto.commentId)
+    fun deleteComment(commentId: Long): Long? {
+        val currentuser = userS.getCurrentUser()
+        val comment = findById(commentId)
+        if (comment.user.id != currentuser.id || currentuser.role.key != "ROLE_ADMIN")
+            throw IllegalArgumentException("댓글 삭제 실패: 권한이 없습니다.")
+        commentRepo.deleteById(commentId)
         return comment.id
     }
 
-    fun getCommentsByUser(userId: Long?): List<Comment?>? {
-        return commentRepo.findCommentsByUserId(userId)
+    fun findById(id: Long): Comment {
+        //findById(id) 는 Optimal<type> 타입 반환 .orElse(null) 함수를 통해 kotlin "type?" 타입으로 변경
+        return commentRepo.findById(id).orElse(null) ?: throw NullPointerException("댓글을 찾을 수 없습니다.")
     }
 }

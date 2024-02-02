@@ -11,6 +11,6 @@ class globalExceptHandler {
 
     @ExceptionHandler(value = [NullPointerException::class])
     fun asdf(e: Exception): ResponseEntity<*>{
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body()
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.message)
     }
 }

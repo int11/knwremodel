@@ -1,24 +1,26 @@
 package injea.knwremodel.user
 
 import injea.knwremodel.entity.Role
-import java.io.Serializable
 
 class UserDTO {
     class Common(var oAuthServiceId: String, var nameAttributeKey: String, var attributes: Map<String, Any>) {
-        lateinit var name: String
-        lateinit var email: String
-        lateinit var picture: String
+        var name: String
+        var email: String
+        var picture: String
 
         init {
-            if (oAuthServiceId == "google") {
-                name = this.attributes["name"] as String
-                email = this.attributes["email"] as String
-                picture = this.attributes["picture"] as String
-            } else if (oAuthServiceId == "naver") {
-                // TODO naver logic
-            } else{
-                // TODO 지원되지않는 oauth 오류
-            }
+            this.name = this.attributes["name"] as String
+            this.email = this.attributes["email"] as String
+            this.picture = this.attributes["picture"] as String
+//            if (oAuthServiceId == "google") {
+//                this.name = this.attributes["name"] as String
+//                this.email = this.attributes["email"] as String
+//                this.picture = this.attributes["picture"] as String
+//            } else if (oAuthServiceId == "naver") {
+//                // TODO naver logic
+//            } else{
+//                // TODO 지원되지않는 oauth 오류
+//            }
         }
 
         fun toEntity(): User {

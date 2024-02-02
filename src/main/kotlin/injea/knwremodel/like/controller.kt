@@ -12,10 +12,7 @@ class LikeController(private val likeS: LikeService) {
     class click(val id: Long)
     @PostMapping("/click")
     fun clickLike(@RequestBody dto: click): ResponseEntity<*> {
-        return try {
-            ResponseEntity.ok(likeS.clickLike(dto.id))
-        } catch (e: Exception) {
-            ResponseEntity.badRequest().body(e.message)
-        }
+        likeS.clickLike(dto.id)
+        return ResponseEntity.ok(null)
     }
 }

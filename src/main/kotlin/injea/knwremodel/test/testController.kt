@@ -1,97 +1,82 @@
-package injea.knwremodel.test;
+package injea.knwremodel.test
 
-import java.io.IOException;
-import java.util.List;
+import injea.knwremodel.college.CollegeService
+import injea.knwremodel.comment.CommentService
+import injea.knwremodel.schedule.HaksaService
+import injea.knwremodel.like.LikeService
+import injea.knwremodel.notice.NoticeController
+import injea.knwremodel.notice.NoticeService
+import injea.knwremodel.user.UserDTO
+import injea.knwremodel.user.UserService
+import jakarta.servlet.http.HttpServletRequest
+import jakarta.servlet.http.HttpServletResponse
+import jakarta.servlet.http.HttpSession
+import org.springframework.stereotype.Controller
+import org.springframework.ui.Model
+import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.PathVariable
+import java.io.IOException
 
-import injea.knwremodel.college.CollegeService;
-import injea.knwremodel.comment.Comment;
-import injea.knwremodel.comment.CommentService;
-import injea.knwremodel.haksa.Haksa;
-import injea.knwremodel.haksa.HaksaService;
-import injea.knwremodel.like.LikeService;
-import injea.knwremodel.notice.Notice;
-import injea.knwremodel.notice.NoticeController;
-import injea.knwremodel.notice.NoticeService;
-import injea.knwremodel.user.UserDTO;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
-import lombok.RequiredArgsConstructor;
-
-@RequiredArgsConstructor
 @Controller
-public class testController {
-    private final HaksaService haksaS;
-    private final NoticeService noticeS;
-    private final CollegeService collegeS;
-    private final HttpSession httpSession;
-    private final NoticeController noticeC;
-    private final LikeService likeS;
-    private final CommentService commentS;
+class testController(
+    private val haksaS: HaksaService,
+    private val noticeS: NoticeService,
+    private val collegeS: CollegeService,
+    private val httpSession: HttpSession,
+    private val noticeC: NoticeController,
+    private val userS: UserService,
+    private val likeS: LikeService,
+    private val commentS: CommentService
+) {
+    @GetMapping(value = ["/"])
+    @Throws(IOException::class)
+    fun test(
+        keyword: String?,
+        request: HttpServletRequest?,
+        response: HttpServletResponse?,
+        model: Model
+    ): String {
+        val currentuserDTO = httpSession.getAttribute("user") as UserDTO.Session?
+        model.addAttribute("currentuser", currentuserDTO)
 
-    @GetMapping(value = {"/"})
-    public String test(String keyword,
-                       HttpServletRequest request,
-                       HttpServletResponse response,
-                       Model model) throws IOException {
-        UserDTO.Session currentuserDTO = (UserDTO.Session) httpSession.getAttribute("user");
-
-        if (currentuserDTO != null) {
-            model.addAttribute("currentuser", currentuserDTO);
-        }
-
-        model.addAttribute("majorlist", collegeS.findAllMajor());
-        return "mainpage";
+        model.addAttribute("majorlist", collegeS.findAllMajor())
+        return "mainpage"
     }
 
     @GetMapping("/read/{noticeid}")
-    public String findNotice(@PathVariable Long noticeid, Model model) {
-
-        return "noticebody";
+    fun findNotice(@PathVariable noticeid: Long?, model: Model?): String {
+        return "noticebody"
     }
 
-    @GetMapping(value = "/haksa")
-    public String test111(Model model) throws IOException {
-        List<Haksa> haksas = haksaS.findAll();
-        model.addAttribute("test", haksas);
+    @GetMapping(value = ["/haksa"])
+    fun test111(model: Model): String {
+        val haksas = haksaS.findAll()
+        model.addAttribute("test", haksas)
 
-        return "haksa";
+        return "haksa"
     }
 
     @GetMapping("/top5View")
-    public String getTop5View(Model model) {
-        List<Notice> topNotices = noticeS.findTopView(5);
+    fun getTop5View(model: Model): String {
+        val topNotices = noticeS.findTopView(5)
 
-        model.addAttribute("topNotices", topNotices);
-        return "top5View";
+        model.addAttribute("topNotices", topNotices)
+        return "top5View"
     }
 
     @GetMapping("/myPage")
-    public String showLikedNoticesAndComments(Model model) {
-        UserDTO.Session currentuserDTO = (UserDTO.Session) httpSession.getAttribute("user");
+    fun showLikedNoticesAndComments(model: Model): String {
+        val currentuserDTO = httpSession.getAttribute("user") as UserDTO.Session?
+        model.addAttribute("currentuser", currentuserDTO)
 
-        if (currentuserDTO != null) {
-            model.addAttribute("currentuser", currentuserDTO);
-        }
+        model.addAttribute("likedNotices", userS.getCurrentUserLikes())
+        model.addAttribute("comments", userS.getCurrentUserComments())
 
-        List<Notice> likedNotices = likeS.getLikedNotices(currentuserDTO);
-        model.addAttribute("likedNotices", likedNotices);
-
-        UserDTO.Session currentUserDTO = (UserDTO.Session) httpSession.getAttribute("user");
-        List<Comment> userComments = commentS.getCommentsByUser(currentUserDTO.id);
-        model.addAttribute("comments", userComments);
-
-        return "myPage";
+        return "myPage"
     }
 
     @GetMapping("/scholarshipwiki")
-    public String scholarshipwiki(Model model) {
-
-        return "scholarshipwiki";
+    fun scholarshipwiki(model: Model?): String {
+        return "scholarshipwiki"
     }
-} 
+}

@@ -23,9 +23,13 @@ class NoticeController(private val noticeS: NoticeService, private val likeS: Li
         var perPage: Long)
     @PostMapping("/requestPage")
     fun requestPage(@RequestBody dto: requestPage): ResponseEntity<*> {
+        val major: String = dto.major ?: ""
+        val type: String = dto.type ?: ""
+        val keyword: String = dto.keyword ?: ""
+
         val paging = PageRequest.of(dto.page.toInt(), dto.perPage.toInt(), Sort.Direction.DESC, "regdate")
-        val notices = noticeS.search(dto.major, dto.type, dto.keyword, paging)
-        val result = notices?.map { notice: Notice ->
+        val notices = noticeS.search(major, type, keyword, paging)
+        val result = notices.map { notice: Notice ->
             CommonWithoutBody(
                 likeS, notice
             )
@@ -46,7 +50,7 @@ class NoticeController(private val noticeS: NoticeService, private val likeS: Li
     @PostMapping("/topView")
     fun getTopView(@RequestBody dto: topview): ResponseEntity<*> {
         val topNotices = noticeS.findTopView(dto.size)
-        val result = topNotices?.map { notice: Notice ->
+        val result = topNotices.map { notice: Notice ->
             CommonWithoutBody(
                 likeS, notice
             )
@@ -59,7 +63,7 @@ class NoticeController(private val noticeS: NoticeService, private val likeS: Li
     @PostMapping("/toplike")
     fun getTopLikeByMajor(@RequestBody dto: toplike): ResponseEntity<*> {
         val topNotices = noticeS.findTopLike(dto.major, dto.size)
-        val result = topNotices?.map { notice: Notice ->
+        val result = topNotices.map { notice: Notice ->
             CommonWithoutBody(
                 likeS, notice
             )

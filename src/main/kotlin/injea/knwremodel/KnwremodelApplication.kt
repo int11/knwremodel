@@ -1,6 +1,6 @@
 package injea.knwremodel
 
-import injea.knwremodel.haksa.HaksaService
+import injea.knwremodel.schedule.HaksaService
 import injea.knwremodel.notice.NoticeService
 import injea.knwremodel.scholarship.ScholarshipService
 import injea.knwremodel.test.testdatainsertService

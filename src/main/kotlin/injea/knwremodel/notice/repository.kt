@@ -1,5 +1,6 @@
 package injea.knwremodel.notice
 
+import injea.knwremodel.user.User
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.data.jpa.repository.JpaRepository
@@ -26,4 +27,7 @@ interface NoticeRepository : JpaRepository<Notice?, Long?> {
     @Query("SELECT n FROM Notice n WHERE n.major LIKE %:major AND n.likeCount > 0")
     fun findByMajorContaining(@Param("major") major: String, pageable: Pageable): MutableList<Notice>
     override fun count(): Long
+
+    @Query("SELECT n FROM Notice n JOIN n.likes l WHERE l.user = :user")
+    fun findByUserLikes0(@Param("user") user: User): MutableList<Notice>
 }

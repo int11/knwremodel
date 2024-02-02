@@ -3,15 +3,26 @@ var script = document.createElement('script');
 script.src = "https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"; // Check https://jquery.com/ for the current version
 document.getElementsByTagName('head')[0].appendChild(script);
 
+function request(url, data, successfunction, errorfunction){
+    $.ajax({
+        url: url,
+        type: 'POST',
+        contentType: "application/json",
+        data: JSON.stringify(data),
+        success: successfunction(response),
+        error: errorfunction(response)
+    });
 
+}
 function saveDepartment() {
     var department = document.getElementById('department').value;
 
     // jQuery AJAX를 사용하여 서버에 부서 정보 저장 요청
     $.ajax({
-        url: '/user/saveDepartment',
+        url: '/user/setDepartment',
         type: 'POST',
-        data: {department: department},
+        contentType: "application/json",
+        data: JSON.stringify({department: department}),
         success: function (response) {
             alert(response); // 서버로부터의 응답을 알림으로 표시
         },

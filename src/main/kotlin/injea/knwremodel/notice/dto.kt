@@ -17,7 +17,6 @@ class NoticeDTO {
         var view: Long = notice.view
         var likeCount: Long = notice.likeCount
         var isCheckLike: Boolean = likeS.checkedLike(this.id)
-        var img: String? = notice.img
     }
 
     class Common(likeS: LikeService, notice: Notice) {
@@ -36,6 +35,6 @@ class NoticeDTO {
         val img: String? = notice.img
         val html: String = notice.html
 
-        val comments: List<CommentDTO.Comment> = notice.comments.map { comment: Comment? -> CommentDTO.Comment(comment) }
+        val comments: List<CommentDTO.Common> = notice.comments.map { comment: Comment -> CommentDTO.Common(comment) }
     }
 }

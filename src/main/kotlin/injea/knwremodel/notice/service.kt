@@ -1,6 +1,7 @@
 package injea.knwremodel.notice
 
-import injea.knwremodel.college.CollegeRepository
+import injea.knwremodel.college.CollegeService
+import injea.knwremodel.user.User
 import org.json.simple.JSONObject
 import org.json.simple.parser.JSONParser
 import org.jsoup.Jsoup
@@ -16,7 +17,7 @@ import java.time.format.DateTimeFormatter
 import java.util.regex.Pattern
 
 @Service
-class NoticeService(private val noticeRepo: NoticeRepository, private val CollegeRepo: CollegeRepository) {
+class NoticeService(private val noticeRepo: NoticeRepository, private val CollegeS: CollegeService) {
     private val pattern = Pattern.compile("\\((\\d+)\\)")
     private val dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy.MM.dd HH:mm")
     private val parser = JSONParser()
@@ -30,7 +31,7 @@ class NoticeService(private val noticeRepo: NoticeRepository, private val Colleg
     fun updateNotice(maxPage: Int) {
         val notices: MutableList<Notice> = mutableListOf()
 
-        for (e in CollegeRepo.findAll()) {
+        for (e in CollegeS.findAll()) {
             val LastPage = getLastpage(e.url, maxPage)
             for (page in LastPage downTo 1) {
                 val document = Jsoup.connect("${e.url}?paginationInfo.currentPageNo=${page}").get()
@@ -169,21 +170,17 @@ class NoticeService(private val noticeRepo: NoticeRepository, private val Colleg
         return arrayOf(regdate, type, body, img, html.toString())
     }
 
-    fun findById(id: Long): Notice? {
-        //noticeRepo.findById(id) 는 Optimal<Notice> 타입 반환 .orElse(null) 함수를 통해 kotlin "Notice?" 타입으로 변경
-        return noticeRepo.findById(id).orElse(null)
+    fun findById(id: Long): Notice {
+        //findById(id) 는 Optimal<type> 타입 반환 .orElse(null) 함수를 통해 kotlin "type?" 타입으로 변경
+        return noticeRepo.findById(id).orElse(null) ?: throw NullPointerException("게시글을 찾을 수 없습니다.")
     }
 
-    fun findAll(): MutableList<Notice>? {
+    fun findAll(): MutableList<Notice> {
         return noticeRepo.findAll().filterNotNull().toMutableList()
     }
 
     @Transactional(readOnly = true)
-    fun search(major: String?, type: String?, keyword: String?, pageable: Pageable): Page<Notice> {
-        val major: String = major ?: ""
-        val type: String = type ?: ""
-        val keyword: String = keyword ?: ""
-
+    fun search(major: String, type: String, keyword: String, pageable: Pageable): Page<Notice> {
         if (major == "행사/안내") {
             return noticeRepo.searchWithout(major, type, keyword, pageable)
         }
@@ -208,5 +205,10 @@ class NoticeService(private val noticeRepo: NoticeRepository, private val Colleg
 
     fun count(): Long {
         return noticeRepo.count()
+    }
+
+    fun findByUserLikes(user: User): MutableList<Notice>{
+        val a0 = noticeRepo.findByUserLikes0(user)
+        return a0
     }
 }

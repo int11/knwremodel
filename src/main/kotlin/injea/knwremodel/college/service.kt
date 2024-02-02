@@ -9,4 +9,8 @@ class CollegeService(private val CollegeRepo: CollegeRepository) {
     fun findAllMajor(): List<String> {
         return CollegeRepo.findAllMajor()
     }
+
+    fun findAll(): MutableList<College> {
+        return CollegeRepo.findAll().filterNotNull().toMutableList()
+    }
 }

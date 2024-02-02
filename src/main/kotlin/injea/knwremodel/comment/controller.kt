@@ -1,7 +1,5 @@
 package injea.knwremodel.comment
 
-import injea.knwremodel.comment.CommentDTO.delete
-import injea.knwremodel.comment.CommentDTO.modify
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
@@ -11,34 +9,24 @@ import org.springframework.web.bind.annotation.RestController
 @RestController
 @RequestMapping("/comments")
 class CommentController(private val commentS: CommentService) {
-    /* CREATE */
+    // TODO javascript JSON 변경
+    class save(val noticeId: Long, val text: String)
     @PostMapping("/save")
-    @Throws(Exception::class)
-    fun saveComment(@RequestBody commentdto: CommentDTO.save): ResponseEntity<*> {
-        return try {
-            ResponseEntity.ok(commentS.saveComment(commentdto))
-        } catch (e: Exception) {
-            ResponseEntity.badRequest().body(e.message)
-        }
+    fun saveComment(@RequestBody dto: save): ResponseEntity<*> {
+        commentS.saveComment(dto.noticeId, dto.text)
+        return ResponseEntity.ok(null)
     }
 
+    class modify(val commentId: Long, val text: String)
     @PostMapping("/modify")
-    @Throws(Exception::class)
-    fun modifyComment(@RequestBody commentdto: modify): ResponseEntity<*> {
-        return try {
-            ResponseEntity.ok(commentS.modifyComment(commentdto))
-        } catch (e: Exception) {
-            ResponseEntity.badRequest().body(e.message)
-        }
+    fun modifyComment(@RequestBody dto: modify): ResponseEntity<*> {
+        commentS.modifyComment(dto.commentId, dto.text)
+        return ResponseEntity.ok(null)
     }
 
+    class delete(val commentId: Long)
     @PostMapping("/delete")
-    @Throws(Exception::class)
-    fun deleteComment(@RequestBody commentdto: delete): ResponseEntity<*> {
-        return try {
-            ResponseEntity.ok(commentS.deleteComment(commentdto))
-        } catch (e: Exception) {
-            ResponseEntity.badRequest().body(e.message)
-        }
+    fun deleteComment(@RequestBody dto: delete): ResponseEntity<*> {
+        return ResponseEntity.ok(commentS.deleteComment(dto.commentId))
     }
 }
