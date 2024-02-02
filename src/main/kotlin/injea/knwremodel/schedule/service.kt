@@ -6,11 +6,11 @@ import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
 @Service
-class HaksaService(private val haksaRepo: repository) {
+class ScheduleService(private val ScheduleRepo: ScheduleRepository) {
     fun update() {
         // 학사 데이터가 아예 존재하지않을때 or 크롤링한 학사 일정 년도수가 현재 년도수랑 다를떄
-        if (haksaRepo.findAll().size == 0 || findAll()[0].dateStart.year != LocalDate.now().year) {
-            haksaRepo.deleteAll()
+        if (ScheduleRepo.findAll().size == 0 || findAll()[0].dateStart.year != LocalDate.now().year) {
+            ScheduleRepo.deleteAll()
             val url = "https://web.kangnam.ac.kr/menu/02be162adc07170ec7ee034097d627e9.do"
             val schedules: MutableList<Schedule> = mutableListOf()
 
@@ -37,11 +37,11 @@ class HaksaService(private val haksaRepo: repository) {
                 schedules.add(Schedule(dateStart, dateEnd, text))
 
             }
-            haksaRepo.saveAll(schedules)
+            ScheduleRepo.saveAll(schedules)
         }
     }
 
     fun findAll(): MutableList<Schedule> {
-        return haksaRepo.findAll().filterNotNull().toMutableList()
+        return ScheduleRepo.findAll().filterNotNull().toMutableList()
     }
 }

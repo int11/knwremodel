@@ -9,8 +9,8 @@ function request(url, data, successfunction, errorfunction){
         type: 'POST',
         contentType: "application/json",
         data: JSON.stringify(data),
-        success: successfunction(response),
-        error: errorfunction(response)
+        success: successfunction,
+        error: errorfunction
     });
 
 }

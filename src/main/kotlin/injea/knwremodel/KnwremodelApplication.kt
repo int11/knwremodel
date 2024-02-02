@@ -1,6 +1,6 @@
 package injea.knwremodel
 
-import injea.knwremodel.schedule.HaksaService
+import injea.knwremodel.schedule.ScheduleService
 import injea.knwremodel.notice.NoticeService
 import injea.knwremodel.scholarship.ScholarshipService
 import injea.knwremodel.test.testdatainsertService
@@ -16,7 +16,7 @@ import org.springframework.scheduling.annotation.Scheduled
 class KnwremodelApplication(
     private val noticeS: NoticeService,
     private val testdatainsertS: testdatainsertService,
-    private val haksaS: HaksaService,
+    private val haksaS: ScheduleService,
     private val scholarshipS: ScholarshipService
 ) {
     var frist = true

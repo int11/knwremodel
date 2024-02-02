@@ -2,7 +2,7 @@ package injea.knwremodel.test
 
 import injea.knwremodel.college.CollegeService
 import injea.knwremodel.comment.CommentService
-import injea.knwremodel.schedule.HaksaService
+import injea.knwremodel.schedule.ScheduleService
 import injea.knwremodel.like.LikeService
 import injea.knwremodel.notice.NoticeController
 import injea.knwremodel.notice.NoticeService
@@ -19,7 +19,7 @@ import java.io.IOException
 
 @Controller
 class testController(
-    private val haksaS: HaksaService,
+    private val haksaS: ScheduleService,
     private val noticeS: NoticeService,
     private val collegeS: CollegeService,
     private val httpSession: HttpSession,
