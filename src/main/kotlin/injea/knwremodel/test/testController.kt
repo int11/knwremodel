@@ -52,7 +52,7 @@ class testController(
         val haksas = haksaS.findAll()
         model.addAttribute("test", haksas)
 
-        return "haksa"
+        return "schedule"
     }
 
     @Transactional
@@ -66,6 +66,6 @@ class testController(
 
     @GetMapping("/scholarshipwiki")
     fun scholarshipwiki(model: Model?): String {
-        return "scholarshipwiki"
+        return "scholarship"
     }
 }
