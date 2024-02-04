@@ -1,29 +1,29 @@
 window.onload = function(){
     const URLSearch = new URLSearchParams(location.search);
 
-    if (URLSearch.get("keyword")){
-        document.getElementById('keyword').value = URLSearch.get("keyword");
+    let keyword = URLSearch.get("keyword")
+    if (keyword){
+        document.getElementById('keyword').value = keyword
     }
 
-    if (URLSearch.get("major")){
-        document.getElementById('MajorDropdown').value = URLSearch.get("major");
+    let major = URLSearch.get("major")
+    if (major){
+        document.getElementById('MajorDropdown').value = major
     }
+
     loadNoticeTable(URLSearch.get("major"), URLSearch.get("type"), URLSearch.get("keyword"));
     loadRankTable(URLSearch.get("major"));
 }
 
 function loadNoticeTable(major="", type="", keyword="", page=0, perPage=20){
-    $.ajax({
-        url: '/notice/requestPage',
-        type: 'POST',
-        contentType: "application/json",
-        dataType: "json",
-        data: JSON.stringify({major:major,
-            type: type, 
-            keyword:keyword, 
-            page:page, 
-            perPage:perPage}),
-        success: function (response) {
+    request(
+        "/notice/requestPage",
+        {major:major,
+            type: type,
+            keyword:keyword,
+            page:page,
+            perPage:perPage},
+        function (response) {
             let table = document.getElementById("mainTable");
             createTable(response.content, table);
             let ul = document.getElementById("mainPageCount");
@@ -42,51 +42,39 @@ function loadNoticeTable(major="", type="", keyword="", page=0, perPage=20){
                 let a = document.createElement("a");
                 a.href = `javascript:myopen(${i})`;
                 a.text = i+1;
-                
-                
+
+
                 li.appendChild(a);
                 ul.appendChild(li)
             }
-        },
-        error: function (data) {
-            console.error(data.responseText); // 에러 발생 시 콘솔에 출력
         }
-    });
-}
-
-function myopen(page){
-    const URLSearch = new URLSearchParams(location.search);
-    loadNoticeTable(URLSearch.get("major"), URLSearch.get("type"), URLSearch.get("keyword"), page)
+    )
 }
 
 function loadRankTable(major){
-    $.ajax({
-        url: '/notice/toplike',
-        type: 'POST',
-        contentType: "application/json",
-        dataType: "json",
-        data: JSON.stringify({major:major, size: 5}),
-        success: function (response) {
+    request(
+        "/notice/toplike",
+        {major:major, size: 5},
+        function (response) {
             let table = document.getElementById("viewRankTable");
             createTable(response, table);
-        },
-        error: function (data) {
-            console.error(data.responseText); // 에러 발생 시 콘솔에 출력
         }
-    });
+    )
 
-    $.ajax({
-        url: '/notice/topView',
-        type: 'POST',
-        contentType: "application/json",
-        dataType: "json",
-        data: JSON.stringify({size: 5}),
-        success: function (response) {
+    request(
+        "/notice/topView",
+        {size: 5},
+        function (response) {
             let table = document.getElementById("likeRankTable");
             createTable(response, table);
-        },
-        error: function (data) {
-            console.error(data.responseText); // 에러 발생 시 콘솔에 출력
         }
-    });
+    )
+}
+
+function search(){
+    const URLSearch = new URLSearchParams(location.search);
+    URLSearch.delete("page");
+    URLSearch.set("major", document.getElementById('MajorDropdown').value);
+    URLSearch.set("keyword", document.getElementById('keyword').value);
+    location.href = location.href.split("?")[0] + '?' + URLSearch.toString();
 }

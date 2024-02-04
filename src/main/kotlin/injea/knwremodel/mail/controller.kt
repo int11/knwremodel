@@ -13,23 +13,17 @@ class MailController(private val mailS: MailService) {
     class send(var mail: String)
     @PostMapping("/send")
     fun MailSend(@RequestBody dto: send): ResponseEntity<*> {
-        try {
-            mailS.sendMail(dto.mail)
-            return ResponseEntity.ok("인증번호 발송. 1분 30초 안에 입력하시오.")
-        } catch (e: Exception) {
-            return ResponseEntity.badRequest().body(e.message)
-        }
+
+        mailS.sendMail(dto.mail)
+        return ResponseEntity.ok("인증번호 발송. 1분 30초 안에 입력하시오.")
+
     }
 
     // 인증 번호 확인
-    class confirmNumber(var enteredNumber: String)
+    class confirmNumber(var authNumber: String)
     @PostMapping("/confirmNumber")
     fun ConfirmNumber(@RequestBody dto: confirmNumber): ResponseEntity<*> {
-        try {
-            mailS.confirmNumber(dto.enteredNumber)
-            return ResponseEntity.ok("이메일 인증이 성공했습니다.")
-        } catch (e: Exception) {
-            return ResponseEntity.badRequest().body(e.message)
-        }
+        mailS.confirmNumber(dto.authNumber)
+        return ResponseEntity.ok("이메일 인증이 성공했습니다.")
     }
 }

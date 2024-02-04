@@ -16,13 +16,12 @@ class Like(
     @Column(updatable = false)
     val id: Long? = null
 
-    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     var user = user
         protected set
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "notice_id")
     var notice = notice
         protected set

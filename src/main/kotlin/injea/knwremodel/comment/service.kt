@@ -10,8 +10,7 @@ import org.springframework.transaction.annotation.Transactional
 class CommentService(
     private val commentRepo: CommentRepository,
     private val userS: UserService,
-    private val noticeS: NoticeService,
-    private val httpSession: HttpSession
+    private val noticeS: NoticeService
 ) {
     @Transactional
     fun saveComment(noticeId: Long, text: String){

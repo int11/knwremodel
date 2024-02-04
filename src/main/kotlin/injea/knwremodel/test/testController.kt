@@ -11,11 +11,11 @@ import injea.knwremodel.user.UserService
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
 import jakarta.servlet.http.HttpSession
+import jakarta.transaction.Transactional
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
-import java.io.IOException
 
 @Controller
 class testController(
@@ -29,7 +29,6 @@ class testController(
     private val commentS: CommentService
 ) {
     @GetMapping(value = ["/"])
-    @Throws(IOException::class)
     fun test(
         keyword: String?,
         request: HttpServletRequest?,
@@ -44,7 +43,7 @@ class testController(
     }
 
     @GetMapping("/read/{noticeid}")
-    fun findNotice(@PathVariable noticeid: Long?, model: Model?): String {
+    fun findNotice(@PathVariable noticeid: Long, model: Model): String {
         return "noticebody"
     }
 
@@ -56,21 +55,11 @@ class testController(
         return "haksa"
     }
 
-    @GetMapping("/top5View")
-    fun getTop5View(model: Model): String {
-        val topNotices = noticeS.findTopView(5)
-
-        model.addAttribute("topNotices", topNotices)
-        return "top5View"
-    }
-
+    @Transactional
     @GetMapping("/myPage")
-    fun showLikedNoticesAndComments(model: Model): String {
+    fun myPage(model: Model): String {
         val currentuserDTO = httpSession.getAttribute("user") as UserDTO.Session?
         model.addAttribute("currentuser", currentuserDTO)
-
-        model.addAttribute("likedNotices", userS.getCurrentUserLikes())
-        model.addAttribute("comments", userS.getCurrentUserComments())
 
         return "myPage"
     }

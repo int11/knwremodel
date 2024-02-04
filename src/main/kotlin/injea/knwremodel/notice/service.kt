@@ -51,7 +51,7 @@ class NoticeService(private val noticeRepo: NoticeRepository, private val Colleg
 
                     val titleElements = content.select("a")
 
-                    val (regdate, type, body, img, html) = crawlingbody(e.url, titleElements)
+                    val (regdate, type, body, img, html) = getBody(e.url, titleElements)
 
 
                     notices.add(Notice(
@@ -92,7 +92,7 @@ class NoticeService(private val noticeRepo: NoticeRepository, private val Colleg
                     continue
 
                 //게시물 타입, 내용, 사진 크롤링
-                val (regdate, type, body, img, html) = crawlingbody(url, titleElements)
+                val (regdate, type, body, img, html) = getBody(url, titleElements)
 
                 notices.add(
                     Notice(
@@ -131,7 +131,7 @@ class NoticeService(private val noticeRepo: NoticeRepository, private val Colleg
         throw NumberFormatException("Can't find pattern")
     }
 
-    private fun crawlingbody(url: String, titleElements: Elements): Array<Any> {
+    private fun getBody(url: String, titleElements: Elements): Array<Any> {
         val jsonObject = parser.parse(titleElements.attr("data-params")) as JSONObject
         val encMenuSeq = jsonObject["encMenuSeq"] as String
         val encMenuBoardSeq = jsonObject["encMenuBoardSeq"] as String

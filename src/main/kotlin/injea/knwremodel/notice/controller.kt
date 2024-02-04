@@ -5,6 +5,7 @@ import injea.knwremodel.notice.NoticeDTO.*
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Sort
 import org.springframework.http.ResponseEntity
+import org.springframework.transaction.annotation.Transactional
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
@@ -29,7 +30,7 @@ class NoticeController(private val noticeS: NoticeService, private val likeS: Li
 
         val paging = PageRequest.of(dto.page.toInt(), dto.perPage.toInt(), Sort.Direction.DESC, "regdate")
         val notices = noticeS.search(major, type, keyword, paging)
-        val result = notices.map { notice: Notice ->
+        val result = notices.map { notice ->
             CommonWithoutBody(
                 likeS, notice
             )
@@ -38,10 +39,11 @@ class NoticeController(private val noticeS: NoticeService, private val likeS: Li
     }
 
 
-    class requestbody(var id: Long)
-    @PostMapping("/requestbody")
-    fun requestbody(@RequestBody dto: requestbody): ResponseEntity<*> {
-        val notice = noticeS.findById(dto.id)
+    class requestBody(var noticeId: Long)
+    @Transactional
+    @PostMapping("/requestBody")
+    fun requestBody(@RequestBody dto: requestBody): ResponseEntity<*> {
+        val notice = noticeS.findById(dto.noticeId)
         return ResponseEntity.ok(Common(likeS, notice))
     }
 
@@ -50,7 +52,7 @@ class NoticeController(private val noticeS: NoticeService, private val likeS: Li
     @PostMapping("/topView")
     fun getTopView(@RequestBody dto: topview): ResponseEntity<*> {
         val topNotices = noticeS.findTopView(dto.size)
-        val result = topNotices.map { notice: Notice ->
+        val result = topNotices.map { notice ->
             CommonWithoutBody(
                 likeS, notice
             )
@@ -63,7 +65,7 @@ class NoticeController(private val noticeS: NoticeService, private val likeS: Li
     @PostMapping("/toplike")
     fun getTopLikeByMajor(@RequestBody dto: toplike): ResponseEntity<*> {
         val topNotices = noticeS.findTopLike(dto.major, dto.size)
-        val result = topNotices.map { notice: Notice ->
+        val result = topNotices.map { notice ->
             CommonWithoutBody(
                 likeS, notice
             )

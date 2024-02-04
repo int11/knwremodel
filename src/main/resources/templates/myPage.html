@@ -6,19 +6,19 @@
     <title>마이페이지</title>
     <link rel="stylesheet" th:href="@{/style.css}">
     <script th:src="@{/core.js}"></script>
+    <script th:src="@{/myPage.js}"></script>
 </head>
 <body>
 
-<div th:if="${currentuser.role == 'ROLE_GUEST'}">
-    <div id="mail_input" name="mail_input">
-        <input type="text" name="mail" id="mail" placeholder="이메일 입력">
-        <button type="button" id="sendBtn" name="sendBtn" onclick="sendNumber()">인증번호</button>
-    </div>
-    <br>
-    <div id="mail_number" name="mail_number" style="display: none">
-        <input type="text" name="number" id="number" placeholder="인증번호 입력">
-        <button type="button" name="confirmBtn" id="confirmBtn" onclick="confirmNumber()">이메일 인증</button>
-    </div>
+
+<div>
+    <input id="mail" placeholder="이메일 입력">
+    <button onclick="sendNumber()">인증번호</button>
+</div>
+<br>
+<div id="authDiv" style="display: none">
+    <input id="auth" placeholder="인증번호 입력">
+    <button onclick="confirmNumber()">이메일 인증</button>
 </div>
 
 <br>
@@ -38,64 +38,10 @@
 <br>
 
 <h1>내가 좋아요한 공지사항</h1>
-<table>
-    <thead>
-    <tr>
-        <th>ID</th>
-        <th>Board ID</th>
-        <th>Title</th>
-        <th>Type</th>
-        <th>Major</th>
-        <th>Writer</th>
-        <th>Reg Date</th>
-        <th>View</th>
-        <th>Like Count</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr th:each="i : ${likedNotices}">
-        <td th:text="${i.id}"></td>
-        <td th:text="${i.boardId}"></td>
-        <td th:text="${i.title}"></td>
-        <td th:text="${i.type}"></td>
-        <td th:text="${i.major}"></td>
-        <td th:text="${i.writer}"></td>
-        <td th:text="${i.regdate}"></td>
-        <td th:text="${i.view}"></td>
-        <td th:text="${i.likeCount}"></td>
-    </tr>
-    </tbody>
-</table>
+<table id="likedTable"></table>
 
 <h1>내가 작성한 댓글</h1>
-<table>
-    <thead>
-    <tr>
-        <th>Comment</th>
-        <th>Title</th>
-        <th>Created Date</th>
-        <th>Modified Date</th>
-        <th>Modify</th>
-        <th>Delete</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr th:each="i : ${comments}">
-        <td th:text="${i.comment}"></td>
-        <td>
-            <a th:href="@{'/read/' + ${i.notice.id}}">
-                <span th:text="${i.notice.title}"></span>
-            </a>
-        </td>
-        <td th:text="${i.createdDate}"></td>
-        <td th:text="${i.modifiedDate}"></td>
-        <td><button th:onclick="commentModify([[${i.id}]])">댓글 수정</button></td>
-        <td><button th:onclick="commentDelete([[${i.id}]])">댓글 삭제</button></td>
-    </tr>
-    </tbody>
-</table>
-
-
+<table id="writedCommentTable"></table>
 
 </body>
 </html>

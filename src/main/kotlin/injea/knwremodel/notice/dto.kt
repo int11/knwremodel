@@ -32,7 +32,7 @@ class NoticeDTO {
         val isCheckLike: Boolean = likeS.checkedLike(this.id)
 
         val body: String = notice.body
-        val img: String? = notice.img
+        val img: String = notice.img
         val html: String = notice.html
 
         val comments: List<CommentDTO.Common> = notice.comments.map { comment: Comment -> CommentDTO.Common(comment) }

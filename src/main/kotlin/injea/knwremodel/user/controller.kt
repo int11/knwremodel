@@ -1,6 +1,8 @@
 package injea.knwremodel.user
 
+import injea.knwremodel.like.Like
 import org.springframework.http.ResponseEntity
+import org.springframework.transaction.annotation.Transactional
 import org.springframework.web.bind.annotation.*
 
 @RestController
@@ -20,11 +22,19 @@ class UserController(
         return ResponseEntity.ok(userS.getCurrentUser())
     }
 
+    @Transactional
     @PostMapping("/likes")
     fun likedNotice(): ResponseEntity<*> {
-        return ResponseEntity.ok(userS.getCurrentUserLikes())
+        val likes = userS.getCurrentUserLikes()
+        class resultDTO(like: Like){
+            val id = like.id
+            val title = like.notice.title
+        }
+        val result = likes.map { like -> resultDTO(like) }
+        return ResponseEntity.ok(result)
     }
     // TODO 확인필요
+    @Transactional
     @PostMapping("/comments")
     fun comments(): ResponseEntity<*> {
         return ResponseEntity.ok(userS.getCurrentUserComments())

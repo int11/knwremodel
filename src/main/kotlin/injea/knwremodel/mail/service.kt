@@ -3,6 +3,7 @@ package injea.knwremodel.mail
 import injea.knwremodel.user.UserService
 import jakarta.mail.internet.MimeMessage
 import jakarta.servlet.http.HttpSession
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.mail.javamail.JavaMailSender
 import org.springframework.stereotype.Service
 
@@ -12,6 +13,9 @@ class MailService(
     private val javaMailSender: JavaMailSender,
     private val httpSession: HttpSession
 ) {
+    @Value("\${spring.mail.username}")
+    private val senderEmail: String? = null
+
     fun CreateMail(mail: String, number: Int): MimeMessage {
         val message = javaMailSender.createMimeMessage()
 
@@ -28,8 +32,11 @@ class MailService(
     }
 
     fun sendMail(mail: String) {
-        require(mail.endsWith("kangnam.ac.kr")) { "강남대학교 이메일로만 인증 가능합니다. 다시 시도해주세요." }
-        val number = createNumber()
+        if (mail.endsWith("kangnam.ac.kr")){
+            throw IllegalArgumentException("강남대학교 이메일로만 인증 가능합니다. 다시 시도해주세요.")
+        }
+
+        val number = (Math.random() * (90000)).toInt() + 100000 // (int) Math.random() * (최댓값-최소값+1) + 최소값
 
         val message = CreateMail(mail, number)
 
@@ -51,12 +58,5 @@ class MailService(
             userS.setCurrentUserRole(injea.knwremodel.entity.Role.USER)
             httpSession.removeAttribute("timer")
             httpSession.removeAttribute("number")
-    }
-
-    companion object {
-        private const val senderEmail = "knureplica@gmail.com"
-        fun createNumber(): Int {
-            return (Math.random() * (90000)).toInt() + 100000 // (int) Math.random() * (최댓값-최소값+1) + 최소값
-        }
     }
 }

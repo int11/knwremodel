@@ -58,7 +58,7 @@ class UserService(
     }
     fun getCurrentUserDTO(): UserDTO.Session {
         // "user" Attribute 없으면 null 반환
-        return httpSession.getAttribute("user") as UserDTO.Session? ?: throw NullPointerException("현재 세션에 로그인 되어있지 않습니다.")
+        return httpSession.getAttribute("user") as UserDTO.Session? ?: throw NullPointerException("로그인 되어있지 않습니다.")
     }
 
     fun isLogin(): Boolean{
@@ -68,6 +68,7 @@ class UserService(
     fun getCurrentUser(): User {
         return findById(getCurrentUserDTO().id)
     }
+
 
     fun getCurrentUserComments(): MutableList<Comment>{
         return getCurrentUser().comments.toMutableList()

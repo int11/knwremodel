@@ -51,16 +51,16 @@ class Notice(
     var img = img
         protected set
 
-    @Column(columnDefinition = "TEXT", nullable = false)
+    @Column(columnDefinition = "TEXT")
     var html = html
         protected set
 
     @JsonIgnore
-    @OneToMany(mappedBy = "notice", fetch = FetchType.EAGER, cascade = [CascadeType.REMOVE])
+    @OneToMany(mappedBy = "notice", cascade = [CascadeType.REMOVE])
     val comments: MutableList<Comment> = mutableListOf()
 
     @JsonIgnore
-    @OneToMany(mappedBy = "notice", fetch = FetchType.EAGER, cascade = [CascadeType.REMOVE])
+    @OneToMany(mappedBy = "notice", cascade = [CascadeType.REMOVE])
     val likes: MutableList<Like> = mutableListOf()
 
     @Column(nullable = false)
