@@ -32,7 +32,7 @@ class MailService(
     }
 
     fun sendMail(mail: String) {
-        if (mail.endsWith("kangnam.ac.kr")){
+        if (mail.endsWith("kangnam.ac.kr") == false){
             throw IllegalArgumentException("강남대학교 이메일로만 인증 가능합니다. 다시 시도해주세요.")
         }
 

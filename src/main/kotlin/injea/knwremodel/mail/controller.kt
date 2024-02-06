@@ -13,10 +13,8 @@ class MailController(private val mailS: MailService) {
     class send(var mail: String)
     @PostMapping("/send")
     fun MailSend(@RequestBody dto: send): ResponseEntity<*> {
-
         mailS.sendMail(dto.mail)
         return ResponseEntity.ok("인증번호 발송. 1분 30초 안에 입력하시오.")
-
     }
 
     // 인증 번호 확인

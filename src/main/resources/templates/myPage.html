@@ -17,21 +17,21 @@
 </div>
 <br>
 <div id="authDiv" style="display: none">
-    <input id="auth" placeholder="인증번호 입력">
+    <input id="authNumber" placeholder="인증번호 입력">
     <button onclick="confirmNumber()">이메일 인증</button>
 </div>
 
 <br>
 
-<div id="departmentInput">
+<div>
     <label for="department">학부 선택:
-        <select id="department" name="department">
+        <select id="department">
             <option value="ICT공학부">ICT공학부</option>
             <option value="ICT융합공학부">ICT융합공학부</option>
             <!-- 다른 학부도 필요에 따라 추가 -->
         </select>
         
-        <button onclick="saveDepartment()">학부 저장</button>
+        <button onclick="setDepartment()">학부 저장</button>
     </label>
 </div>
 

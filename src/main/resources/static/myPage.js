@@ -38,27 +38,16 @@ function sendNumber() {
 }
 
 function confirmNumber() {
-    var number1 = $("#number").val();
-    $.ajax({
-        url: "/mail/confirmNumber",
-        type: "post",
-        contentType: "application/json",
-        dataType: "json",
-        data: JSON.stringify({ "enteredNumber": number1 }),
-        success: function (data) {
-            alert(data);
-        },
-        error: function(data){
-            alert(data.responseText);
-        }
-    });
+    request(
+        "/mail/confirmNumber",
+        { "authNumber": $("#authNumber").val() },
+        function (data) {alert(data)}
+    )
 }
 
-function saveDepartment() {
-    var department = document.getElementById('department').value;
-
+function setDepartment() {
     request("/user/setDepartment",
-        {department: department},
+        {department: $("#department").val()},
         function (response) {alert(response)}
     )
 }

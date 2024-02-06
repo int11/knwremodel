@@ -10,7 +10,13 @@ import org.springframework.web.bind.annotation.ExceptionHandler
 class globalExceptHandler {
 
     @ExceptionHandler(value = [NullPointerException::class])
-    fun asdf(e: Exception): ResponseEntity<*>{
+    fun notFound(e: Exception): ResponseEntity<*>{
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.message)
     }
+    
+    @ExceptionHandler(value = [IllegalArgumentException::class])
+    fun badRequest(e: Exception): ResponseEntity<*>{
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.message)
+    }
+
 }

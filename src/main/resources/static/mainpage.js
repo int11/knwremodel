@@ -34,13 +34,13 @@ function loadNoticeTable(major="", type="", keyword="", page=0, perPage=20){
             li.innerText = "page"
             ul.appendChild(li)
 
-            for(let i = 0; i<=response.totalPages; i++){
+            for(let i = 0; i<response.totalPages; i++){
                 let li = document.createElement("li");
                 li.style.float = "left";
                 li.style.margin = "0px 5px";
 
                 let a = document.createElement("a");
-                a.href = `javascript:myopen(${i})`;
+                a.href = `javascript:paging(${i})`;
                 a.text = i+1;
 
 
@@ -77,4 +77,9 @@ function search(){
     URLSearch.set("major", document.getElementById('MajorDropdown').value);
     URLSearch.set("keyword", document.getElementById('keyword').value);
     location.href = location.href.split("?")[0] + '?' + URLSearch.toString();
+}
+
+function paging(page){
+    const URLSearch = new URLSearchParams(location.search);
+    loadNoticeTable(URLSearch.get("major"), URLSearch.get("type"), URLSearch.get("keyword"), page)
 }

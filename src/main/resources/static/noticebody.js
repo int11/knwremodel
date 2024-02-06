@@ -22,7 +22,7 @@ function loadBody(noticeId){
             createTable([Object.fromEntries(obejctlist.slice(-3, -1))], bodyTable);
 
             let commentsTable = document.getElementById("comments");
-            createTable(Object.fromEntries(obejctlist.slice(-1)), commentsTable);
+            createTable(Object.fromEntries(obejctlist.slice(-1))["comments"], commentsTable);
         }
     )
 }
