@@ -17,12 +17,13 @@ class LikeService(
         val clickedNotice = noticeS.findById(id)
 
         val like = likeRepo.findByUserAndNotice(currentuser, clickedNotice)
-        //사용자가 해당 게시물에 좋아요를 눌렀던 기록이 있다면
+        //사용자가 해당 게시물에 좋아요를 눌렀던 기록이 없으면
         if (like == null) {
             val temp = Like(currentuser, clickedNotice)
             likeRepo.save(temp)
             clickedNotice.likeCount += 1
-        } else {
+        }
+        else {
             likeRepo.delete(like)
             clickedNotice.likeCount -= 1
         }

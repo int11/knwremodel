@@ -1,4 +1,4 @@
-package injea.knwremodel.notice
+ package injea.knwremodel.notice
 
 import com.fasterxml.jackson.annotation.JsonIgnore
 import injea.knwremodel.comment.Comment

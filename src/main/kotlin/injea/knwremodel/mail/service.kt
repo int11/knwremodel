@@ -54,9 +54,12 @@ class MailService(
             httpSession.removeAttribute("timer")
             httpSession.removeAttribute("number")
             throw IllegalArgumentException("인증 번호가 만료되었습니다. 다시 시도해주세요")
-        } else require(number == enteredNumber.toInt()) { "인증 번호가 다릅니다. 다시 시도해주세요." }
-            userS.setCurrentUserRole(injea.knwremodel.entity.Role.USER)
-            httpSession.removeAttribute("timer")
-            httpSession.removeAttribute("number")
+        }
+        else if(number != enteredNumber.toInt()) {
+            throw IllegalArgumentException("인증 번호가 다릅니다. 다시 시도해주세요.")
+        }
+        userS.setCurrentUserRole(injea.knwremodel.entity.Role.USER)
+        httpSession.removeAttribute("timer")
+        httpSession.removeAttribute("number")
     }
 }

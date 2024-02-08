@@ -1,5 +1,6 @@
 package injea.knwremodel.user
 
+import injea.knwremodel.comment.CommentDTO
 import injea.knwremodel.like.Like
 import org.springframework.http.ResponseEntity
 import org.springframework.transaction.annotation.Transactional
@@ -33,10 +34,11 @@ class UserController(
         val result = likes.map { like -> resultDTO(like) }
         return ResponseEntity.ok(result)
     }
-    // TODO 확인필요
+
     @Transactional
     @PostMapping("/comments")
     fun comments(): ResponseEntity<*> {
-        return ResponseEntity.ok(userS.getCurrentUserComments())
+        val result = userS.getCurrentUserComments().map { comment -> CommentDTO.Common(comment) }
+        return ResponseEntity.ok(result)
     }
 }

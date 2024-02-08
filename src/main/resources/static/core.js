@@ -20,45 +20,45 @@ function request(
 }
 
 
-function createTable(jsonlist, table) {
-    table.replaceChildren()
-    let tr = table.insertRow();
-    for(let item in jsonlist[0]){
-        let th = tr.insertCell();
-        th.innerText = item; 
+function createTable(
+    jsonlist,
+    table,
+    scheduleFunction=function (item, key, cell) {
+        if (key == "isCheckLike"){
+            let button = $("<button>");
+            cell.append(button);
+            button.click(function(){clickLike(item["id"], this);});
+            button.text((item[key] == false) ? "좋아요" : "좋아요 취소")
+        }else if(key == "id"){
+            $(cell).append(`<a href="/read/${item[key]}">${item[key]}</a>`)
+        }
+        else{
+            cell.text(item[key]);
+        }
+    }
+) {
+    $(table).empty();
+
+    let headerRow = $("<tr>");
+    $(table).append(headerRow);
+    for(let key in jsonlist[0]){
+        headerRow.append(`<th>${key}</th>`);
     }
 
     for (let index in jsonlist){
-        let tr = table.insertRow();
-        tr.id = index
+        let row = $("<tr>");
+        row.attr("id", index);
+        $(table).append(row);
         let item = jsonlist[index];
         for(let key in item){
-            let td = tr.insertCell();
-            td.class = key;
+            let cell = $("<td>").addClass(key);
+            row.append(cell);
 
-            if (key == "isCheckLike"){
-                let button = document.createElement("button");
-                td.appendChild(button);
-                button.onclick = function(){clickLike(item["id"], this);};
-                if (item[key] == false){
-                    button.innerText = "좋아요";
-                }else{
-                    button.innerText = "좋아요 취소";
-                }
+            scheduleFunction(item, key, cell)
 
-            }else if(key == "id"){
-                let a = document.createElement("a");
-                td.appendChild(a);
-                a.href = "/read/" + item[key]
-                a.innerText = item[key]; 
-            }
-            else{
-                td.innerText = item[key]; 
-            }
         }
     }
- }
-
+}
 function clickLike(noticeId, self) {
     request(
         "/like/click",

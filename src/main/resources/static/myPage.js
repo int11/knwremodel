@@ -8,7 +8,7 @@ function loadLikes(){
         "/user/likes",
         {},
         function (response) {
-            let table = document.getElementById("likedTable");
+            let table = $("#likedTable");
             createTable(response, table);
         }
     )
@@ -19,8 +19,22 @@ function loadComments(){
         "/user/comments",
         {},
         function (response) {
-            let table = document.getElementById("writedCommentTable");
-            createTable(response, table);
+            let table = $("#writedCommentTable");
+            createTable(
+                response,
+                table,
+                function (item, key, cell) {
+                    if(key == "noticeId"){
+                        let a = $("<a>")
+                            .text(item[key])
+                            .attr("href", "/read/" + item[key]);
+                        cell.append(a)
+                    }
+                    else{
+                        cell.text(item[key]);
+                    }
+                }
+            )
         }
     )
 }

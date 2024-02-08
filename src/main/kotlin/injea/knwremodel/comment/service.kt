@@ -30,10 +30,15 @@ class CommentService(
     fun modifyComment(commentId: Long, text: String){
         val currentuser = userS.getCurrentUser()
         val comment = findById(commentId)
-        require(text.isNotEmpty()) { "댓글 수정 실패: 빈 내용의 댓글은 작성할 수 없습니다." }
-        if (comment.user.id == currentuser.id)
-            throw IllegalArgumentException("댓글 수정 실패: 해당 댓글을 작성한 사용자가 아닙니다.")
 
+        if (text.isEmpty()){
+            throw IllegalArgumentException("댓글 수정 실패: 빈 내용의 댓글은 작성할 수 없습니다.")
+        }
+        else if(comment.user.id != currentuser.id){
+            throw IllegalArgumentException("댓글 수정 실패: 해당 댓글을 작성한 사용자가 아닙니다.")
+        }
+
+        comment.text = text
     }
 
     @Transactional
