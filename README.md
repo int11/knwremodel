@@ -13,7 +13,7 @@ https://github.com/int11/knwremodel/tree/KUN-REPLICA-TEAM
 # After
 Current branch
 
-이인재
+이인재 Solo, java to kotlin refactoring
 
 2023/12/15 ~
 
