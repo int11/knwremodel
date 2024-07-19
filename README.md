@@ -19,3 +19,22 @@ Current branch
 
 
 
+
+<p align="center">
+    <img width="800" height="auto" src="https://github.com/int11/knwremodel/blob/main/demoimg/1.%20After%20login.jpg" />
+</p>
+<p align="center">
+    <img width="800" height="auto" src="https://github.com/int11/knwremodel/blob/main/demoimg/2.%20Social%20login%20with%20OAuth.jpg" />
+</p>
+<p align="center">
+    <img width="800" height="auto" src="https://github.com/int11/knwremodel/blob/main/demoimg/3.%20Before%20login.jpg" />
+</p>
+<p align="center">
+    <img width="800" height="auto" src="https://github.com/int11/knwremodel/blob/main/demoimg/4.%20MyPage%20and%20Email%20Authentication%20System.jpg" />
+</p>
+<p align="center">
+    <img width="800" height="auto" src="https://github.com/int11/knwremodel/blob/main/demoimg/5. Comments.jpg" />
+</p>
+<p align="center">
+    <img width="800" height="auto" src="https://github.com/int11/knwremodel/blob/main/demoimg/6.%20Mypage.jpg" />
+</p>
