@@ -15,18 +15,16 @@
 <button value="/haksa" onclick="window.open(value,'_self');">학사 크롤링</button>
 <button value="/scholarshipwiki" onclick="window.open(value,'_self');">학식</button>
 <br>
+<div id = "loginFalse">
+    <a href="/oauth2/authorization/google">구글 로그인</a>
+</div>
 
-<th:block th:if="${currentuser != null}">
+<div id="loginTrue" style="display: none">
     <button onClick="window.open('/myPage','_self');">Mypage</button>
     <button onClick="window.open('/logout','_self');">로그아웃</button>
-    <p th:text="${currentuser.name}"></p>
-    <p th:text="${currentuser.email}"></p>
-    <p th:text="${currentuser.role}"></p>
-    <p th:text="${currentuser.department}"></p>
-</th:block>
-<th:block th:if="${currentuser == null}">
-    <a href="/oauth2/authorization/google">구글 로그인</a>
-</th:block>
+    <table id="currentUserTable"></table>
+</div>
+
 
 <br>
 

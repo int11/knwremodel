@@ -1,15 +1,16 @@
 window.onload = function(){
     loadLikes()
     loadComments()
+    loadCurrentUser()
 }
 
 function loadLikes(){
     request(
         "/user/likes",
         {},
-        function (response) {
+        function (data) {
             let table = $("#likedTable");
-            createTable(response, table);
+            createTable(data, table);
         }
     )
 }
@@ -18,10 +19,10 @@ function loadComments(){
     request(
         "/user/comments",
         {},
-        function (response) {
+        function (data) {
             let table = $("#writedCommentTable");
             createTable(
-                response,
+                data,
                 table,
                 function (item, key, cell) {
                     if(key == "noticeId"){
@@ -62,7 +63,11 @@ function confirmNumber() {
 function setDepartment() {
     request("/user/setDepartment",
         {department: $("#department").val()},
-        function (response) {alert(response)}
+        function (data) {
+
+            alert(data)
+            loadCurrentUser()
+        }
     )
 }
 

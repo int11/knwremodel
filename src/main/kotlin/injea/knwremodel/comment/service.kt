@@ -2,7 +2,6 @@ package injea.knwremodel.comment
 
 import injea.knwremodel.notice.NoticeService
 import injea.knwremodel.user.UserService
-import jakarta.servlet.http.HttpSession
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
@@ -45,7 +44,8 @@ class CommentService(
     fun deleteComment(commentId: Long): Long? {
         val currentuser = userS.getCurrentUser()
         val comment = findById(commentId)
-        if (comment.user.id != currentuser.id || currentuser.role.key != "ROLE_ADMIN")
+//        id 가 다르고 어드민이 아닌사람만
+        if (comment.user.id != currentuser.id && currentuser.role.key != "ROLE_ADMIN")
             throw IllegalArgumentException("댓글 삭제 실패: 권한이 없습니다.")
         commentRepo.deleteById(commentId)
         return comment.id
@@ -54,5 +54,9 @@ class CommentService(
     fun findById(id: Long): Comment {
         //findById(id) 는 Optimal<type> 타입 반환 .orElse(null) 함수를 통해 kotlin "type?" 타입으로 변경
         return commentRepo.findById(id).orElse(null) ?: throw NullPointerException("댓글을 찾을 수 없습니다.")
+    }
+
+    fun findByNoticeId(noticeId: Long): MutableList<Comment>{
+        return commentRepo.findByNoticeId(noticeId)
     }
 }

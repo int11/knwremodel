@@ -4,26 +4,37 @@ window.onload = function(){
     var index = currentURL.lastIndexOf('/')
     noticeId = currentURL.substring(index + 1)
 
-    loadBody(noticeId)
+    loadBody()
+    loadComments()
 }
 
-function loadBody(noticeId){
+function loadBody(){
     request(
-        "/notice/requestBody",
+        "/notice/findById",
         {noticeId: noticeId},
-        function (response) {
+        function (data) {
             // 객체를 배열 객체로 변환
-            let obejctlist = Object.entries(response)
+            let obejctlist = Object.entries(data)
 
             let noticeTable = $("#notice")
-            createTable([Object.fromEntries(obejctlist.slice(0, -4))], noticeTable);
+            createTable(Object.fromEntries(obejctlist.slice(0, -4)), noticeTable);
 
             let bodyTable = $("#body")
-            createTable([Object.fromEntries(obejctlist.slice(-4, -1))], bodyTable);
+            createTable(Object.fromEntries(obejctlist.slice(-4, -1)), bodyTable);
 
+
+        }
+    )
+}
+
+function loadComments(){
+    request(
+        "/comments/findByNoticeId",
+        {noticeId: noticeId},
+        function (data) {
             let commentsTable = $("#comments")
-            createTable(Object.fromEntries(obejctlist.slice(-1))["comments"],
-                commentsTable,
+            createTable(
+                data, commentsTable,
                 function (item, key, cell) {cell.text(item[key])}
             )
 
@@ -31,16 +42,25 @@ function loadBody(noticeId){
                 let row = $(this);
                 let cell = $(`<td></td>`);
                 row.append(cell)
-                let button = $(`<button></button>`)
+                let modifyButton = $(`<button></button>`)
                     .text("댓글 수정")
                     .click(function() {
-                            let idCell = row.find('.id');
-                            commentModify(idCell.text());
+                        let idCell = row.find('.id');
+                        commentModify(idCell.text());
                     });
-                cell.append(button)
+                cell.append(modifyButton)
+
+                let deleteButton = $(`<button></button>`)
+                    .text("댓글 삭제")
+                    .click(function() {
+                        let idCell = row.find('.id');
+                        commentDelete(idCell.text());
+                    });
+                cell.append(deleteButton)
             });
         }
     )
+
 }
 
 function commentSave() {
@@ -49,7 +69,8 @@ function commentSave() {
         "/comments/save",
         {noticeId: noticeId, text: text},
         function (data) {
-            console.log(data)
+            loadComments()
+            $("#comment").val('')
         }
     )
 }
@@ -59,7 +80,10 @@ function commentModify(commentId) {
     request(
         "/comments/modify",
         {commentId: commentId, text: text},
-        function (data) {console.log(data);}
+        function (data) {
+            loadComments()
+            $("#comment").val('')
+        }
     );
 }
 
@@ -67,6 +91,9 @@ function commentDelete(commentId) {
     request(
         "/comments/delete",
         {commentId: commentId},
-        function (data) {console.log(data);}
+        function (data) {
+            loadComments()
+            $("#comment").val('')
+        }
     );
 }

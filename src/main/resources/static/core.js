@@ -37,6 +37,11 @@ function createTable(
         }
     }
 ) {
+    if (!Array.isArray(jsonlist)) {
+        // If it's not an array, wrap it in an array
+        jsonlist = [jsonlist];
+    }
+
     $(table).empty();
 
     let headerRow = $("<tr>");
@@ -77,3 +82,20 @@ function clickLike(noticeId, self) {
     )
 }
 
+function loadCurrentUser(){
+    request(
+        "/user/getCurrentUser",
+        {},
+        function (data) {
+            if (data == false){
+                $("#loginTrue").css("display", "none")
+                $("#loginFalse").css("display", "block")
+            }else{
+                $("#loginTrue").css("display", "block")
+                $("#loginFalse").css("display", "none")
+                let table = $("#currentUserTable");
+                createTable(data, table);
+            }
+        }
+    )
+}

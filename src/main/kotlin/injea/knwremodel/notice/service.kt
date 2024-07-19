@@ -115,6 +115,8 @@ class NoticeService(private val noticeRepo: NoticeRepository, private val Colleg
     }
 
     private fun getLastpage(url: String, maxPage: Int): Int {
+
+        println(url)
         val document = Jsoup.connect("${url}?paginationInfo.currentPageNo=${maxPage}").get()
 
         val lp = document.getElementsByClass("pagination create_mob_pagination").select("a").last()!!.attr("onclick")
@@ -182,9 +184,9 @@ class NoticeService(private val noticeRepo: NoticeRepository, private val Colleg
     @Transactional(readOnly = true)
     fun search(major: String, type: String, keyword: String, pageable: Pageable): Page<Notice> {
         if (major == "행사/안내") {
-            return noticeRepo.searchWithout(major, type, keyword, pageable)
+            return noticeRepo.search(major, type, keyword, pageable)
         }
-        return noticeRepo.search(major, type, keyword, pageable)
+        return noticeRepo.searchWithout(major, type, keyword, pageable)
     }
 
 

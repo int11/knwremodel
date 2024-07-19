@@ -7,7 +7,7 @@ import org.springframework.stereotype.Repository
 
 @Repository
 interface CommentRepository : JpaRepository<Comment?, Long?> {
-    @Query("SELECT c FROM Comment c WHERE c.user.id = :userId")
-    fun findCommentsByUserId(@Param("userId") userId: Long): MutableList<Comment>
+    @Query("SELECT c FROM Comment c WHERE c.notice.id = :noticeId")
+    fun findByNoticeId(@Param("noticeId") noticeId: Long): MutableList<Comment>
 }
 

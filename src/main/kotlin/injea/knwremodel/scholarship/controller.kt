@@ -10,8 +10,8 @@ import org.springframework.web.bind.annotation.RestController
 @RequestMapping("/scholarship")
 class ScholarshipController(private val scholarshipS: ScholarshipService) {
 
-    @PostMapping("/request")
-    fun request(): ResponseEntity<*> {
+    @PostMapping("/findAll")
+    fun findAll(): ResponseEntity<*> {
         val scholarships = scholarshipS.findAll()
         val result = scholarships.map { scholarship: Scholarship -> ScholarshipDTO.Common(scholarship) }
         return ResponseEntity.ok(result.reversed())

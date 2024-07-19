@@ -16,14 +16,14 @@ import org.springframework.web.bind.annotation.RestController
 @RequestMapping("/notice")
 class NoticeController(private val noticeS: NoticeService, private val likeS: LikeService) {
 
-    class requestPage(
+    class findByPageDTO(
         var major: String?,
         var type: String?,
         var keyword: String?,
         var page: Long,
         var perPage: Long)
-    @PostMapping("/requestPage")
-    fun requestPage(@RequestBody dto: requestPage): ResponseEntity<*> {
+    @PostMapping("/findByPage")
+    fun findByPage(@RequestBody dto: findByPageDTO): ResponseEntity<*> {
         val major: String = dto.major ?: ""
         val type: String = dto.type ?: ""
         val keyword: String = dto.keyword ?: ""
@@ -38,19 +38,18 @@ class NoticeController(private val noticeS: NoticeService, private val likeS: Li
         return ResponseEntity.ok(result)
     }
 
-
-    class requestBody(var noticeId: Long)
+    class getByIdDTO(var noticeId: Long)
     @Transactional
-    @PostMapping("/requestBody")
-    fun requestBody(@RequestBody dto: requestBody): ResponseEntity<*> {
+    @PostMapping("/findById")
+    fun findById(@RequestBody dto: getByIdDTO): ResponseEntity<*> {
         val notice = noticeS.findById(dto.noticeId)
         return ResponseEntity.ok(Common(likeS, notice))
     }
 
 
-    class topview(var size: Int)
-    @PostMapping("/topView")
-    fun getTopView(@RequestBody dto: topview): ResponseEntity<*> {
+    class findTopViewDTO(var size: Int)
+    @PostMapping("/findTopView")
+    fun findTopView(@RequestBody dto: findTopViewDTO): ResponseEntity<*> {
         val topNotices = noticeS.findTopView(dto.size)
         val result = topNotices.map { notice ->
             CommonWithoutBody(
@@ -61,9 +60,9 @@ class NoticeController(private val noticeS: NoticeService, private val likeS: Li
     }
 
 
-    class toplike(var major: String?, var size: Int)
-    @PostMapping("/toplike")
-    fun getTopLikeByMajor(@RequestBody dto: toplike): ResponseEntity<*> {
+    class findTopLikeDTO(var major: String?, var size: Int)
+    @PostMapping("/findTopLike")
+    fun findTopLike(@RequestBody dto: findTopLikeDTO): ResponseEntity<*> {
         val topNotices = noticeS.findTopLike(dto.major, dto.size)
         val result = topNotices.map { notice ->
             CommonWithoutBody(

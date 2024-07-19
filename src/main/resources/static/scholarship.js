@@ -37,7 +37,7 @@ function testdata(){
 
 function loadscholarship(){
     $.ajax({
-        url: '/scholarship/request',
+        url: '/scholarship/findAll',
         type: 'POST',
         contentType: "application/json",
         dataType: "json",

@@ -13,19 +13,20 @@ window.onload = function(){
 
     loadNoticeTable(URLSearch.get("major"), URLSearch.get("type"), URLSearch.get("keyword"));
     loadRankTable(URLSearch.get("major"));
+    loadCurrentUser()
 }
 
 function loadNoticeTable(major="", type="", keyword="", page=0, perPage=20){
     request(
-        "/notice/requestPage",
+        "/notice/findByPage",
         {major:major,
             type: type,
             keyword:keyword,
             page:page,
             perPage:perPage},
-        function (response) {
+        function (data) {
             let table = $("#mainTable")
-            createTable(response.content, table);
+            createTable(data.content, table);
             let ul = $("#mainPageCount");
             ul.empty();
 
@@ -34,7 +35,7 @@ function loadNoticeTable(major="", type="", keyword="", page=0, perPage=20){
                 .css({"float": "left"});
             ul.append(li)
 
-            for(let i = 0; i<response.totalPages; i++){
+            for(let i = 0; i<data.totalPages; i++){
                 let li = $("<li>")
                     .css({"float": "left", "margin": "0px 5px"});
 
@@ -51,20 +52,20 @@ function loadNoticeTable(major="", type="", keyword="", page=0, perPage=20){
 
 function loadRankTable(major){
     request(
-        "/notice/toplike",
+        "/notice/findTopLike",
         {major:major, size: 5},
-        function (response) {
+        function (data) {
             let table = $("#viewRankTable");
-            createTable(response, table);
+            createTable(data, table);
         }
     )
 
     request(
-        "/notice/topView",
+        "/notice/findTopView",
         {size: 5},
-        function (response) {
+        function (data) {
             let table = $("#likeRankTable");
-            createTable(response, table);
+            createTable(data, table);
         }
     )
 }

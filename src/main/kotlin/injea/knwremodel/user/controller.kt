@@ -11,16 +11,19 @@ import org.springframework.web.bind.annotation.*
 class UserController(
     private val userS: UserService
 ) {
-    class setDepartment(var department: String)
+    class setDepartmentDTO(var department: String)
     @PostMapping("/setDepartment")
-    fun saveDepartment(@RequestBody department: setDepartment): ResponseEntity<*> {
+    fun setDepartment(@RequestBody department: setDepartmentDTO): ResponseEntity<*> {
         userS.setCurrentUserDepartment(department.department)
         return ResponseEntity.ok("학부 저장을 성공했습니다.")
     }
 
-    @PostMapping("/request")
-    fun request(): ResponseEntity<*> {
-        return ResponseEntity.ok(userS.getCurrentUser())
+    @PostMapping("/getCurrentUser")
+    fun getCurrentUser(): ResponseEntity<*> {
+        if (userS.isLogin()){
+            return ResponseEntity.ok(userS.getCurrentUserDTO())
+        }
+        return ResponseEntity.ok(false)
     }
 
     @Transactional

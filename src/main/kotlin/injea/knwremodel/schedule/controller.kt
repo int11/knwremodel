@@ -6,10 +6,10 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
-@RequestMapping("/Haksa")
+@RequestMapping("/schedule")
 class ScheduleController(private val haksaS: ScheduleService) {
-    @PostMapping("/request")
-    fun request(): ResponseEntity<*> {
+    @PostMapping("/findAll")
+    fun findAll(): ResponseEntity<*> {
         return ResponseEntity.ok(haksaS.findAll())
     }
 }
