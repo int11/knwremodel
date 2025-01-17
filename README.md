@@ -26,7 +26,7 @@
 <h3 align="center">24/09/01 ~ 24/12/3</h3>
 
 <p align="center">
-<img src="https://github.com/user-attachments/assets/2fdebf3f-dac8-4ed9-a658-f8691f8bfd2e"  width="800" height="480"  />
+<img src="https://github.com/user-attachments/assets/2fdebf3f-dac8-4ed9-a658-f8691f8bfd2e"  width="1000" height="600"  />
 </p>
 
 
