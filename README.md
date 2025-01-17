@@ -136,7 +136,7 @@
 </div>
 
 
-<details>
+
   <summary>프로그램 동기 부여</summary>
   
 - Scheduling을 통한 데이터 크롤링과 재분류를 통해 사용자에게 가공된 데이터 제공. 프로그램에 대한 접근성 강화
@@ -149,7 +149,7 @@
 
 
 
-</details>
+
 
 
   <summary>개인화 홈페이지 제작</summary>
@@ -157,10 +157,11 @@
 - Instargram 기능 중 일부를 벤치마킹하여 기존 학교 웹서비스와 통합. 자신이 쓴 댓글과 좋아요를 누른 게시물을 한 눈에 모아 조회 가능
 
   
-<div style="display: flex; justify-content: space-between;">
-  <img src="https://github.com/user-attachments/assets/e93422a5-dd66-4b79-b3f7-b7b4fcd8ef8f"  width="430"   />
-  <img src="https://github.com/user-attachments/assets/19cc0721-e72e-4d89-9dc3-917166bb92af"  width="430"   />
-</div>
+<p align="center">  
+  <img src="https://github.com/user-attachments/assets/9d208a20-b57f-4ad4-b78f-a5f5a1f67e0d"  width="350"   />
+
+</p>
+
 
 
 
