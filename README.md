@@ -107,23 +107,34 @@
 </details>
 
 ---
+
 ## 6. 차별점 
-- **가시성 높은 디자인** :  Styled Components와 @Media Query를사용하여 반응형 디자인 구현. 다양한 화면 크기에서 자동으로 레이아웃이 조정되도록 설계
+<details>
+  <summary>가시성 높은 디자인</summary>
+  
+- Styled Components와 @Media Query를사용하여 반응형 디자인 구현. 다양한 화면 크기에서 자동으로 레이아웃이 조정되도록 설계
+  
 <p align="center">
 <img src="https://github.com/user-attachments/assets/15404c9e-ab85-4589-b16a-d298c38433ed" width="430"/> 
 </p>
 
----
+</details>
 
-- **학생들에게 맞춤형 정보 제공** : 사용자의 전공, 학년, 게시물의 인기도 데이터를 기반으로 맞춤형 게시물을 추천
+<details>
+  <summary>학생들에게 맞춤형 정보 제공</summary>
+  
+- 사용자의 전공, 학년, 게시물의 인기도 데이터를 기반으로 맞춤형 게시물을 추천
 
 <p align="center">
 <img src="https://github.com/user-attachments/assets/10ee6129-7df6-4125-bed3-6a4ff65a3094" width="430" />
 </p>
 
----
+</details>
 
-- **프로그램 동기 부여** :  Scheduling을 통한 데이터 크롤링과 재분류를 통해 사용자에게 가공된 데이터 제공. 프로그램에 대한 접근성 강화
+<details>
+  <summary>프로그램 동기 부여</summary>
+  
+- Scheduling을 통한 데이터 크롤링과 재분류를 통해 사용자에게 가공된 데이터 제공. 프로그램에 대한 접근성 강화
 
 <p align="center">
 <img src="https://github.com/user-attachments/assets/9e9100be-4942-4186-b33d-3aae3a5c3f41"  width="430" />
@@ -133,15 +144,21 @@
 <img src="https://github.com/user-attachments/assets/780fbd0f-bea2-478c-a97a-fdfee488205c"  width="430" />
 </p>
 
----
+</details>
 
-- **개인화 홈페이지 제작** : Instargram 기능 중 일부를 벤치마킹하여 기존 학교 웹서비스와 통합. 자신이 쓴 댓글과 좋아요를 누른 게시물을 한 눈에 모아 조회 가능
+<details>
+  <summary>개인화 홈페이지 제작</summary>
+  
+- Instargram 기능 중 일부를 벤치마킹하여 기존 학교 웹서비스와 통합. 자신이 쓴 댓글과 좋아요를 누른 게시물을 한 눈에 모아 조회 가능
 
 <p align="center">
 <img src="https://github.com/user-attachments/assets/19cc0721-e72e-4d89-9dc3-917166bb92af"  width="430"   />
 </p>
 
+</details>
+
 ---  
+
 
 ## 7. 설치 방법
 
