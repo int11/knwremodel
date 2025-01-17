@@ -155,8 +155,9 @@
 
 
 <div style="display: flex; justify-content: space-between; ">
-  <img src="https://github.com/user-attachments/assets/e93422a5-dd66-4b79-b3f7-b7b4fcd8ef8f"  width="395"   />
-  <img src="https://github.com/user-attachments/assets/68921a7e-30d7-488d-a361-1256c9f16c09"  width="395" />
+  <img src="https://github.com/user-attachments/assets/e93422a5-dd66-4b79-b3f7-b7b4fcd8ef8f"  width="350"/>
+  <img src="https://github.com/user-attachments/assets/25e396a1-5cc7-4e5f-aa8f-680db47f674d" width="125" />
+  <img src="https://github.com/user-attachments/assets/68921a7e-30d7-488d-a361-1256c9f16c09"  width="350"/>
 </div>
 
 
