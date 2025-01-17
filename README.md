@@ -1,29 +1,23 @@
-<h1 align="center">가나다<br><strong>가나다라</strong></h1>
-<h3 align="center">가나다라</h3>
+<h1 align="center">KNU Remodel<br><strong>강남대학교 홈페이지 재구성</strong></h1>
+<h3 align="center">강민주, 강명균, 서동현, 서은빈, 유우열, 이인재</h3>
 
 <p align="center">
-<img src="https://github.com/user-attachments/assets/47d7b689-2a63-44c4-9185-42a33bfe6667"  width="850" height="480"  />
+<img src="https://github.com/user-attachments/assets/285a7b09-ef4d-4578-b048-573d132d33b3"  width="850" height="480"  />
 </p>
 
 
 ---
 ## 1. 프로젝트 개요
 
-**📊 시장 분석**
-- ㅇ
-- ㅇ
-- ㅇ
+**목적**
+- 학생 중심의 **접근성** 향상
+- 참여율 증대 및 효율적 **개인화** 기능 제공
+- **가시성** 확보를 위한 UI/UI 개선
 
-
-**💡 필요성**  
-- ㅇ
-- ㅇ
-- ㅇ
-
-
-**🚀 기대 효과**  
-- ㅇ
-- ㅇ 
+**목표**
+- 프로그램 **참여율** 증가
+- 충분한 **경험과 교류**의 기회 제공
+- 개인적인 성장 촉진 및 **교내 활동 활성화**
 
 ---
 
@@ -42,69 +36,89 @@
 - 공통
 DB구조 설계, 디자인 설계, API 설계
 
+- **강민주**
 
-- **ㅇ**: 전체적인 시스템 구성 및 API 설계, 결제 시스템 주도
+
+  기능 : 디자인, 화면 구현 & 스타일링
+
+- **강명균**
 
 
-  기능 : 결제, 장바구니, 게시판(이벤트 ,공지사항, QnA), 점주 페이지(주문내역, 휴무일, 메뉴 관리, 가게 승인 페이지, 가게등록 페이지
+  기능 : 화면 구현, 페이징 설정
+
+- **서동현**
+
+
+  기능 : 로그인, 데이터베이스 구축(크롤링, 랭킹, 식단표, 학사일정)
+데이터베이스, 서버랑 연결 코딩(식단표, 크롤링, 랭킹, 학사일정)
   
-- **ㅇ**:
+- **서은빈**
 
 
-  기능 : AI, 마이페이지(주소지, 즐겨찾기, 장바구니, 결제내역), 점주 페이지(리뷰 관리,가게 정보), 스토어 검색 기능, 즐겨찾기, 카카오 로그인, 댓글 기능, 
+  기능 : 데이터 관리(백업포함) 자동화 코딩(식단표, 크롤링, 랭킹, 학사일정)
+데이터 전처리(수집된 데이터를 정제하고 필요한 형식으로 변환) 구축(식단표, 크롤링, 학사일정)
 
   
-- **ㅇㅇ**: 사용자 인터페이스 개발 및 디자인 최적화, UI/UX 개선 주도
+- **유우열**
 
 
-  기능 :  가게 승인 페이지, 가게등록 페이지
+  기능 : 분야별 크롤링, 검색창, DB실시간 모니터링 코딩(식단표, 크롤링, 랭킹, 학사일정)
+크롤링 엔진 개발
+
+- **이인재**
+
+
+  기능 : 전반적인 코드 관리, 단과대 크롤링
+
 ---
 ## 4. 개발 환경
 
 - **백엔드**: ![springboot](https://img.shields.io/badge/springboot-6DB33F?style=for-the-badge&logo=springboot&logoColor=white)<img src="https://img.shields.io/badge/3.1.4-515151?style=for-the-badge"> ![MySQL](https://img.shields.io/badge/mysql-4479A1?style=for-the-badge&logo=mysql&logoColor=white)<img src="https://img.shields.io/badge/8.0.33-515151?style=for-the-badge"> ![IntelliJ IDEA](https://img.shields.io/badge/IntelliJ%20IDEA-EE4C2C?style=for-the-badge&logo=IntelliJ%20IDEA&logoColor=white) <img src="https://img.shields.io/badge/java-%23ED8B00?style=for-the-badge&logo=openjdk&logoColor=white"><img src="https://img.shields.io/badge/17-515151?style=for-the-badge">
 
-- **프론트엔드**: ![Next.js](https://img.shields.io/badge/Next.js-000000?style=for-the-badge&logo=next.js&logoColor=white)<img src="https://img.shields.io/badge/14.2.11-515151?style=for-the-badge"> ![React](https://img.shields.io/badge/React-61DAFB?style=for-the-badge&logo=react&logoColor=black)<img src="https://img.shields.io/badge/18.3.1-515151?style=for-the-badge"> ![Node.js](https://img.shields.io/badge/Node.js-339933?style=for-the-badge&logo=node.js&logoColor=white)
+- **프론트엔드**: ![React](https://img.shields.io/badge/React-61DAFB?style=for-the-badge&logo=react&logoColor=black)<img src="https://img.shields.io/badge/18.3.1-515151?style=for-the-badge"> ![Node.js](https://img.shields.io/badge/Node.js-339933?style=for-the-badge&logo=node.js&logoColor=white)
 
 - **협업 툴**: ![GitHub](https://img.shields.io/badge/GitHub-181717?style=for-the-badge&logo=github&logoColor=white) ![Notion](https://img.shields.io/badge/Notion-000000?style=for-the-badge&logo=notion&logoColor=white) <a href="https://www.erdcloud.com/d/8Lf2f63JR7jpDJMqQ" target="_blank">
     <img src="https://img.shields.io/badge/ERDCloud-0072FF?style=for-the-badge&logo=erdcloud&logoColor=white" alt="ERDCloud" />
+</a> 클릭!<a href="https://gitmind.com/app/docs/md3av2n5" target="_blank">
+    <img src="https://img.shields.io/badge/GitMind-FF7F50?style=for-the-badge&logo=git&logoColor=white" alt="GitMind" />
 </a> 클릭!
 
 
 ---
+## 5. 프로젝트 설계
 
+**프론트엔드**
+
+![Essay Structure](https://github.com/user-attachments/assets/55038de5-e68c-4e69-a4b6-0daa091de3a4)
+
+**백엔드**
+![image01](https://github.com/user-attachments/assets/c1f26116-29be-40f9-ab52-ec86ba10aea4)
+![image02](https://github.com/user-attachments/assets/4ec10e29-5c80-4a3c-a7b3-0ad8709a7fa6)
+
+---
 ## 5. 차별점 
-- **가시성 높은 디자인** :  Styled Components와 @Media Query를사용하여 반응형 디자인 구현. 다양한 화면 크기에서 레이아웃이 자동으로 조정되며, 사용자에게 일관되고 최적화된 경험을 제공
+- **ㅇㅇ** : 원하는 날짜, 시간대에 주문. 예약 가능
+
 
 <p align="center">
-<img src="https://github.com/user-attachments/assets/15404c9e-ab85-4589-b16a-d298c38433ed" width="430"/> 
+<img src="https://github.com/user-attachments/assets/9c9b6215-4126-45da-9a26-87bf9c99273c"  width="850" height="430"  />
 </p>
 
----
 
-- **학생들에게 맞춤형 정보 제공** : 사용자의 전공, 학년, 게시물의 인기도 데이터를 기반으로 맞춤형 게시물을 추천. 사용자 경험을 향상시키고, 원하는 정보를 빠르게 얻을 수 있도록 설계
+
+- **ㅇ** : 여러 업체의 메뉴 담기 가능
 
 <p align="center">
-<img src="https://github.com/user-attachments/assets/10ee6129-7df6-4125-bed3-6a4ff65a3094" width="430" />
+<img src="https://github.com/user-attachments/assets/fa14e3d7-9942-47e4-9a2d-8708bac6525f"  width="400" height="480"  />
 </p>
 
----
 
-- **프로그램 동기 부여** :  Scheduling을 통한 데이터 크롤링과 데이터 재분류를 활용하여 사용자가 필요로 하는 정보를 효과적으로 제공. 프로그램 접근성을 강화하고 사용자 참여를 유도
 
-<p align="center">
-<img src="https://github.com/user-attachments/assets/9e9100be-4942-4186-b33d-3aae3a5c3f41"  width="430" />
-</p>
+
+- **ㅇㅇ** : 리뷰 리스트 기반 AI 선택지 반환 
 
 <p align="center">
-<img src="https://github.com/user-attachments/assets/780fbd0f-bea2-478c-a97a-fdfee488205c"  width="430" />
-</p>
-
----
-
-- **개인화 홈페이지 제작** : Instagram의 일부 기능을 벤치마킹하여 기존 학교 웹서비스와 통합. 사용자는 자신이 작성한 댓글과 좋아요를 누른 게시물을 한 곳에서 확인할 수 있는 편리함 제공
-  
-<p align="center">
-<img src="https://github.com/user-attachments/assets/19cc0721-e72e-4d89-9dc3-917166bb92af"  width="430"   />
+<img src="https://github.com/user-attachments/assets/a6ee9b51-c6fc-4750-9ffa-f79ee00b2dbe"  width="400" height="480"  />
 </p>
 
 ---  
