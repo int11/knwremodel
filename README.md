@@ -73,14 +73,15 @@ DB구조 설계, 디자인 설계, API 설계
 ---
 
 ## 5. 차별점 
-- **가시성 높은 디자인** :  Styled Components와 @Media Query를사용하여 반응형 디자인 구현. 다양한 화면 크기에서 자동으로 레이아웃이 조정되도록 설계
+- **가시성 높은 디자인** :  Styled Components와 @Media Query를사용하여 반응형 디자인 구현. 다양한 화면 크기에서 레이아웃이 자동으로 조정되며, 사용자에게 일관되고 최적화된 경험을 제공
+
 <p align="center">
 <img src="https://github.com/user-attachments/assets/15404c9e-ab85-4589-b16a-d298c38433ed" width="430"/> 
 </p>
 
 ---
 
-- **학생들에게 맞춤형 정보 제공** : 사용자의 전공, 학년, 게시물의 인기도 데이터를 기반으로 맞춤형 게시물을 추천
+- **학생들에게 맞춤형 정보 제공** : 사용자의 전공, 학년, 게시물의 인기도 데이터를 기반으로 맞춤형 게시물을 추천. 사용자 경험을 향상시키고, 원하는 정보를 빠르게 얻을 수 있도록 설계
 
 <p align="center">
 <img src="https://github.com/user-attachments/assets/10ee6129-7df6-4125-bed3-6a4ff65a3094" width="430" />
@@ -88,7 +89,7 @@ DB구조 설계, 디자인 설계, API 설계
 
 ---
 
-- **프로그램 동기 부여** :  Scheduling을 통한 데이터 크롤링과 재분류를 통해 사용자에게 가공된 데이터 제공. 프로그램에 대한 접근성 강화
+- **프로그램 동기 부여** :  Scheduling을 통한 데이터 크롤링과 데이터 재분류를 활용하여 사용자가 필요로 하는 정보를 효과적으로 제공. 프로그램 접근성을 강화하고 사용자 참여를 유도
 
 <p align="center">
 <img src="https://github.com/user-attachments/assets/9e9100be-4942-4186-b33d-3aae3a5c3f41"  width="430" />
@@ -100,8 +101,8 @@ DB구조 설계, 디자인 설계, API 설계
 
 ---
 
-- **개인화 홈페이지 제작** : Instargram 기능 중 일부를 벤치마킹하여 기존 학교 웹서비스와 통합. 자신이 쓴 댓글과 좋아요를 누른 게시물을 한 눈에 모아 조회 가능
-
+- **개인화 홈페이지 제작** : Instagram의 일부 기능을 벤치마킹하여 기존 학교 웹서비스와 통합. 사용자는 자신이 작성한 댓글과 좋아요를 누른 게시물을 한 곳에서 확인할 수 있는 편리함 제공
+  
 <p align="center">
 <img src="https://github.com/user-attachments/assets/19cc0721-e72e-4d89-9dc3-917166bb92af"  width="430"   />
 </p>
