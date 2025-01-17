@@ -142,8 +142,8 @@
 
 
 <div style="display: flex; justify-content: space-between;">
-<img src="https://github.com/user-attachments/assets/c394ec5e-719d-445d-ba4d-6c51ad808571" width="350" />
-<img src="https://github.com/user-attachments/assets/10ee6129-7df6-4125-bed3-6a4ff65a3094" width="350" />
+<img src="https://github.com/user-attachments/assets/c394ec5e-719d-445d-ba4d-6c51ad808571" width="390" />
+<img src="https://github.com/user-attachments/assets/10ee6129-7df6-4125-bed3-6a4ff65a3094" width="390" />
 </div>
 
 
@@ -153,7 +153,7 @@
 - Scheduling을 통한 데이터 크롤링과 재분류를 통해 사용자에게 가공된 데이터 제공. 프로그램에 대한 접근성 강화
 
 
-<div style="display: flex; justify-content: space-between;">
+<div style="display: flex; justify-content: space-between; ">
   <img src="https://github.com/user-attachments/assets/e93422a5-dd66-4b79-b3f7-b7b4fcd8ef8f"  width="350"   />
   <img src="https://github.com/user-attachments/assets/68921a7e-30d7-488d-a361-1256c9f16c09"  width="350" />
 </div>
