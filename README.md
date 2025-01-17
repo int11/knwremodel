@@ -116,37 +116,31 @@
 
 ---
 
-## 6. 차별점 
-<details>
+## 6. 기존 사이트와의 차별점 
+
   <summary>가시성 높은 디자인</summary>
   
-- Styled Components와 @Media Query를사용하여 반응형 디자인 구현. 다양한 화면 크기에서 자동으로 레이아웃이 조정되도록 설계
   
-<p align="center">
-<img src="https://github.com/user-attachments/assets/15404c9e-ab85-4589-b16a-d298c38433ed" width="430"/> 
-</p>
-
-</details>
-
-<details>
-  <summary>학생들에게 맞춤형 정보 제공</summary>
+  Styled Components와 @Media Query를사용하여 반응형 디자인 구현. 다양한 화면 크기에서 자동으로 레이아웃이 조정되도록 설계
   
-- 사용자의 전공, 학년, 게시물의 인기도 데이터를 기반으로 맞춤형 게시물을 추천
 
-<p align="center">
+
+  <summary>학생들의 관심을 유도할 수 있는 정보 제공</summary>
+  
+사용자의 전공, 학년, 게시물의 인기도 데이터를 기반으로 맞춤형 게시물을 추천
+
+
+<div style="display: flex; justify-content: space-between;">
+<img src="https://github.com/user-attachments/assets/c394ec5e-719d-445d-ba4d-6c51ad808571" width="430" />
 <img src="https://github.com/user-attachments/assets/10ee6129-7df6-4125-bed3-6a4ff65a3094" width="430" />
-</p>
+</div>
 
-</details>
 
 <details>
   <summary>프로그램 동기 부여</summary>
   
 - Scheduling을 통한 데이터 크롤링과 재분류를 통해 사용자에게 가공된 데이터 제공. 프로그램에 대한 접근성 강화
 
-<p align="center">
-<img src="https://github.com/user-attachments/assets/9e9100be-4942-4186-b33d-3aae3a5c3f41"  width="430" />
-</p>
 
 <p align="center">
 <img src="https://github.com/user-attachments/assets/780fbd0f-bea2-478c-a97a-fdfee488205c"  width="430" />
