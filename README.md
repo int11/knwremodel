@@ -12,7 +12,7 @@
 **목적**
 - 학생 중심의 **접근성** 향상
 - 참여율 증대 및 효율적 **개인화** 기능 제공
-- **가시성** 확보를 위한 UI/UI 개선
+- **가시성** 확보를 위한 UI/UX 개선
 
 **목표**
 - 프로그램 **참여율** 증가
@@ -23,7 +23,7 @@
 
 
 ## 2. 개발 기간
-<h3 align="center">24/09/01 ~ 24/12/3</h3>
+<h3 align="center">23/09/01 ~ 23/12/3</h3>
 
 <p align="center">
 <img src="https://github.com/user-attachments/assets/2fdebf3f-dac8-4ed9-a658-f8691f8bfd2e"  width="1000" height="600"  />
