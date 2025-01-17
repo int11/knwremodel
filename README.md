@@ -131,8 +131,8 @@
 
 
 <div style="display: flex; justify-content: space-between;">
-<img src="https://github.com/user-attachments/assets/c394ec5e-719d-445d-ba4d-6c51ad808571" width="430" />
-<img src="https://github.com/user-attachments/assets/10ee6129-7df6-4125-bed3-6a4ff65a3094" width="430" />
+<img src="https://github.com/user-attachments/assets/c394ec5e-719d-445d-ba4d-6c51ad808571" width="350" />
+<img src="https://github.com/user-attachments/assets/10ee6129-7df6-4125-bed3-6a4ff65a3094" width="350" />
 </div>
 
 
